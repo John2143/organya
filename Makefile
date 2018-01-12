@@ -1,4 +1,4 @@
-CC := g++ -std=c++11 -g -pg -fopenmp
+CC := g++ -std=c++11 -g
 CFLAGS := -Wall -Wextra -Iinclude -Wno-unused-parameter -Wno-write-strings -Wno-char-subscripts -Wno-unused-but-set-variable -Wno-unused-variable
 
 SRC=source
@@ -9,7 +9,7 @@ DEPS=$(patsubst %.cpp,%.d,$(SRCS))
 
 EXECUTABLE := organya
 
-LIBRARIES:=
+LIBRARIES:= -L. -lWinMM -ldsound -mwindows
 ifeq ($(shell uname),Linux)
 LIBRARIES += -lm
 endif

@@ -8,6 +8,9 @@
 #include "Scroll.h"
 #include <cstdio>
 #include "util.h"
+extern "C" {
+#include "windows.h"
+}
 
 char timer_sw = 0;
 extern HWND hDlgTrack;
