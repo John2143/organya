@@ -3,7 +3,7 @@
 #define _WIN32_WINDOWS	0x0410
 #define _WIN32_IE		0x0400
 #define BUF_SIZE 256
-//#define HENKOU_NO_SHIRUSHI	" [•ÏXƒAƒŠ]"
+//#define HENKOU_NO_SHIRUSHI	" [å¤‰æ›´ã‚¢ãƒª]"
 
 #define MAIN_WINDOW "WINDOW"
 #define COMMON_WINDOW "COMMONDIALOG"
@@ -37,7 +37,7 @@
 #include "Sound.h"
 #include "Timer.h"
 
-//ƒƒCƒ“ƒvƒƒV[ƒWƒƒ
+//ãƒ¡ã‚¤ãƒ³ãƒ—ãƒ­ã‚·ãƒ¼ã‚¸ãƒ£
 LRESULT CALLBACK WndProc(HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam);
 BOOL CALLBACK DialogSetting(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam);
 BOOL CALLBACK DialogDefault(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam);
@@ -61,9 +61,9 @@ void SetTitlebarChange(void);
 void ResetTitlebarChange(void);
 void CheckLoupeMenu(void);
 
-//‚±‚±‚ÉLˆæ•Ï”‚ğéŒ¾‚·‚é
-HINSTANCE hInst;//ƒCƒ“ƒXƒ^ƒ“ƒXƒnƒ“ƒhƒ‹
-HWND hWnd;//ƒƒCƒ“ƒEƒBƒ“ƒhƒEƒnƒ“ƒhƒ‹
+//ã“ã“ã«åºƒåŸŸå¤‰æ•°ã‚’å®£è¨€ã™ã‚‹
+HINSTANCE hInst;//ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ãƒãƒ³ãƒ‰ãƒ«
+HWND hWnd;//ãƒ¡ã‚¤ãƒ³ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«
 HWND hDlgPlayer;
 HWND hDlgTrack;
 HWND hDlgEZCopy;
@@ -73,46 +73,46 @@ BOOL actApp;
 
 int WWidth = WINDOWWIDTH, WHeight = WINDOWHEIGHT;
 
-char lpszName[MAX_PATH+15];// = "ƒIƒ‹ƒK[ƒjƒƒ‚Q - ";//ƒEƒCƒ“ƒhƒEƒYã‚É“o˜^‚·‚é–¼‘O
+char lpszName[MAX_PATH+15];// = "ã‚ªãƒ«ã‚¬ãƒ¼ãƒ‹ãƒ£ï¼’ - ";//ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ã‚ºä¸Šã«ç™»éŒ²ã™ã‚‹åå‰
 
-ORGDATA org_data;//ƒƒCƒ“ƒf[ƒ^
-SCROLLDATA scr_data;//ƒXƒNƒ[ƒ‹ƒf[ƒ^
-MOUSEDATA mouse_data;//ƒ}ƒEƒXƒf[ƒ^
-extern char music_file[];//ƒtƒ@ƒCƒ‹ƒl[ƒ€
-extern int sGrid;	//”ÍˆÍ‘I‘ğ‚ÍƒOƒŠƒbƒh’PˆÊ‚Å
-extern int sACrnt;	//”ÍˆÍ‘I‘ğ‚Íí‚É¶ÚİÄÄ×¯¸
+ORGDATA org_data;//ãƒ¡ã‚¤ãƒ³ãƒ‡ãƒ¼ã‚¿
+SCROLLDATA scr_data;//ã‚¹ã‚¯ãƒ­ãƒ¼ãƒ«ãƒ‡ãƒ¼ã‚¿
+MOUSEDATA mouse_data;//ãƒã‚¦ã‚¹ãƒ‡ãƒ¼ã‚¿
+extern char music_file[];//ãƒ•ã‚¡ã‚¤ãƒ«ãƒãƒ¼ãƒ 
+extern int sGrid;	//ç¯„å›²é¸æŠã¯ã‚°ãƒªãƒƒãƒ‰å˜ä½ã§
+extern int sACrnt;	//ç¯„å›²é¸æŠã¯å¸¸ã«ï½¶ï¾šï¾ï¾„ï¾„ï¾—ï½¯ï½¸
 
 extern void ChangeTrack(HWND hdwnd, int iTrack);
 extern void ChangeTrackPlus(HWND hdwnd, int iValue);
-extern char timer_sw; //‰‰‘t’†H
-extern EZCopyWindowState; //ƒC[ƒW[ƒRƒs[‚Ìó‘Ô
-extern void ClearEZC_Message(); //EZƒƒbƒZ[ƒW‚Æ”ÍˆÍ‚ğÁ‚·
+extern char timer_sw; //æ¼”å¥ä¸­ï¼Ÿ
+extern EZCopyWindowState; //ã‚¤ãƒ¼ã‚¸ãƒ¼ã‚³ãƒ”ãƒ¼ã®çŠ¶æ…‹
+extern void ClearEZC_Message(); //EZãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã¨ç¯„å›²ã‚’æ¶ˆã™
 extern RECT CmnDialogWnd;
-extern int SaveWithInitVolFile;	//‹Èƒf[ƒ^‚ÆcƒZ[ƒu‚·‚é‚©B
+extern int SaveWithInitVolFile;	//æ›²ãƒ‡ãƒ¼ã‚¿ã¨â€¦ã‚»ãƒ¼ãƒ–ã™ã‚‹ã‹ã€‚
 extern int Menu_Recent[];
 extern int iDragMode;
-extern int iDlgRepeat; //ƒ_ƒCƒAƒƒO‚©‚çæ“¾‚µ‚½ŒJ‚è•Ô‚µ‰ñ”
+extern int iDlgRepeat; //ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‹ã‚‰å–å¾—ã—ãŸç¹°ã‚Šè¿”ã—å›æ•°
 extern char strMIDI_TITLE[256];
 extern char strMIDI_AUTHOR[256];
 extern unsigned char ucMIDIProgramChangeValue[MAXTRACK];
 
-//ƒEƒBƒ“ƒhƒEƒTƒCƒY•Û‘¶—p
+//ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚µã‚¤ã‚ºä¿å­˜ç”¨
 RECT WinRect;
 CHAR *buf;
 CHAR app_path[BUF_SIZE];
 CHAR num_buf[BUF_SIZE];
-//‚±‚±‚Ü‚Å
+//ã“ã“ã¾ã§
 
 
 void SaveIniFile();
 
-//ƒI[ƒvƒjƒ“ƒOƒtƒ‰ƒbƒVƒ…
+//ã‚ªãƒ¼ãƒ—ãƒ‹ãƒ³ã‚°ãƒ•ãƒ©ãƒƒã‚·ãƒ¥
 //#define WAITFLASH	256
 //BOOL    CALLBACK DialogFlash(HWND, UINT, WPARAM, LPARAM);
 int gWidthWindow;
 int gHeightWindow;
 
-int gDrawDouble;	//—¼•û‚Ìƒgƒ‰ƒbƒNƒOƒ‹[ƒv‚ğ•`‰æ‚·‚é
+int gDrawDouble;	//ä¸¡æ–¹ã®ãƒˆãƒ©ãƒƒã‚¯ã‚°ãƒ«ãƒ¼ãƒ—ã‚’æç”»ã™ã‚‹
 
 int iChgTrackKey[16] = {
 	ID_AC_1,	ID_AC_2,	ID_AC_3,	ID_AC_4,	ID_AC_5,	ID_AC_6,	ID_AC_7,	ID_AC_8,
@@ -142,15 +142,15 @@ int CancelDeleteCurrentData(int iMessagePattern = 1){
 		//chn = strstr(cc, HENKOU_NO_SHIRUSHI);	// 2014.10.19 D
 		chn = strstr(cc, MessageString[IDS_MODIFIED]);	// 2014.10.19 A
 		if(chn!=NULL){
-			//•ÏX‚ª‚ ‚Á‚½‚Æ‚«‚ÍI—¹Šm”F‚·‚éB // A 2010.09.22
+			//å¤‰æ›´ãŒã‚ã£ãŸã¨ãã¯çµ‚äº†ç¢ºèªã™ã‚‹ã€‚ // A 2010.09.22
 			if(iMessagePattern == 0){
-				//if(MessageBox(hWnd,"•Û‘¶‚µ‚Ä‚¢‚È‚¢“à—e‚Í”jŠü‚³‚ê‚Ü‚·B‰Šú‰»‚µ‚Ü‚·‚©H", "‰Šú‰»Šm”F",MB_OKCANCEL | MB_ICONASTERISK)==IDCANCEL)return 1;	// 2014.10.19 D
+				//if(MessageBox(hWnd,"ä¿å­˜ã—ã¦ã„ãªã„å†…å®¹ã¯ç ´æ£„ã•ã‚Œã¾ã™ã€‚åˆæœŸåŒ–ã—ã¾ã™ã‹ï¼Ÿ", "åˆæœŸåŒ–ç¢ºèª",MB_OKCANCEL | MB_ICONASTERISK)==IDCANCEL)return 1;	// 2014.10.19 D
 				if(msgbox(hWnd,IDS_NOTIFY_INITIALIZE, IDS_NOTIFY_TITLE_INITALIZE,MB_OKCANCEL | MB_ICONASTERISK)==IDCANCEL)return 1;	// 2014.10.19 A
 			}else if(iMessagePattern == 1){
-				//if(MessageBox(hWnd,"•Û‘¶‚µ‚Ä‚¢‚È‚¢“à—e‚Í”jŠü‚³‚ê‚Ü‚·BI—¹‚µ‚Ü‚·‚©H", "I—¹Šm”F",MB_OKCANCEL | MB_ICONASTERISK)==IDCANCEL)return 1;	// 2014.10.19 D
+				//if(MessageBox(hWnd,"ä¿å­˜ã—ã¦ã„ãªã„å†…å®¹ã¯ç ´æ£„ã•ã‚Œã¾ã™ã€‚çµ‚äº†ã—ã¾ã™ã‹ï¼Ÿ", "çµ‚äº†ç¢ºèª",MB_OKCANCEL | MB_ICONASTERISK)==IDCANCEL)return 1;	// 2014.10.19 D
 				if(msgbox(hWnd,IDS_NOTIFY_EXIT, IDS_NOTIFY_TITLE_EXIT,MB_OKCANCEL | MB_ICONASTERISK)==IDCANCEL)return 1;	// 2014.10.19 A
 			}else if(iMessagePattern == 2){
-				//if(MessageBox(hWnd,"•Û‘¶‚µ‚Ä‚¢‚È‚¢“à—e‚Í”jŠü‚³‚ê‚Ü‚·Bƒtƒ@ƒCƒ‹‚ğƒ[ƒh‚µ‚Ü‚·‚©H", "ƒ[ƒhŠm”F",MB_OKCANCEL | MB_ICONASTERISK)==IDCANCEL)return 1;	// 2014.10.19 D
+				//if(MessageBox(hWnd,"ä¿å­˜ã—ã¦ã„ãªã„å†…å®¹ã¯ç ´æ£„ã•ã‚Œã¾ã™ã€‚ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ãƒ­ãƒ¼ãƒ‰ã—ã¾ã™ã‹ï¼Ÿ", "ãƒ­ãƒ¼ãƒ‰ç¢ºèª",MB_OKCANCEL | MB_ICONASTERISK)==IDCANCEL)return 1;	// 2014.10.19 D
 				if(msgbox(hWnd,IDS_NOTIFY_LOAD, IDS_NOTIFY_TITLE_LOAD,MB_OKCANCEL | MB_ICONASTERISK)==IDCANCEL)return 1;	// 2014.10.19 A
 			}
 		}
@@ -159,8 +159,8 @@ int CancelDeleteCurrentData(int iMessagePattern = 1){
 }
 
 int APIENTRY WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPTSTR dropfile,int nCmdShow)
-{//ƒƒCƒ“ŠÖ”
-	MSG msg;//‚±‚ÌƒAƒvƒŠ‚ªg‚¤ƒpƒ‰ƒ[ƒ^	
+{//ãƒ¡ã‚¤ãƒ³é–¢æ•°
+	MSG msg;//ã“ã®ã‚¢ãƒ—ãƒªãŒä½¿ã†ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿	
 	WNDCLASSEX wc;
 //	MessageBox(hWnd,dropfile,"Drap",MB_OK);
 	InitMMTimer();  // 2010.09.21
@@ -175,16 +175,16 @@ int APIENTRY WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPTSTR dropfile
 		iKeyPushDown[vvv]=0;
 	}
 
-	//ƒƒbƒZ[ƒW—pƒXƒgƒŠƒ“ƒO‚ğƒ[ƒh‚·‚é
+	//ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ç”¨ã‚¹ãƒˆãƒªãƒ³ã‚°ã‚’ãƒ­ãƒ¼ãƒ‰ã™ã‚‹
 	AllocMessageStringBuffer();
 
-	//‰Šúƒtƒ@ƒCƒ‹–¼
+	//åˆæœŸãƒ•ã‚¡ã‚¤ãƒ«å
 	strcpy(music_file, MessageString[IDS_DEFAULT_ORG_FILENAME]);
 
 	iCast['Z']= 33;
 	iCast['S']= 34;
 	iCast['X']= 35;
-	iCast['C']= 36; //C c C‚Ì‰¹
+	iCast['C']= 36; //C â€¦ Cã®éŸ³
 	iCast['F']= 37;
 	iCast['V']= 38; //     D
 	iCast['G']= 39;
@@ -196,38 +196,38 @@ int APIENTRY WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPTSTR dropfile
 	iCast[0xBC]=45; //,    A
 	iCast['L']= 46;
 	iCast[0xBE]=47; //.    B
-	iCast[0xBF]=48; //^   C
+	iCast[0xBF]=48; //ï¼   C
 	iCast[0xBA]=49; //:
-	iCast[0xE2]=50; //
+	iCast[0xE2]=50; //ï¿¥
 	iCast[0xDD]=51; //]
 	strMIDIFile = (char *)malloc(MAX_PATH);
 
-	HACCEL Ac; //ƒVƒ‡[ƒgƒJƒbƒgƒL[—p
+	HACCEL Ac; //ã‚·ãƒ§ãƒ¼ãƒˆã‚«ãƒƒãƒˆã‚­ãƒ¼ç”¨
 
 	LoadString(GetModuleHandle(NULL), IDS_TITLE, lpszName, sizeof(lpszName) / sizeof(lpszName[0]));
 
 	wc.cbSize        = sizeof(WNDCLASSEX);
-	wc.style         = 0;//CS_DBLCLKS| CS_OWNDC;//ƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚ÌƒXƒ^ƒCƒ‹
+	wc.style         = 0;//CS_DBLCLKS| CS_OWNDC;//ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã®ã‚¹ã‚¿ã‚¤ãƒ«
 	wc.lpfnWndProc   = (WNDPROC)WndProc;
 	wc.cbClsExtra    = 0;
 	wc.cbWndExtra    = 0;
 	wc.hInstance     = hInst = hInstance;
-	wc.hIcon         = LoadIcon(hInst,"ICON");//‘å‚«‚¢ƒAƒCƒRƒ“
-	wc.hIconSm       = LoadIcon(hInst,"ICON");//¬‚³‚¢ƒAƒCƒRƒ“
-	wc.hCursor       = LoadCursor(hInst,"CURSOR");//ƒJ[ƒ\ƒ‹
-	wc.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);//ƒEƒCƒ“ƒhƒE‚Ì‹C–{F
-	wc.lpszMenuName  = "ORGANYAMENU";//ƒƒj	ƒ…[
+	wc.hIcon         = LoadIcon(hInst,"ICON");//å¤§ãã„ã‚¢ã‚¤ã‚³ãƒ³
+	wc.hIconSm       = LoadIcon(hInst,"ICON");//å°ã•ã„ã‚¢ã‚¤ã‚³ãƒ³
+	wc.hCursor       = LoadCursor(hInst,"CURSOR");//ã‚«ãƒ¼ã‚½ãƒ«
+	wc.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);//ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ã®æ°—æœ¬è‰²
+	wc.lpszMenuName  = "ORGANYAMENU";//ãƒ¡ãƒ‹	ãƒ¥ãƒ¼
 	wc.lpszClassName = lpszName;
 
-	int wnd_width;///‚±‚±‚ÅWindow‚ÌL‚³‚ğw’è‚µ‚Ü‚·B
+	int wnd_width;///ã“ã“ã§Windowã®åºƒã•ã‚’æŒ‡å®šã—ã¾ã™ã€‚
 	int wnd_height;
-	gWidthWindow = wnd_width = GetSystemMetrics(SM_CXFRAME)*2+//ƒtƒŒ[ƒ€‚Ì•
-		GetSystemMetrics(SM_CXHSCROLL)+//ƒXƒNƒ[ƒ‹ƒo[‚Ì•
+	gWidthWindow = wnd_width = GetSystemMetrics(SM_CXFRAME)*2+//ãƒ•ãƒ¬ãƒ¼ãƒ ã®å¹…
+		GetSystemMetrics(SM_CXHSCROLL)+//ã‚¹ã‚¯ãƒ­ãƒ¼ãƒ«ãƒãƒ¼ã®å¹…
 		WWidth;
-	gHeightWindow = wnd_height = GetSystemMetrics(SM_CYFRAME)*2 +//ƒtƒŒ[ƒ€‚Ì‚‚³
-		GetSystemMetrics(SM_CYCAPTION)+//ƒLƒƒƒvƒVƒ‡ƒ“‚Ì‚‚³
-		GetSystemMetrics(SM_CYMENU)+//ƒƒjƒ…[ƒo[‚Ì‚‚³
-		GetSystemMetrics(SM_CYVSCROLL)+//ƒXƒNƒ[ƒ‹ƒo[‚Ì‚‚³
+	gHeightWindow = wnd_height = GetSystemMetrics(SM_CYFRAME)*2 +//ãƒ•ãƒ¬ãƒ¼ãƒ ã®é«˜ã•
+		GetSystemMetrics(SM_CYCAPTION)+//ã‚­ãƒ£ãƒ—ã‚·ãƒ§ãƒ³ã®é«˜ã•
+		GetSystemMetrics(SM_CYMENU)+//ãƒ¡ãƒ‹ãƒ¥ãƒ¼ãƒãƒ¼ã®é«˜ã•
+		GetSystemMetrics(SM_CYVSCROLL)+//ã‚¹ã‚¯ãƒ­ãƒ¼ãƒ«ãƒãƒ¼ã®é«˜ã•
 		WHeight;
 
 	if(!RegisterClassEx(&wc)) return FALSE;
@@ -239,7 +239,7 @@ int APIENTRY WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPTSTR dropfile
 	}else{
 		lstrcat(app_path,".ini");
 	}
-	//NoteWidth = 16; //•w’èš
+	//NoteWidth = 16; //å¹…æŒ‡å®šâ˜…
 	NoteWidth =         GetPrivateProfileInt(MAIN_WINDOW,"NoteWidth",16,app_path);
 	NoteWidth = (NoteWidth > 16) ? 16: ( (NoteWidth<4) ? 4: NoteWidth );
 
@@ -254,9 +254,9 @@ int APIENTRY WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPTSTR dropfile
 	iDlgRepeat =        GetPrivateProfileInt(MIDI_EXPORT,"Repeat",1,app_path);
 
 	char strauthtmp[128];
-	SYSTEMTIME stTime; GetLocalTime(&stTime); //stTime.wYear ‚Å”Næ“¾	// 2014.10.18
+	SYSTEMTIME stTime; GetLocalTime(&stTime); //stTime.wYear ã§å¹´å–å¾—	// 2014.10.18
 	strcpy(strauthtmp, "(C) AUTHOR xxxxx,                 ");
-	sprintf(strauthtmp + 18, "%d", stTime.wYear); //,‚ÌŒã‚ë‚É¼—ï‚ğ“ü‚ê‚é
+	sprintf(strauthtmp + 18, "%d", stTime.wYear); //,ã®å¾Œã‚ã«è¥¿æš¦ã‚’å…¥ã‚Œã‚‹
 
 	//GetPrivateProfileString(MIDI_EXPORT, "Author", "(C) AUTHOR xxxxx, 2014", strMIDI_AUTHOR, 255, app_path);	// 2045.01.18 D
 	GetPrivateProfileString(MIDI_EXPORT, "Author", strauthtmp, strMIDI_AUTHOR, 255, app_path);	// 2045.01.18 A
@@ -268,17 +268,17 @@ int APIENTRY WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPTSTR dropfile
 	unsigned long ul;
 	ul = WS_CAPTION|WS_MINIMIZEBOX|WS_SYSMENU|WS_THICKFRAME|WS_MAXIMIZEBOX;
 
-	//ƒƒCƒ“ƒEƒCƒ“ƒhƒE‚Ì¶¬
+	//ãƒ¡ã‚¤ãƒ³ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ã®ç”Ÿæˆ
 	hWnd = CreateWindow(lpszName,
-			"ƒIƒ‹ƒK[ƒjƒƒ",//•\¦‚³‚ê‚é"–¼‘O"
+			"ã‚ªãƒ«ã‚¬ãƒ¼ãƒ‹ãƒ£",//è¡¨ç¤ºã•ã‚Œã‚‹"åå‰"
 			ul,
 			//WS_CAPTION|WS_MINIMIZEBOX|WS_SYSMENU|WS_THICKFRAME|WS_MAXIMIZEBOX,
-//            WS_CAPTION|WS_VISIBLE|WS_SYSMENU,//ƒEƒBƒ“ƒhƒE‚ÌƒXƒ^ƒCƒ‹
+//            WS_CAPTION|WS_VISIBLE|WS_SYSMENU,//ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®ã‚¹ã‚¿ã‚¤ãƒ«
 /*
-            32,//Window‚ÌX
-			32,//Window‚ÌY
-            wnd_width,//•
-            wnd_height,//‚‚³
+            32,//Windowã®X
+			32,//Windowã®Y
+            wnd_width,//å¹…
+            wnd_height,//é«˜ã•
 			*/
 			WinRect.left, WinRect.top, WinRect.right, WinRect.bottom,
             NULL, NULL, hInst, NULL);
@@ -286,18 +286,18 @@ int APIENTRY WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPTSTR dropfile
 
 //	DialogBox(hInst,"DLGFLASH",NULL,DialogFlash);
 
-	Ac=LoadAccelerators(hInstance,MAKEINTRESOURCE(IDR_ACCELERATOR1)); //ƒAƒNƒZƒXƒL[
+	Ac=LoadAccelerators(hInstance,MAKEINTRESOURCE(IDR_ACCELERATOR1)); //ã‚¢ã‚¯ã‚»ã‚¹ã‚­ãƒ¼
 
-//‰æ‘œ‚Ì‰Šú‰»//////////
-	StartGDI(hWnd);//GDI€”õ
-	InitBitmap("MUSIC",BMPMUSIC);//ƒsƒAƒmƒ[ƒ‹
-	InitBitmap("NOTE",BMPNOTE);//‰¹•„
-	InitBitmap("NUMBER",BMPNUMBER);//”š
-	InitBitmap("PAN",BMPPAN);//ƒpƒ“‚Æƒ{ƒŠƒ…[ƒ€
-//ƒTƒEƒ“ƒh‚Ì‰Šú‰»///////
+//ç”»åƒã®åˆæœŸåŒ–//////////
+	StartGDI(hWnd);//GDIæº–å‚™
+	InitBitmap("MUSIC",BMPMUSIC);//ãƒ”ã‚¢ãƒãƒ­ãƒ¼ãƒ«
+	InitBitmap("NOTE",BMPNOTE);//éŸ³ç¬¦
+	InitBitmap("NUMBER",BMPNUMBER);//æ•°å­—
+	InitBitmap("PAN",BMPPAN);//ãƒ‘ãƒ³ã¨ãƒœãƒªãƒ¥ãƒ¼ãƒ 
+//ã‚µã‚¦ãƒ³ãƒ‰ã®åˆæœŸåŒ–///////
 	InitDirectSound(hWnd);
-//	LoadWaveData100(); //ƒtƒ@ƒCƒ‹"Wave.dat"‚©‚çƒ[ƒh‚·‚é
-	InitWaveData100(); //ƒŒƒWƒXƒgƒŠ"WAVE100"‚©‚çƒ[ƒh‚·‚é
+//	LoadWaveData100(); //ãƒ•ã‚¡ã‚¤ãƒ«"Wave.dat"ã‹ã‚‰ãƒ­ãƒ¼ãƒ‰ã™ã‚‹
+	InitWaveData100(); //ãƒ¬ã‚¸ã‚¹ãƒˆãƒª"WAVE100"ã‹ã‚‰ãƒ­ãƒ¼ãƒ‰ã™ã‚‹
 	scr_data.InitScroll();
 	
 	hDlgPlayer = CreateDialog(hInst,"PLAYER",hWnd,DialogPlayer);
@@ -330,29 +330,29 @@ int APIENTRY WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPTSTR dropfile
 	ChangeFinish(GetPrivateProfileInt(MAIN_WINDOW,"QuitMessage",0,app_path));
 	ChangeSlideOverlapNoteMode(GetPrivateProfileInt(MAIN_WINDOW,"SlideOverlapNoteMode",1,app_path));
 	ChangePushStratchNOTE(GetPrivateProfileInt(MAIN_WINDOW,"EnablePressNoteStretch",1,app_path));
-	ChangeNoteEnlarge(GetPrivateProfileInt(MAIN_WINDOW,"NoteEnlarge",1,app_path)); //2014.05.28 k¬•\¦A‰¹•„‚Ì“ª‚ğ–Ú—§‚½‚¹‚é(&O)
+	ChangeNoteEnlarge(GetPrivateProfileInt(MAIN_WINDOW,"NoteEnlarge",1,app_path)); //2014.05.28 ç¸®å°è¡¨ç¤ºæ™‚ã€éŸ³ç¬¦ã®é ­ã‚’ç›®ç«‹ãŸã›ã‚‹(&O)
 	
-	org_data.PutMusic();//Šy•ˆ‚ğ•\¦
+	org_data.PutMusic();//æ¥½è­œã‚’è¡¨ç¤º
 
 	if(GetPrivateProfileInt(MAIN_WINDOW,"WindowState",0,app_path)==1){
 		ShowWindow(hWnd,SW_MAXIMIZE);
 	}else{
-		ShowWindow(hWnd,nCmdShow);//ƒƒCƒ“ƒEƒCƒ“ƒhƒE•\¦
+		ShowWindow(hWnd,nCmdShow);//ãƒ¡ã‚¤ãƒ³ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦è¡¨ç¤º
 	}
-	UpdateWindow(hWnd);//ƒƒCƒ“ƒEƒBƒ“ƒhƒE‚ÌXV
+	UpdateWindow(hWnd);//ãƒ¡ã‚¤ãƒ³ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®æ›´æ–°
 
-	DragAcceptFiles(hWnd,TRUE);//‚±‚ê‚Åƒhƒ‰ƒbƒO‹–‰Â
-	//ƒvƒŒƒCƒ„[ƒ_ƒCƒAƒƒO(ƒ‚[ƒ_ƒŒƒX)‚Ì¶¬
+	DragAcceptFiles(hWnd,TRUE);//ã“ã‚Œã§ãƒ‰ãƒ©ãƒƒã‚°è¨±å¯
+	//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãƒ€ã‚¤ã‚¢ãƒ­ã‚°(ãƒ¢ãƒ¼ãƒ€ãƒ¬ã‚¹)ã®ç”Ÿæˆ
 
 	//if(GetPrivateProfileInt(MAIN_WINDOW,"WindowState",0,app_path)==1){
 	//	ShowWindow(hWnd,SW_MAXIMIZE);
 	//}
 
-	SetTitlebarText(music_file);//ƒ^ƒCƒgƒ‹ƒl[ƒ€ƒZƒbƒg
-	ClearVirtualCB(); //ƒ”ƒ@[ƒ`ƒƒƒ‹ƒNƒŠƒbƒvƒ{[ƒh‰Šú‰»
+	SetTitlebarText(music_file);//ã‚¿ã‚¤ãƒˆãƒ«ãƒãƒ¼ãƒ ã‚»ãƒƒãƒˆ
+	ClearVirtualCB(); //ãƒ´ã‚¡ãƒ¼ãƒãƒ£ãƒ«ã‚¯ãƒªãƒƒãƒ—ãƒœãƒ¼ãƒ‰åˆæœŸåŒ–
 	ClearUndo();
 
-			//ƒvƒŒƒCƒ„[‚É•\¦
+			//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã«è¡¨ç¤º
 	MUSICINFO mi;
 			org_data.GetMusicInfo( &mi );
 			SetDlgItemInt(hDlgTrack,IDE_VIEWWAIT,mi.wait,TRUE );
@@ -363,7 +363,7 @@ int APIENTRY WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPTSTR dropfile
 	if(dropfile[0]!=0){
 		strcpy(kfn,dropfile);
 		int ttt;
-		if(dropfile[0]=='\"'){	//ˆø—p•„‚ğæ‚èœ‚­
+		if(dropfile[0]=='Â¥"'){	//å¼•ç”¨ç¬¦ã‚’å–ã‚Šé™¤ã
 			ttt = 1;
 		}else{
 			ttt = 0;
@@ -374,7 +374,7 @@ int APIENTRY WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPTSTR dropfile
 		//MessageBox(hWnd,gfn,"Error(Load)",MB_OK);
 		fp=fopen(gfn,"rb");
 		if(fp==NULL){
-			//MessageBox(hWnd,"“Ç‚İ‚İ‚É¸”s‚µ‚Ü‚µ‚½","Error(Load)",MB_OK); //D 2010.09.28
+			//MessageBox(hWnd,"èª­ã¿è¾¼ã¿ã«å¤±æ•—ã—ã¾ã—ãŸ","Error(Load)",MB_OK); //D 2010.09.28
 		}else{
 			char pass_chek[3];
 			bool b_OrgFile = false;
@@ -382,35 +382,35 @@ int APIENTRY WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPTSTR dropfile
 			b_OrgFile = (pass_chek[0]==0x4F) && (pass_chek[1]==0x72) && (pass_chek[2]==0x67); //'O', 'r', 'g'
 			fclose(fp);
 			//memcpy(music_file,dropfile,MAX_PATH);
-			if(b_OrgFile){ //A 2010.09.25 ‚È‚ñ‚Æ‚È‚­OrgŒ`®‚Ìƒtƒ@ƒCƒ‹‚¾‚Á‚½ê‡
+			if(b_OrgFile){ //A 2010.09.25 ãªã‚“ã¨ãªãOrgå½¢å¼ã®ãƒ•ã‚¡ã‚¤ãƒ«ã ã£ãŸå ´åˆ
 				strcpy(music_file, gfn);
-				if(org_data.LoadMusicData()==TRUE){ //C 2010.09.25 ”»’è’Ç‰Á
-					SetTitlebarText(music_file);//ƒ^ƒCƒgƒ‹ƒl[ƒ€ƒZƒbƒg
+				if(org_data.LoadMusicData()==TRUE){ //C 2010.09.25 åˆ¤å®šè¿½åŠ 
+					SetTitlebarText(music_file);//ã‚¿ã‚¤ãƒˆãƒ«ãƒãƒ¼ãƒ ã‚»ãƒƒãƒˆ
 					org_data.GetMusicInfo( &mi );
 					SetDlgItemInt(hDlgTrack,IDE_VIEWWAIT,mi.wait,TRUE );
 					SetDlgItemText(hDlgTrack,IDE_VIEWTRACK,"1");
 					ClearEZC_Message();	SelectReset();	org_data.PutMusic();
 				}else{
-					//ORGƒtƒH[ƒ}ƒbƒg‚Ìƒtƒ@ƒCƒ‹‚Å‚Í‚È‚©‚Á‚½‚Ì‚Å //A 2010.9.25
-					//ƒtƒ@ƒCƒ‹–¼ƒNƒŠƒA
+					//ORGãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã®ãƒ•ã‚¡ã‚¤ãƒ«ã§ã¯ãªã‹ã£ãŸã®ã§ //A 2010.9.25
+					//ãƒ•ã‚¡ã‚¤ãƒ«åã‚¯ãƒªã‚¢
 					strcpy(music_file, MessageString[IDS_DEFAULT_ORG_FILENAME]);
 				}
 			}
 		}
 	}
 	QuitMMTimer(); //A 2010.09.21
-	//ƒƒbƒZ[ƒWƒ‹[ƒv‚ğ¶¬(ƒƒCƒ“ƒ‹[ƒv)
+	//ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ãƒ«ãƒ¼ãƒ—ã‚’ç”Ÿæˆ(ãƒ¡ã‚¤ãƒ³ãƒ«ãƒ¼ãƒ—)
 	while(GetMessage(&msg,NULL,0,0)){
 //		if(!TranslateAccelerator(hwnd,hAccel,&msg)){
-		//ƒ_ƒCƒAƒƒOŒü‚¯‚ÌƒƒbƒZ[ƒW‚¶‚á‚È‚¯‚ê‚Î
+		//ãƒ€ã‚¤ã‚¢ãƒ­ã‚°å‘ã‘ã®ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã˜ã‚ƒãªã‘ã‚Œã°
 		if(!TranslateAccelerator(hWnd,Ac,&msg))
         {
 			if(!IsDialogMessage(hDlgPlayer,&msg)){
 				if(!IsDialogMessage(hDlgTrack,&msg)){
 					if(!IsDialogMessage(hDlgEZCopy,&msg)){
 						if(!IsDialogMessage(hDlgHelp,&msg)){
-							TranslateMessage(&msg);//ƒL[ƒ{[ƒhg—p‰Â”\
-							DispatchMessage(&msg);//§Œä‚ğWindows‚É–ß‚·
+							TranslateMessage(&msg);//ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰ä½¿ç”¨å¯èƒ½
+							DispatchMessage(&msg);//åˆ¶å¾¡ã‚’Windowsã«æˆ»ã™
 						}
 					}				
 				}
@@ -419,19 +419,19 @@ int APIENTRY WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPTSTR dropfile
 				//DispatchMessage(&msg);
         }
 	}
-	//MessageBox(NULL, "ƒƒbƒZ[ƒWƒ‹[ƒv‚ğ”²‚¯‚Ü‚µ‚½", "OK", MB_OK);
+	//MessageBox(NULL, "ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ãƒ«ãƒ¼ãƒ—ã‚’æŠœã‘ã¾ã—ãŸ", "OK", MB_OK);
 
 	DestroyAcceleratorTable (Ac);
-	return msg.wParam;//‚±‚±‚ÅƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚ÍI—¹
+	return msg.wParam;//ã“ã“ã§ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã¯çµ‚äº†
 }
-//ƒƒCƒ“ƒvƒƒV[ƒWƒƒ
+//ãƒ¡ã‚¤ãƒ³ãƒ—ãƒ­ã‚·ãƒ¼ã‚¸ãƒ£
 LRESULT CALLBACK WndProc(HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 {
 //	char str[64];
-	int i, j;	// 2014.10.18 j‚ğ’Ç‰Á
+	int i, j;	// 2014.10.18 jã‚’è¿½åŠ 
 	char res;
 	bool AfterReSize=false;
-	RECT rect = {0,0,WWidth,WHeight};//XV‚·‚é—Ìˆæ(ƒgƒ‰ƒbƒN•ÏX)
+	RECT rect = {0,0,WWidth,WHeight};//æ›´æ–°ã™ã‚‹é ˜åŸŸ(ãƒˆãƒ©ãƒƒã‚¯å¤‰æ›´)
 	MUSICINFO mi;
 	MINMAXINFO *pmmi;
 
@@ -464,11 +464,11 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 
 			}
 		}
-		for(i=0;i<10;i++){	//Å‹ßg‚Á‚½ƒtƒ@ƒCƒ‹
+		for(i=0;i<10;i++){	//æœ€è¿‘ä½¿ã£ãŸãƒ•ã‚¡ã‚¤ãƒ«
 			if(LOWORD(wParam)==Menu_Recent[i]){
 				if(CancelDeleteCurrentData(CDCD_LOAD))break;
 				SetLoadRecentFile(i);	org_data.InitOrgData();	org_data.LoadMusicData();
-				SetTitlebarText(music_file);//ƒ^ƒCƒgƒ‹ƒl[ƒ€ƒZƒbƒg
+				SetTitlebarText(music_file);//ã‚¿ã‚¤ãƒˆãƒ«ãƒãƒ¼ãƒ ã‚»ãƒƒãƒˆ
 				org_data.GetMusicInfo( &mi );
 				SetDlgItemInt(hDlgTrack,IDE_VIEWWAIT,mi.wait,TRUE );
 				SetDlgItemText(hDlgTrack,IDE_VIEWTRACK,"1");
@@ -479,20 +479,20 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 				break;	// 2014.10.18 A
 			}
 		}
-		if(timer_sw==0){ //‰‰‘t’†‚Í‚¢‚â‚æ
+		if(timer_sw==0){ //æ¼”å¥ä¸­ã¯ã„ã‚„ã‚ˆ
 			switch(LOWORD(wParam)){
 			case ID_AC_LOAD_MOST_RECENT:
 				SendMessage(hWnd, WM_COMMAND, Menu_Recent[0],0);
 				break;
-			case IDM_SORTMUSICNOTE: //ƒ\[ƒg‚·‚é
+			case IDM_SORTMUSICNOTE: //ã‚½ãƒ¼ãƒˆã™ã‚‹
 				SetUndo();
 				SortMusicNote();
 				break;
-			case IDM_DLGSETTING://İ’èƒ_ƒCƒAƒƒO‚ğ•\¦
+			case IDM_DLGSETTING://è¨­å®šãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‚’è¡¨ç¤º
 			case ID_AC_SETTEMPO:
 				DialogBox(hInst,"DLGSETTING",hwnd,DialogSetting);
 				break;
-			case IDM_DLGDEFAULT://ƒfƒtƒHƒ‹ƒgƒ_ƒCƒAƒƒO‚ğ•\¦
+			case IDM_DLGDEFAULT://ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‚’è¡¨ç¤º
 			case ID_AC_DEFAULT:
 				DialogBox(hInst,"DLGDEFAULT",hwnd,DialogDefault);
 				break;
@@ -529,7 +529,7 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 			case IDM_DLGUSED://
 				DialogBox(hInst,"DLGUSED",hwnd,DialogNoteUsed);
 				break;
-			case IDM_DLGWAVE://İ’èƒ_ƒCƒAƒƒO‚ğ•\¦
+			case IDM_DLGWAVE://è¨­å®šãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã‚’è¡¨ç¤º
 			case ID_AC_WAVESELECT:
 				DialogBox(hInst,"DLGWAVE",hwnd,DialogWave);
 				break;
@@ -555,34 +555,34 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 				org_data.SaveMusicData();
 				ResetTitlebarChange();
 				break;							  
-			case IDM_SAVENEW://•Ê–¼‚Å•Û‘¶
+			case IDM_SAVENEW://åˆ¥åã§ä¿å­˜
 			case ID_AC_MENUNEWSAVE:
-				res = GetFileNameSave(hwnd,MessageString[IDS_STRING62]); //"•Ê–¼‚Å•Û‘¶"
+				res = GetFileNameSave(hwnd,MessageString[IDS_STRING62]); //"åˆ¥åã§ä¿å­˜"
 				if(res == MSGCANCEL)break;
 				if(res == MSGEXISFILE){
-					//if(MessageBox(hwnd,"ã‘‚«‚µ‚Ü‚·‚©H","“¯‚¶–¼‘O‚Ìƒtƒ@ƒCƒ‹‚ª‚ ‚è‚Ü‚·",MB_YESNO | MB_ICONEXCLAMATION)	// 2014.10.19 D
+					//if(MessageBox(hwnd,"ä¸Šæ›¸ãã—ã¾ã™ã‹ï¼Ÿ","åŒã˜åå‰ã®ãƒ•ã‚¡ã‚¤ãƒ«ãŒã‚ã‚Šã¾ã™",MB_YESNO | MB_ICONEXCLAMATION)	// 2014.10.19 D
 					if(msgbox(hwnd,IDS_NOTIFY_OVERWRITE,IDS_INFO_SAME_FILE,MB_YESNO | MB_ICONEXCLAMATION)	// 2014.10.19 A
 						==IDNO)break;
 				}
 				org_data.SaveMusicData();
-				SetTitlebarText(music_file);//ƒ^ƒCƒgƒ‹ƒl[ƒ€ƒZƒbƒg
+				SetTitlebarText(music_file);//ã‚¿ã‚¤ãƒˆãƒ«ãƒãƒ¼ãƒ ã‚»ãƒƒãƒˆ
 				ResetTitlebarChange();
 				break;
-			case IDM_EXPORT_MIDI: //´¸½Îß°Ä 2014.05.11
+			case IDM_EXPORT_MIDI: //ï½´ï½¸ï½½ï¾ï¾Ÿï½°ï¾„ 2014.05.11
 			case ID_AC_MIDI:
 				
-				res = GetFileNameMIDI(hwnd,MessageString[IDS_STRING63], strMIDIFile );//"•W€MIDIŒ`®‚Å´¸½Îß°Ä"
+				res = GetFileNameMIDI(hwnd,MessageString[IDS_STRING63], strMIDIFile );//"æ¨™æº–MIDIå½¢å¼ã§ï½´ï½¸ï½½ï¾ï¾Ÿï½°ï¾„"
 				if(res == MSGCANCEL)break;
 				if(res == MSGEXISFILE){
-					//if(MessageBox(hwnd,"ã‘‚«‚µ‚Ü‚·‚©H","“¯‚¶–¼‘O‚Ìƒtƒ@ƒCƒ‹‚ª‚ ‚è‚Ü‚·",MB_YESNO | MB_ICONEXCLAMATION)	// 2014.10.19 D
+					//if(MessageBox(hwnd,"ä¸Šæ›¸ãã—ã¾ã™ã‹ï¼Ÿ","åŒã˜åå‰ã®ãƒ•ã‚¡ã‚¤ãƒ«ãŒã‚ã‚Šã¾ã™",MB_YESNO | MB_ICONEXCLAMATION)	// 2014.10.19 D
 					if(msgbox(hwnd,IDS_NOTIFY_OVERWRITE,IDS_INFO_SAME_FILE,MB_YESNO | MB_ICONEXCLAMATION)	// 2014.10.19 A
 						==IDNO)break;
 				}
 				org_data.ExportMIDIData(strMIDIFile, iDlgRepeat);
-				//SetTitlebarText(music_file);//ƒ^ƒCƒgƒ‹ƒl[ƒ€ƒZƒbƒg
+				//SetTitlebarText(music_file);//ã‚¿ã‚¤ãƒˆãƒ«ãƒãƒ¼ãƒ ã‚»ãƒƒãƒˆ
 				//ResetTitlebarChange();
 				break;
-			case IDM_DUMMY_TATE_SEPARATOR: //‰½‚à‚µ‚È‚¢
+			case IDM_DUMMY_TATE_SEPARATOR: //ä½•ã‚‚ã—ãªã„
 				break;
 			case IDM_LOAD:
 			case ID_AC_MENUOPEN:
@@ -591,13 +591,13 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 				if(CancelDeleteCurrentData(CDCD_LOAD))break;
 				i = 0;
 				if(LOWORD(wParam)==IDM_LOAD2 || LOWORD(wParam)==ID_AC_LOAD2)i=1; 
-				if(GetFileNameLoad(hWnd,MessageString[IDS_STRING61],i) != MSGLOADOK)break;//"‹Èƒf[ƒ^‚Ì“Ç‚İ‚İ"
+				if(GetFileNameLoad(hWnd,MessageString[IDS_STRING61],i) != MSGLOADOK)break;//"æ›²ãƒ‡ãƒ¼ã‚¿ã®èª­ã¿è¾¼ã¿"
 				
 				ClearUndo();
 				org_data.InitOrgData();
 				org_data.LoadMusicData();
-				SetTitlebarText(music_file);//ƒ^ƒCƒgƒ‹ƒl[ƒ€ƒZƒbƒg
-				//ƒvƒŒƒCƒ„[‚É•\¦
+				SetTitlebarText(music_file);//ã‚¿ã‚¤ãƒˆãƒ«ãƒãƒ¼ãƒ ã‚»ãƒƒãƒˆ
+				//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã«è¡¨ç¤º
 				org_data.GetMusicInfo( &mi );
 				SetDlgItemInt(hDlgTrack,IDE_VIEWWAIT,mi.wait,TRUE );
 				//SetDlgItemInt(hDlgTrack,IDE_VIEWTRACK,0,TRUE );
@@ -615,8 +615,8 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 				//	GetWindowText(hWnd,cc,512);
 				//	chn = strstr(cc, HENKOU_NO_SHIRUSHI);
 				//	if(chn!=NULL){
-				//		//•ÏX‚ª‚ ‚Á‚½‚Æ‚«‚ÍI—¹Šm”F‚·‚éB // A 2010.09.22
-				//		if(MessageBox(hwnd,"•Û‘¶‚µ‚Ä‚¢‚È‚¢“à—e‚Í”jŠü‚³‚ê‚Ü‚·BI—¹‚µ‚Ü‚·‚©H","I—¹Šm”F",MB_OKCANCEL | MB_ICONASTERISK)==IDCANCEL)break;
+				//		//å¤‰æ›´ãŒã‚ã£ãŸã¨ãã¯çµ‚äº†ç¢ºèªã™ã‚‹ã€‚ // A 2010.09.22
+				//		if(MessageBox(hwnd,"ä¿å­˜ã—ã¦ã„ãªã„å†…å®¹ã¯ç ´æ£„ã•ã‚Œã¾ã™ã€‚çµ‚äº†ã—ã¾ã™ã‹ï¼Ÿ","çµ‚äº†ç¢ºèª",MB_OKCANCEL | MB_ICONASTERISK)==IDCANCEL)break;
 				//	}
 				//}
 				if(CancelDeleteCurrentData(CDCD_EXIT))break;
@@ -637,7 +637,7 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 			case IDM_2BAI:
 				SetUndo();
 				org_data.EnlargeAllNotes(2);
-				scr_data.SetHorzScroll(0);org_data.SetPlayPointer(0);SetFocus(hWnd);//“ªo‚µ
+				scr_data.SetHorzScroll(0);org_data.SetPlayPointer(0);SetFocus(hWnd);//é ­å‡ºã—
 				org_data.PutMusic();
 				RedrawWindow(hWnd,&rect,NULL,RDW_INVALIDATE|RDW_ERASENOW);
 				org_data.GetMusicInfo( &mi );
@@ -647,7 +647,7 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 			case IDM_3BAI:
 				SetUndo();
 				org_data.EnlargeAllNotes(3);
-				scr_data.SetHorzScroll(0);org_data.SetPlayPointer(0);SetFocus(hWnd);//“ªo‚µ
+				scr_data.SetHorzScroll(0);org_data.SetPlayPointer(0);SetFocus(hWnd);//é ­å‡ºã—
 				org_data.PutMusic();
 				RedrawWindow(hWnd,&rect,NULL,RDW_INVALIDATE|RDW_ERASENOW);
 				org_data.GetMusicInfo( &mi );
@@ -657,7 +657,7 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 			case IDM_2BUNNO1:
 				SetUndo();
 				org_data.ShortenAllNotes(2);
-				scr_data.SetHorzScroll(0);org_data.SetPlayPointer(0);SetFocus(hWnd);//“ªo‚µ				
+				scr_data.SetHorzScroll(0);org_data.SetPlayPointer(0);SetFocus(hWnd);//é ­å‡ºã—				
 				org_data.PutMusic();
 				RedrawWindow(hWnd,&rect,NULL,RDW_INVALIDATE|RDW_ERASENOW);
 				org_data.GetMusicInfo( &mi );
@@ -667,19 +667,19 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 			case IDM_3BUNNO1:
 				SetUndo();
 				org_data.ShortenAllNotes(3);
-				scr_data.SetHorzScroll(0);org_data.SetPlayPointer(0);SetFocus(hWnd);//“ªo‚µ				
+				scr_data.SetHorzScroll(0);org_data.SetPlayPointer(0);SetFocus(hWnd);//é ­å‡ºã—				
 				org_data.PutMusic();
 				RedrawWindow(hWnd,&rect,NULL,RDW_INVALIDATE|RDW_ERASENOW);
 				org_data.GetMusicInfo( &mi );
 				itoa(mi.wait,str,10);
 				SetDlgItemText(hDlgTrack,IDE_VIEWWAIT,str);
 				break;
-			case IDM_CT_L1: //üŒ`Šã            IDM_CT_L1`9‚Í˜A”Ô‚Å‚ ‚é‚±‚ÆI
-			case IDM_CT_L2: //ã‚É“ÊŠã
-			case IDM_CT_L3: //‰º‚É“ÊŠã
-			case IDM_CT_L4: //ƒm[ƒ}ƒ‰ƒCƒY
-			case IDM_CT_L5: //ƒOƒ‰ƒf[ƒVƒ‡ƒ“
-			case IDM_CT_L6: //ƒrƒuƒ‰[ƒg
+			case IDM_CT_L1: //ç·šå½¢è¡°å¼±            IDM_CT_L1ã€œ9ã¯é€£ç•ªã§ã‚ã‚‹ã“ã¨ï¼
+			case IDM_CT_L2: //ä¸Šã«å‡¸è¡°å¼±
+			case IDM_CT_L3: //ä¸‹ã«å‡¸è¡°å¼±
+			case IDM_CT_L4: //ãƒãƒ¼ãƒãƒ©ã‚¤ã‚º
+			case IDM_CT_L5: //ã‚°ãƒ©ãƒ‡ãƒ¼ã‚·ãƒ§ãƒ³
+			case IDM_CT_L6: //ãƒ“ãƒ–ãƒ©ãƒ¼ãƒˆ
 			case IDM_CT_L7: //
 			case IDM_CT_L8: //
 			case IDM_CT_L9: //
@@ -693,13 +693,13 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 			case IDM_CT_L17:
 			case IDM_CT_L18:
 			case IDM_CT_L19:
-				SetUndo(); VolumeDecayEdit(1, -4, LOWORD(wParam) - IDM_CT_L1 + 1); //‘æˆêˆø”‚Í0‚É‚·‚é‚Æ‹óreturn ‚³‚ê‚é‚Ì‚Å
+				SetUndo(); VolumeDecayEdit(1, -4, LOWORD(wParam) - IDM_CT_L1 + 1); //ç¬¬ä¸€å¼•æ•°ã¯0ã«ã™ã‚‹ã¨ç©ºreturn ã•ã‚Œã‚‹ã®ã§
 				break;
 			case IDM_CT_S0: 
 			case IDM_CT_S1: 
 			case IDM_CT_S2: 
 			case IDM_CT_S3: 
-			case IDM_CT_S4: //ŒŠ–„‚ß
+			case IDM_CT_S4: //ç©´åŸ‹ã‚
 			case IDM_CT_S5: 
 			case IDM_CT_S6: 
 			case IDM_CT_S7: 
@@ -715,10 +715,10 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 			case IDM_CT_S17: 
 			case IDM_CT_S18: 
 			case IDM_CT_S19: 
-			case IDM_CT_S20: //¸Ø±
+			case IDM_CT_S20: //ï½¸ï¾˜ï½±
 				SetUndo(); VolumeDecayEdit(1, -4, LOWORD(wParam) - IDM_CT_S1 + 1 + 20);
 				break;
-			case ID_AC_C0://¸Ø±
+			case ID_AC_C0://ï½¸ï¾˜ï½±
 				SetUndo(); VolumeDecayEdit(1, -4, IDM_CT_S20     - IDM_CT_S1 + 1 + 20); 
 				break;
 			case ID_AC_C1: //Ctrl+1
@@ -738,13 +738,13 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 			case ID_AC_CA3:
 				SetUndo(); VolumeDecayEdit(1, -4, LOWORD(wParam) - ID_AC_CA0 + 1 + 20 + 9);
 				break;
-			case ID_AC_PRESS_LEFT: //¶ƒNƒŠƒbƒN‚Ì‘ã‚í‚è
+			case ID_AC_PRESS_LEFT: //å·¦ã‚¯ãƒªãƒƒã‚¯ã®ä»£ã‚ã‚Š
 				ClickProcL(wParam, lParam);
 				break;
-			case ID_AC_PRESS_RIGHT: //‰EƒNƒŠƒbƒN‚Ì‘ã‚í‚è
+			case ID_AC_PRESS_RIGHT: //å³ã‚¯ãƒªãƒƒã‚¯ã®ä»£ã‚ã‚Š
 				ClickProcR(wParam, lParam);
 				break;
-			case ID_AC_CT_KEY_OCT_DOWN: //ƒIƒNƒ^[ƒu‰º‚°‚é
+			case ID_AC_CT_KEY_OCT_DOWN: //ã‚ªã‚¯ã‚¿ãƒ¼ãƒ–ä¸‹ã’ã‚‹
 			case IDM_CT_OCT_DOWN:
 				SetUndo();
 				TransportNote(-12 , -4 );
@@ -764,7 +764,7 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 				SetUndo();
 				PanEdit( -1,-4 );
 				break;
-			case IDM_CT_PAN_REVERSE: //PAN‹t“]
+			case IDM_CT_PAN_REVERSE: //PANé€†è»¢
 			case ID_AC_PAN_REVERSE:
 				SetUndo(); PanEdit( 254, -4 );
 				break;
@@ -839,7 +839,7 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 			case IDM_UNDO:
 			case ID_AC_UNDO:
 				ReplaseUndo();
-				org_data.PutMusic();//Šy•ˆ‚ğ•\¦
+				org_data.PutMusic();//æ¥½è­œã‚’è¡¨ç¤º
 				RedrawWindow(hWnd,&rect,NULL,RDW_INVALIDATE|RDW_ERASENOW);
 				org_data.GetMusicInfo( &mi );
 				itoa(mi.wait,str,10);
@@ -848,7 +848,7 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 			case IDM_REDO:
 			case ID_AC_REDO:
 				ReplaceRedo();
-				org_data.PutMusic();//Šy•ˆ‚ğ•\¦
+				org_data.PutMusic();//æ¥½è­œã‚’è¡¨ç¤º
 				RedrawWindow(hWnd,&rect,NULL,RDW_INVALIDATE|RDW_ERASENOW);
 				org_data.GetMusicInfo( &mi );
 				itoa(mi.wait,str,10);
@@ -872,7 +872,7 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 			case IDM_ALWAYS_CURRENT:
 			case ID_AC_ALWAYS_CURRENT:
 				ChangeSelAlwaysCurrent();
-				org_data.PutMusic();//Šy•ˆ‚ğ•\¦
+				org_data.PutMusic();//æ¥½è­œã‚’è¡¨ç¤º
 				RedrawWindow(hWnd,&rect,NULL,RDW_INVALIDATE|RDW_ERASENOW);
 				break;
 			case ID_AC_DRAWDOUBLE:
@@ -880,18 +880,18 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 				ChangeDrawDouble();
 				RedrawWindow(hWnd,&rect,NULL,RDW_INVALIDATE|RDW_ERASENOW);
 				break;
-			case IDM_NOTE_ENLARGE: //    k¬•\¦A‰¹•„‚Ì“ª‚ğ–Ú—§‚½‚¹‚é(&O) 2014.05.28
+			case IDM_NOTE_ENLARGE: //    ç¸®å°è¡¨ç¤ºæ™‚ã€éŸ³ç¬¦ã®é ­ã‚’ç›®ç«‹ãŸã›ã‚‹(&O) 2014.05.28
 				ChangeNoteEnlarge();
-				org_data.PutMusic();//Šy•ˆ‚ğ•\¦
+				org_data.PutMusic();//æ¥½è­œã‚’è¡¨ç¤º
 				RedrawWindow(hWnd,&rect,NULL,RDW_INVALIDATE|RDW_ERASENOW);
 				break;
-			case IDM_ENABLEPLAYING: //‰‰‘t’†‚ÉŒ®”Õ‚ğ’@‚¯‚é 2010.09.23 A
+			case IDM_ENABLEPLAYING: //æ¼”å¥ä¸­ã«éµç›¤ã‚’å©ã‘ã‚‹ 2010.09.23 A
 				ChangeEnablePlaying();
 				break;
-			case IDM_CHANGEFINISH: //I—¹‚ÉŠm”F‚·‚é 2010.09.23 A
+			case IDM_CHANGEFINISH: //çµ‚äº†æ™‚ã«ç¢ºèªã™ã‚‹ 2010.09.23 A
 				ChangeFinish();
 				break;
-			case ID_AC_HOMEBACK: //ƒz[ƒ€
+			case ID_AC_HOMEBACK: //ãƒ›ãƒ¼ãƒ 
 				SendMessage(hDlgPlayer , WM_COMMAND , IDC_START , NULL);
 				break;
 			case IDM_RECENT_CLEAR:
@@ -915,7 +915,7 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 				break;
 			case IDM_INIT:
 			case ID_AC_INIT:
-				//if(MessageBox(hwnd,"•Û‘¶‚µ‚Ä‚¢‚È‚¢“à—e‚Í”jŠü‚³‚ê‚Ü‚·B‰Šú‰»‚µ‚Ü‚·‚©H","‰Šú‰»Šm”F",MB_OKCANCEL)==IDCANCEL)break; //2010.09.25 A
+				//if(MessageBox(hwnd,"ä¿å­˜ã—ã¦ã„ãªã„å†…å®¹ã¯ç ´æ£„ã•ã‚Œã¾ã™ã€‚åˆæœŸåŒ–ã—ã¾ã™ã‹ï¼Ÿ","åˆæœŸåŒ–ç¢ºèª",MB_OKCANCEL)==IDCANCEL)break; //2010.09.25 A
 				if(CancelDeleteCurrentData(CDCD_INIT))break;
 				ClearUndo();
 				memset(music_file, 0 , MAX_PATH);
@@ -926,22 +926,22 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 				org_data.InitOrgData();
 				org_data.SetPlayPointer(0);
 				scr_data.SetHorzScroll(0);
-				//ƒvƒŒƒCƒ„[‚É”½‰f
+				//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã«åæ˜ 
 				SetDlgItemText(hDlgPlayer,IDE_VIEWWAIT,"128");
 				SetDlgItemText(hDlgPlayer,IDE_VIEWMEAS,"0");
 				SetDlgItemText(hDlgPlayer,IDE_VIEWXPOS,"0");
 				SetTitlebarText(music_file);
-				//MessageBox(hwnd,"‰Šú‰»‚µ‚Ü‚µ‚½","Message",MB_OK);
-				ClearEZC_Message(); //EZƒƒbƒZ[ƒW‚Æ”ÍˆÍ‚ğÁ‚·
+				//MessageBox(hwnd,"åˆæœŸåŒ–ã—ã¾ã—ãŸ","Message",MB_OK);
+				ClearEZC_Message(); //EZãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã¨ç¯„å›²ã‚’æ¶ˆã™
 				SelectReset();
 				org_data.PutMusic();
 				RedrawWindow(hWnd,&rect,NULL,RDW_INVALIDATE|RDW_ERASENOW);
 				for(i=0;i<8;i++)ucMIDIProgramChangeValue[i]=255;
 
 				break;
-				//«	// 2010.12.01 A
-			case ID_AC_SELECT_CLEAR: //‘I‘ğ”ÍˆÍ‚ğ‰ğœ
-			case ID_AC_SELECT_CLEAR2: //‘I‘ğ”ÍˆÍ‚ğ‰ğœ //2014.04.13
+				//â†“	// 2010.12.01 A
+			case ID_AC_SELECT_CLEAR: //é¸æŠç¯„å›²ã‚’è§£é™¤
+			case ID_AC_SELECT_CLEAR2: //é¸æŠç¯„å›²ã‚’è§£é™¤ //2014.04.13
 				ClearEZC_Message();
 				org_data.PutMusic();
 				RedrawWindow(hWnd,&rect,NULL,RDW_INVALIDATE|RDW_ERASENOW);
@@ -952,7 +952,7 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 			case ID_AC_SELECT_INSERT: //2014.04.13
 				SendMessage(hDlgEZCopy , WM_COMMAND , IDC_INSERTBUTTON  , NULL);
 				break;
-			//ƒeƒ“ƒL[‘€ì‚É‚æ‚é”ÍˆÍ‘I‘ğ‘€ì
+			//ãƒ†ãƒ³ã‚­ãƒ¼æ“ä½œã«ã‚ˆã‚‹ç¯„å›²é¸æŠæ“ä½œ
 			case ID_AC_NUM1:
 				SendMessage(hDlgEZCopy , WM_COMMAND , IDC_CTB1 , NULL);
 				break;
@@ -1006,16 +1006,16 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 				break;
 			}
 		}else{
-			//‰‰‘t’†‚Ì‚İ
-			//“Á‚É–³‚µ
+			//æ¼”å¥ä¸­ã®ã¿
+			//ç‰¹ã«ç„¡ã—
 		}
-		//‰‰‘t’†‚Å‚à‰Â
+		//æ¼”å¥ä¸­ã§ã‚‚å¯
 		switch(LOWORD(wParam)){
 		case IDM_LOUPE_MINUS:
 		case ID_AC_LOUPE_MINUS:
 			NoteWidth -= 2; if(NoteWidth<4)NoteWidth=4;
 			org_data.PutBackGround();
-			org_data.PutMusic();//Šy•ˆ‚ğ•\¦
+			org_data.PutMusic();//æ¥½è­œã‚’è¡¨ç¤º
 			RedrawWindow(hWnd,&rect,NULL,RDW_INVALIDATE|RDW_ERASENOW);
 			switch(NoteWidth){
 			case 4:		SetDlgItemText(hDlgEZCopy, IDC_MESSAGE, "[25.%]"); break;
@@ -1032,7 +1032,7 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 		case ID_AC_LOUPE_PLUS:
 			NoteWidth += 2; if(NoteWidth>16)NoteWidth=16;
 			org_data.PutBackGround();
-			org_data.PutMusic();//Šy•ˆ‚ğ•\¦
+			org_data.PutMusic();//æ¥½è­œã‚’è¡¨ç¤º
 			RedrawWindow(hWnd,&rect,NULL,RDW_INVALIDATE|RDW_ERASENOW);
 			switch(NoteWidth){
 			case 4:		SetDlgItemText(hDlgEZCopy, IDC_MESSAGE, "[25%]"); break;
@@ -1093,7 +1093,7 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 		case IDM_DLGHELP:           SetDlgItemText(hDlgEZCopy, IDC_MESSAGE, MessageString[IDS_STRING102]); break;
 		case IDM_DLGMEMO:           SetDlgItemText(hDlgEZCopy, IDC_MESSAGE, MessageString[IDS_STRING103]); break;		}
 		break;
-	case WM_DROPFILES://ƒtƒ@ƒCƒ‹ƒhƒƒbƒv
+	case WM_DROPFILES://ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‰ãƒ­ãƒƒãƒ—
 		//SetWindowPos(hWnd, HWND_TOP, 0,0,0,0, SWP_NOMOVE | SWP_NOSIZE );
 		//SendMessage(hWnd, WM_PAINT, 0, 0);
 		//SetFocus(hWnd);
@@ -1102,7 +1102,7 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 		//DragQueryFile((HDROP)wParam,0,music_file,MAX_PATH);	// 2014.05.22 D
 		DragQueryFile((HDROP)wParam,0,strMIDIFile,MAX_PATH);	// 2014.05.22 A
 		if(org_data.FileCheckBeforeLoad(strMIDIFile)){
-			SetDlgItemText(hDlgEZCopy, IDC_MESSAGE, MessageString[IDS_STRING64]); //<!>ƒtƒ@ƒCƒ‹‚ªŠJ‚¯‚È‚¢A‚Ü‚½‚ÍAŒ`®‚ª•s³‚Å‚·B
+			SetDlgItemText(hDlgEZCopy, IDC_MESSAGE, MessageString[IDS_STRING64]); //<!>ãƒ•ã‚¡ã‚¤ãƒ«ãŒé–‹ã‘ãªã„ã€ã¾ãŸã¯ã€å½¢å¼ãŒä¸æ­£ã§ã™ã€‚
 			break;
 		}
 		strcpy(music_file, strMIDIFile);
@@ -1111,16 +1111,16 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 //		MessageBox(hWnd,music_file,"",MB_OK);
 		org_data.InitOrgData();
 		org_data.LoadMusicData();
-		org_data.PutMusic();//Šy•ˆ‚ğ•\¦
+		org_data.PutMusic();//æ¥½è­œã‚’è¡¨ç¤º
 		RedrawWindow(hWnd,&rect,NULL,RDW_INVALIDATE|RDW_ERASENOW);
-			//ƒvƒŒƒCƒ„[‚É•\¦
+			//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã«è¡¨ç¤º
 			org_data.GetMusicInfo( &mi );
 			SetDlgItemInt(hDlgTrack,IDE_VIEWWAIT,mi.wait,TRUE );
 			//SetDlgItemInt(hDlgTrack,IDE_VIEWTRACK,0,TRUE );
 			SetDlgItemText(hDlgTrack,IDE_VIEWTRACK,"1");
-		SetTitlebarText(music_file);//ƒ^ƒCƒgƒ‹ƒl[ƒ€ƒZƒbƒg
+		SetTitlebarText(music_file);//ã‚¿ã‚¤ãƒˆãƒ«ãƒãƒ¼ãƒ ã‚»ãƒƒãƒˆ
 		break;
-	case WM_PAINT://•\¦ƒƒbƒZ[ƒW
+	case WM_PAINT://è¡¨ç¤ºãƒ¡ãƒƒã‚»ãƒ¼ã‚¸
 		HDC hdc;
 		PAINTSTRUCT ps;
 
@@ -1139,8 +1139,8 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 		//	GetWindowText(hWnd,cc,512);
 		//	chn = strstr(cc, HENKOU_NO_SHIRUSHI);
 		//	if(chn!=NULL){
-		//		//•ÏX‚ª‚ ‚Á‚½‚Æ‚«‚ÍI—¹Šm”F‚·‚éB // A 2010.09.22
-		//		if(MessageBox(hwnd,"•Û‘¶‚µ‚Ä‚¢‚È‚¢“à—e‚Í”jŠü‚³‚ê‚Ü‚·BI—¹‚µ‚Ü‚·‚©H","I—¹Šm”F",MB_OKCANCEL| MB_ICONASTERISK)==IDCANCEL)break;
+		//		//å¤‰æ›´ãŒã‚ã£ãŸã¨ãã¯çµ‚äº†ç¢ºèªã™ã‚‹ã€‚ // A 2010.09.22
+		//		if(MessageBox(hwnd,"ä¿å­˜ã—ã¦ã„ãªã„å†…å®¹ã¯ç ´æ£„ã•ã‚Œã¾ã™ã€‚çµ‚äº†ã—ã¾ã™ã‹ï¼Ÿ","çµ‚äº†ç¢ºèª",MB_OKCANCEL| MB_ICONASTERISK)==IDCANCEL)break;
 		//	}
 		//}
 		if(CancelDeleteCurrentData(CDCD_EXIT))break;
@@ -1151,10 +1151,10 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 		break;
 	case WM_QUIT:
 		break;
-	case WM_DESTROY://Œãˆ——p
+	case WM_DESTROY://å¾Œå‡¦ç†ç”¨
 		EndDirectSound();
 		org_data.ReleaseNote();
-		DeleteWaveData100(); //’Ç‰Á20140401 ’ÊíAWM_CLOSE ¨ WM_DESTROY ¨ WM_QUIT ‚Ì‡‚ÉŒÄ‚Î‚ê‚é‚ç‚µ‚¢B
+		DeleteWaveData100(); //è¿½åŠ 20140401 é€šå¸¸ã€WM_CLOSE â†’ WM_DESTROY â†’ WM_QUIT ã®é †ã«å‘¼ã°ã‚Œã‚‹ã‚‰ã—ã„ã€‚
 		EndGDI();
 		if(!hDlgPlayer)DestroyWindow(hDlgPlayer);
 		if(!hDlgTrack)DestroyWindow(hDlgTrack);
@@ -1164,7 +1164,7 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 		free(strMIDIFile); //2014.05.11
 		FreeMessageStringBuffer();	// 2014.10.19 
 		break;
-	case WM_KEYDOWN://ƒL[ƒ{[ƒh‚ª‰Ÿ‚³‚ê‚½
+	case WM_KEYDOWN://ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰ãŒæŠ¼ã•ã‚ŒãŸ
 		switch(wParam){
 		case VK_UP:
 			scr_data.KeyScroll(DIRECTION_UP);
@@ -1211,7 +1211,7 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 				iCurrentPhase=-iCurrentPhase + 1;
 				Rxo_PlayKey(iCast[wParam] + iPushShift[0]*12 -iPushShift[1]*12 , org_data.track, 1000, iKeyPhase[iCast[wParam]]);
 				iKeyPushDown[iCast[wParam]+ iPushShift[0]*12 -iPushShift[1]*12] = 1;
-				org_data.PutMusic();//Šy•ˆ‚ÌÄ•`‰æ
+				org_data.PutMusic();//æ¥½è­œã®å†æç”»
 				RedrawWindow(hWnd,&rect,NULL,RDW_INVALIDATE|RDW_ERASENOW);
 
 			}
@@ -1229,7 +1229,7 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 		break;
 //				wsprintf(strSize , "U lParam = %x" , lParam);
 //				RedrawWindow(hWnd,&rect,NULL,RDW_INVALIDATE|RDW_ERASENOW);
-	case WM_KEYUP: //ƒL[ƒ{[ƒh‚ª—£‚³‚ê‚½
+	case WM_KEYUP: //ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰ãŒé›¢ã•ã‚ŒãŸ
 		switch(wParam){
 		case 'Z':
 		case 'S':
@@ -1254,7 +1254,7 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 				Rxo_StopKey(iCast[wParam]+ iPushShift[0]*12 -iPushShift[1]*12, org_data.track, iKeyPhase[iCast[wParam]]);
 				iKeyPhase[iCast[wParam]] = -1;
 				iKeyPushDown[iCast[wParam]+ iPushShift[0]*12 -iPushShift[1]*12] = 0;
-				org_data.PutMusic();//Šy•ˆ‚ÌÄ•`‰æ
+				org_data.PutMusic();//æ¥½è­œã®å†æç”»
 				RedrawWindow(hWnd,&rect,NULL,RDW_INVALIDATE|RDW_ERASENOW);
 			}
 			break;
@@ -1262,7 +1262,7 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 			if((timer_sw==0 || iChangeEnablePlaying!=0)){
 				iPushShift[0]=0;
 				for(i=0;i<256;i++)iKeyPushDown[i]=0;
-				org_data.PutMusic();//Šy•ˆ‚ÌÄ•`‰æ
+				org_data.PutMusic();//æ¥½è­œã®å†æç”»
 				RedrawWindow(hWnd,&rect,NULL,RDW_INVALIDATE|RDW_ERASENOW);
 				Rxo_StopAllSoundNow();
 			}
@@ -1271,7 +1271,7 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 			if((timer_sw==0 || iChangeEnablePlaying!=0)){
 				iPushShift[1]=0;
 				for(i=0;i<256;i++)iKeyPushDown[i]=0;
-				org_data.PutMusic();//Šy•ˆ‚ÌÄ•`‰æ
+				org_data.PutMusic();//æ¥½è­œã®å†æç”»
 				RedrawWindow(hWnd,&rect,NULL,RDW_INVALIDATE|RDW_ERASENOW);
 				Rxo_StopAllSoundNow();
 			}
@@ -1279,22 +1279,22 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 		}
 		break;
 
-    case WM_LBUTTONDOWN://ƒ}ƒEƒX(¶)‚ª‰Ÿ‚³‚ê‚½
+    case WM_LBUTTONDOWN://ãƒã‚¦ã‚¹(å·¦)ãŒæŠ¼ã•ã‚ŒãŸ
 		ClickProcL(wParam, lParam);
 		break;
-    case WM_RBUTTONDOWN://ƒ}ƒEƒX(‰E)‚ª‰Ÿ‚³‚ê‚½
+    case WM_RBUTTONDOWN://ãƒã‚¦ã‚¹(å³)ãŒæŠ¼ã•ã‚ŒãŸ
 		ClickProcR(wParam, lParam);
 		break;
-    case WM_MBUTTONDOWN://ƒ}ƒEƒX(’†‰›)‚ª‰Ÿ‚³‚ê‚½
+    case WM_MBUTTONDOWN://ãƒã‚¦ã‚¹(ä¸­å¤®)ãŒæŠ¼ã•ã‚ŒãŸ
 		ClickProcM(wParam, lParam);
 		break;
 	case WM_MOUSEMOVE:
 		MouseDrag(wParam, lParam);
 		break;
-    case WM_LBUTTONUP://ƒ}ƒEƒX(¶)‚ª—£‚³‚ê‚½
+    case WM_LBUTTONUP://ãƒã‚¦ã‚¹(å·¦)ãŒé›¢ã•ã‚ŒãŸ
 		LButtonUP(wParam, lParam);
 		break;
-    case WM_RBUTTONUP://ƒ}ƒEƒX(‰E)‚ª—£‚³‚ê‚½
+    case WM_RBUTTONUP://ãƒã‚¦ã‚¹(å³)ãŒé›¢ã•ã‚ŒãŸ
 		RButtonUP(wParam, lParam);
 		RedrawWindow(hWnd,&rect,NULL,RDW_INVALIDATE|RDW_ERASENOW);
 		break;
@@ -1311,26 +1311,26 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 			pmmi = (MINMAXINFO *)lParam;
 			if ( pmmi )
 			{
-				pmmi->ptMinTrackSize.x = 420;  // Å¬•
-				pmmi->ptMinTrackSize.y = 480;  // Å¬‚
-				//pmmi->ptMaxTrackSize.x = 1024; // Å‘å•
-				//pmmi->ptMaxTrackSize.y = 768;  // Å‘å‚
+				pmmi->ptMinTrackSize.x = 420;  // æœ€å°å¹…
+				pmmi->ptMinTrackSize.y = 480;  // æœ€å°é«˜
+				//pmmi->ptMaxTrackSize.x = 1024; // æœ€å¤§å¹…
+				//pmmi->ptMaxTrackSize.y = 768;  // æœ€å¤§é«˜
 			}
 		
 		break;
-	case 0x020C: //–­‚Èƒ{ƒ^ƒ“‰Ÿ‰º
-		//MessageBox(hWnd,"“Ç‚İ‚İ‚É¸”s‚µ‚Ü‚µ‚½","Error(Load)",MB_OK);
+	case 0x020C: //å¦™ãªãƒœã‚¿ãƒ³æŠ¼ä¸‹
+		//MessageBox(hWnd,"èª­ã¿è¾¼ã¿ã«å¤±æ•—ã—ã¾ã—ãŸ","Error(Load)",MB_OK);
 		switch HIWORD(wParam){
-		case 0x0001: //¥
+		case 0x0001: //â–¼
 			ChangeTrackPlus(hDlgTrack , 1);
 			break;
-		case 0x0002: //£
+		case 0x0002: //â–²
 			ChangeTrackPlus(hDlgTrack , -1);
 			break;
 		}
 		break;
 	case WM_SIZE:
-		WWidth = LOWORD(lParam);	//ƒNƒ‰ƒCƒAƒ“ƒg—Ìˆæ‚ÌƒTƒCƒY
+		WWidth = LOWORD(lParam);	//ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆé ˜åŸŸã®ã‚µã‚¤ã‚º
 		WHeight = HIWORD(lParam);
 		rect.right = WWidth;		//A 2008/05/14
 		rect.bottom = WHeight;		//A 2008/05/14
@@ -1343,7 +1343,7 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 		RedrawWindow(hWnd,&rect,NULL,RDW_INVALIDATE|RDW_ERASENOW);
 
 		break;
-	case WM_SIZING: //‘å‚«‚³‚ğ•ÏX’†
+	case WM_SIZING: //å¤§ãã•ã‚’å¤‰æ›´ä¸­
 		//org_data.PutBackGround();
 		//org_data.PutMusic();
 		
@@ -1351,7 +1351,7 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 		
 		//AfterReSize = true;
 		break;
-	//ˆÈ‰º‚ÍƒeƒXƒg—p
+	//ä»¥ä¸‹ã¯ãƒ†ã‚¹ãƒˆç”¨
 /*	case WM_MOUSEMOVE:
 		char str[80];
 		long mouse_x,mouse_y;
@@ -1363,23 +1363,23 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 		ReleaseDC(hWnd,hdc);
 		break;
 */
-	default:return DefWindowProc(hwnd, message, wParam, lParam);//ˆÈŠO‚¾‚Á‚½‚ç
+	default:return DefWindowProc(hwnd, message, wParam, lParam);//ä»¥å¤–ã ã£ãŸã‚‰
 	}
 
 	return FALSE;
 }
-//ƒ^ƒCƒgƒ‹ƒo[‚Éƒtƒ@ƒCƒ‹ƒl[ƒ€‚ğ•\¦
+//ã‚¿ã‚¤ãƒˆãƒ«ãƒãƒ¼ã«ãƒ•ã‚¡ã‚¤ãƒ«ãƒãƒ¼ãƒ ã‚’è¡¨ç¤º
 void SetTitlebarText(char *name)
 {
 	int i,j;
-	char set_name[MAX_PATH+15];//ƒ^ƒCƒgƒ‹‚É•\¦½Íß°½
-	char file_name[MAX_PATH];//–¼‘O‚ğ‰ÁHiƒfƒBƒŒƒNƒgƒŠ‚ğ”rœj
+	char set_name[MAX_PATH+15];//ã‚¿ã‚¤ãƒˆãƒ«ã«è¡¨ç¤ºï½½ï¾ï¾Ÿï½°ï½½
+	char file_name[MAX_PATH];//åå‰ã‚’åŠ å·¥ï¼ˆãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’æ’é™¤ï¼‰
 
 	i = 0;
-	while(name[i] != NULL)i++;//‚Ü‚¸‚ÍK‚Ü‚Å
-	while(i != 0 && name[i-1] != '\\')i--; //ƒ‰ƒXƒg‚Ì‰~ƒ}[ƒN
+	while(name[i] != NULL)i++;//ã¾ãšã¯å°»ã¾ã§
+	while(i != 0 && name[i-1] != 'Â¥Â¥')i--; //ãƒ©ã‚¹ãƒˆã®å††ãƒãƒ¼ã‚¯
 	
-	//ƒtƒ@ƒCƒ‹–¼‚ğ‚Â‚­‚é
+	//ãƒ•ã‚¡ã‚¤ãƒ«åã‚’ã¤ãã‚‹
 	j = 0;
 	while(name[i] != NULL){
 		file_name[j] = name[i];
@@ -1387,11 +1387,11 @@ void SetTitlebarText(char *name)
 		j++;
 	}
 	file_name[j] = NULL;
-	//ƒAƒvƒŠƒ^ƒCƒgƒ‹‚ğ—¬‚µ‚İ
+	//ã‚¢ãƒ—ãƒªã‚¿ã‚¤ãƒˆãƒ«ã‚’æµã—è¾¼ã¿
 	for(i = 0; i < 15; i++){
 		set_name[i] = lpszName[i];
 	}
-	//ƒtƒ@ƒCƒ‹–¼‚ğ—¬‚µ‚İ
+	//ãƒ•ã‚¡ã‚¤ãƒ«åã‚’æµã—è¾¼ã¿
 	for(j = 0; j < MAX_PATH; j++){
 		set_name[i] = file_name[j];
 		if(set_name[i] == NULL)break;
@@ -1401,7 +1401,7 @@ void SetTitlebarText(char *name)
 }
 
 
-//•ÏXƒAƒŠ‚ÌˆóB
+//å¤‰æ›´ã‚¢ãƒªã®å°ã€‚
 void SetTitlebarChange(void)
 {
 	char cc[512],*chn;
@@ -1422,8 +1422,8 @@ void ResetTitlebarChange(void)
 	//chn = strstr(cc, HENKOU_NO_SHIRUSHI);	// 2014.10.19 D
 	chn = strstr(cc, MessageString[IDS_MODIFIED]);	// 2014.10.19 A
 	if(chn!=NULL){
-		*chn = '\0';//Á‚·
-		*(chn+1) = '\0';//Á‚·
+		*chn = 'Â¥0';//æ¶ˆã™
+		*(chn+1) = 'Â¥0';//æ¶ˆã™
 		SetWindowText(hWnd,cc);
 	}
 }
@@ -1435,7 +1435,7 @@ void SaveIniFile()
 	WPM.length = sizeof(WINDOWPLACEMENT);
 	GetWindowPlacement(hWnd, &WPM);
 	if(WPM.showCmd == SW_SHOWMAXIMIZED)i=1;else i=0;
-	ShowWindow( hWnd, SW_RESTORE );	//Œ³‚ÌƒTƒCƒYƒj
+	ShowWindow( hWnd, SW_RESTORE );	//å…ƒã®ã‚µã‚¤ã‚ºãƒ‹
 
 	GetWindowRect(hWnd,(LPRECT)&WinRect);
 	wsprintf(num_buf,"%d",WinRect.left);
@@ -1512,7 +1512,7 @@ void SaveIniFile()
 }
 
 /*
-//ƒI[ƒvƒjƒ“ƒOƒtƒ‰ƒbƒVƒ…
+//ã‚ªãƒ¼ãƒ—ãƒ‹ãƒ³ã‚°ãƒ•ãƒ©ãƒƒã‚·ãƒ¥
 BOOL CALLBACK DialogFlash(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	switch(message){
@@ -1524,10 +1524,10 @@ BOOL CALLBACK DialogFlash(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 		long my_h;
 		long x,y,w,h;
 
-		//ƒXƒNƒŠ[ƒ“ƒTƒCƒY
+		//ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ã‚µã‚¤ã‚º
 		screen_w = GetSystemMetrics(SM_CXSCREEN);
 		screen_h = GetSystemMetrics(SM_CYSCREEN);
-		//ƒEƒCƒ“ƒhƒEƒTƒCƒY
+		//ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ã‚µã‚¤ã‚º
 		my_w = gWidthWindow;
 		my_h = gHeightWindow;
 

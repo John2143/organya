@@ -19,7 +19,7 @@ extern HWND hWnd;
 extern HWND hDlgPlayer;
 extern HWND hDlgEZCopy;
 int EZCopyWindowState;
-extern int gDrawDouble;	//—¼•û‚Ìƒgƒ‰ƒbƒNƒOƒ‹[ƒv‚ğ•`‰æ‚·‚é
+extern int gDrawDouble;	//ä¸¡æ–¹ã®ãƒˆãƒ©ãƒƒã‚¯ã‚°ãƒ«ãƒ¼ãƒ—ã‚’æç”»ã™ã‚‹
 extern int iDragMode;
 
 int Bn[]={
@@ -44,8 +44,8 @@ int Hni[]={
 
 NOTECOPY nc_Select;
 int tra=-256, ful=0,haba=0;
-int sGrid = 0;	//”ÍˆÍ‘I‘ğ‚ÍƒOƒŠƒbƒh’PˆÊ‚Å
-int sACrnt = 0;	//”ÍˆÍ‘I‘ğ‚Íí‚É¶ÚİÄÄ×¯¸
+int sGrid = 0;	//ç¯„å›²é¸æŠã¯ã‚°ãƒªãƒƒãƒ‰å˜ä½ã§
+int sACrnt = 0;	//ç¯„å›²é¸æŠã¯å¸¸ã«ï½¶ï¾šï¾ï¾„ï¾„ï¾—ï½¯ï½¸
 
 char CpHelp[512];
 void ShowStatusMessage(void);
@@ -76,22 +76,22 @@ void ClearEZC_Message()
 void EZ_Delete()
 {
 	if(tra<0){
-		wsprintf(CpHelp,MessageString[IDS_STRING67]); //"”ÍˆÍ‚ªw’è‚³‚ê‚Ä‚¢‚È‚¢B"
+		wsprintf(CpHelp,MessageString[IDS_STRING67]); //"ç¯„å›²ãŒæŒ‡å®šã•ã‚Œã¦ã„ãªã„ã€‚"
 		PrintCpHelp();
 		return;
 	}
 	//int anss;
-	//anss = MessageBox(hWnd,"Á‹”ÍˆÍ‚Í³‚µ‚¢‚Å‚·‚©H","Šm”F",MB_OKCANCEL|MB_ICONEXCLAMATION);
+	//anss = MessageBox(hWnd,"æ¶ˆå»ç¯„å›²ã¯æ­£ã—ã„ã§ã™ã‹ï¼Ÿ","ç¢ºèª",MB_OKCANCEL|MB_ICONEXCLAMATION);
 	//if(anss!=IDOK)return;
 	long scr_h,scr_v,lash;
 	scr_data.GetScrollPosition(&scr_h,&scr_v);
-	RECT rect = {64,0,WWidth,WHeight};//XV‚·‚é—Ìˆæ(ƒgƒ‰ƒbƒN•ÏX)
+	RECT rect = {64,0,WWidth,WHeight};//æ›´æ–°ã™ã‚‹é ˜åŸŸ(ãƒˆãƒ©ãƒƒã‚¯å¤‰æ›´)
 	//char str[5];
 	char mss[255],mks[512];
 	MUSICINFO mi;
 	org_data.GetMusicInfo(&mi);
-	//GetDlgItemText(hDlgPlayer,IDE_VIEWMEAS,str,4);//”ÍˆÍfrom
-	nc_Select.x2 = scr_h* mi.dot * mi.line; //‚±‚±‚ÉƒRƒs[
+	//GetDlgItemText(hDlgPlayer,IDE_VIEWMEAS,str,4);//ç¯„å›²from
+	nc_Select.x2 = scr_h* mi.dot * mi.line; //ã“ã“ã«ã‚³ãƒ”ãƒ¼
 	nc_Select.num = 1;
 	int t;
 	if(ful==1){
@@ -120,11 +120,11 @@ void EZ_Delete()
 		org_data.CheckNoteTail(tra);
 		
 	}
-	//MessageBox(NULL,"ƒRƒs[‚µ‚Ü‚µ‚½","’Ê’m",MB_OK);
+	//MessageBox(NULL,"ã‚³ãƒ”ãƒ¼ã—ã¾ã—ãŸ","é€šçŸ¥",MB_OK);
 	org_data.PutMusic();
 	RedrawWindow(hWnd,&rect,NULL,RDW_INVALIDATE|RDW_ERASENOW);
 	lash = scr_h + haba;
-	wsprintf(mss,MessageString[IDS_STRING68]);//"@Á‹‚µ‚Ü‚µ‚½B"
+	wsprintf(mss,MessageString[IDS_STRING68]);//"ã€€æ¶ˆå»ã—ã¾ã—ãŸã€‚"
 
 
 	strcpy(mks,CpHelp);
@@ -143,13 +143,13 @@ void EZ_DeleteAndTrim()
 	int tmptra, tmpful, tmpsACrnt;
 	
 	scr_data.GetScrollPosition(&scr_h,&scr_v);
-	RECT rect = {64,0,WWidth,WHeight};//XV‚·‚é—Ìˆæ(ƒgƒ‰ƒbƒN•ÏX)
+	RECT rect = {64,0,WWidth,WHeight};//æ›´æ–°ã™ã‚‹é ˜åŸŸ(ãƒˆãƒ©ãƒƒã‚¯å¤‰æ›´)
 	org_data.GetMusicInfo(&mi);
-	//GetDlgItemText(hDlgPlayer,IDE_VIEWMEAS,str,4);//”ÍˆÍfrom
-	delNC.x2 = scr_h* mi.dot * mi.line; //‚±‚±‚ÉƒRƒs[
+	//GetDlgItemText(hDlgPlayer,IDE_VIEWMEAS,str,4);//ç¯„å›²from
+	delNC.x2 = scr_h* mi.dot * mi.line; //ã“ã“ã«ã‚³ãƒ”ãƒ¼
 	if(tra<0){
-		wsprintf(CpHelp,MessageString[IDS_STRING69]); //"”ÍˆÍ‚ªw’è‚³‚ê‚Ä‚¢‚È‚¢‚Ì‚Å ‰æ–Ê¶’[‚©‚ç 1ƒhƒbƒg‚ğ"
-		//wsprintf(CpHelp,"”ÍˆÍ‚ªw’è‚³‚ê‚Ä‚¢‚È‚¢B");
+		wsprintf(CpHelp,MessageString[IDS_STRING69]); //"ç¯„å›²ãŒæŒ‡å®šã•ã‚Œã¦ã„ãªã„ã®ã§ ç”»é¢å·¦ç«¯ã‹ã‚‰ 1ãƒ‰ãƒƒãƒˆã‚’"
+		//wsprintf(CpHelp,"ç¯„å›²ãŒæŒ‡å®šã•ã‚Œã¦ã„ãªã„ã€‚");
 		//PrintCpHelp();
 		//return;
 		tmptra = org_data.track;
@@ -171,7 +171,7 @@ void EZ_DeleteAndTrim()
 	tmpNC.x2   = delNC.x1_1;
 	tmpNC.num = 1;
 	//int anss;
-	//anss = MessageBox(hWnd,"Á‹”ÍˆÍ‚Í³‚µ‚¢‚Å‚·‚©H","Šm”F",MB_OKCANCEL|MB_ICONEXCLAMATION);
+	//anss = MessageBox(hWnd,"æ¶ˆå»ç¯„å›²ã¯æ­£ã—ã„ã§ã™ã‹ï¼Ÿ","ç¢ºèª",MB_OKCANCEL|MB_ICONEXCLAMATION);
 	//if(anss!=IDOK)return;
 	//char str[5];
 	int t;
@@ -210,11 +210,11 @@ void EZ_DeleteAndTrim()
 		
 	}
 
-	//MessageBox(NULL,"ƒRƒs[‚µ‚Ü‚µ‚½","’Ê’m",MB_OK);
+	//MessageBox(NULL,"ã‚³ãƒ”ãƒ¼ã—ã¾ã—ãŸ","é€šçŸ¥",MB_OK);
 	org_data.PutMusic();
 	RedrawWindow(hWnd,&rect,NULL,RDW_INVALIDATE|RDW_ERASENOW);
 	lash = scr_h + haba;
-	wsprintf(mss,MessageString[IDS_STRING70]); //"@Á‹‚µA‹l‚ß‚Ü‚µ‚½B"
+	wsprintf(mss,MessageString[IDS_STRING70]); //"ã€€æ¶ˆå»ã—ã€è©°ã‚ã¾ã—ãŸã€‚"
 
 	strcpy(mks,CpHelp);
 	strcat(mks,mss);
@@ -232,13 +232,13 @@ void EZ_Insert()
 	int tmptra, tmpful, tmpsACrnt;
 	MUSICINFO mi;
 	scr_data.GetScrollPosition(&scr_h,&scr_v);
-	RECT rect = {64,0,WWidth,WHeight};//XV‚·‚é—Ìˆæ(ƒgƒ‰ƒbƒN•ÏX)
+	RECT rect = {64,0,WWidth,WHeight};//æ›´æ–°ã™ã‚‹é ˜åŸŸ(ãƒˆãƒ©ãƒƒã‚¯å¤‰æ›´)
 	org_data.GetMusicInfo(&mi);
-	//GetDlgItemText(hDlgPlayer,IDE_VIEWMEAS,str,4);//”ÍˆÍfrom
-	delNC.x2 = scr_h* mi.dot * mi.line; //‚±‚±‚ÉƒRƒs[
+	//GetDlgItemText(hDlgPlayer,IDE_VIEWMEAS,str,4);//ç¯„å›²from
+	delNC.x2 = scr_h* mi.dot * mi.line; //ã“ã“ã«ã‚³ãƒ”ãƒ¼
 	if(tra<0){
-		wsprintf(CpHelp,MessageString[IDS_STRING69]); //"”ÍˆÍ‚ªw’è‚³‚ê‚Ä‚¢‚È‚¢‚Ì‚Å ‰æ–Ê¶’[‚©‚ç 1ƒhƒbƒg‚ğ"
-		//wsprintf(CpHelp,"”ÍˆÍ‚ªw’è‚³‚ê‚Ä‚¢‚È‚¢B");
+		wsprintf(CpHelp,MessageString[IDS_STRING69]); //"ç¯„å›²ãŒæŒ‡å®šã•ã‚Œã¦ã„ãªã„ã®ã§ ç”»é¢å·¦ç«¯ã‹ã‚‰ 1ãƒ‰ãƒƒãƒˆã‚’"
+		//wsprintf(CpHelp,"ç¯„å›²ãŒæŒ‡å®šã•ã‚Œã¦ã„ãªã„ã€‚");
 		//PrintCpHelp();
 		//return;
 		tmptra = org_data.track;
@@ -259,7 +259,7 @@ void EZ_Insert()
 	tmpNC.x2   = delNC.x1_2 + 1;
 	tmpNC.num = 1;
 	//int anss;
-	//anss = MessageBox(hWnd,"Á‹”ÍˆÍ‚Í³‚µ‚¢‚Å‚·‚©H","Šm”F",MB_OKCANCEL|MB_ICONEXCLAMATION);
+	//anss = MessageBox(hWnd,"æ¶ˆå»ç¯„å›²ã¯æ­£ã—ã„ã§ã™ã‹ï¼Ÿ","ç¢ºèª",MB_OKCANCEL|MB_ICONEXCLAMATION);
 	//if(anss!=IDOK)return;
 	//char str[5];
 	int t;
@@ -298,11 +298,11 @@ void EZ_Insert()
 		
 	}
 
-	//MessageBox(NULL,"ƒRƒs[‚µ‚Ü‚µ‚½","’Ê’m",MB_OK);
+	//MessageBox(NULL,"ã‚³ãƒ”ãƒ¼ã—ã¾ã—ãŸ","é€šçŸ¥",MB_OK);
 	org_data.PutMusic();
 	RedrawWindow(hWnd,&rect,NULL,RDW_INVALIDATE|RDW_ERASENOW);
 	lash = scr_h + haba;
-	wsprintf(mss,MessageString[IDS_STRING71]);//"@Œã‚ë‚É‚¸‚ç‚µ‚Ü‚µ‚½B"
+	wsprintf(mss,MessageString[IDS_STRING71]);//"ã€€å¾Œã‚ã«ãšã‚‰ã—ã¾ã—ãŸã€‚"
 
 	strcpy(mks,CpHelp);
 	strcat(mks,mss);
@@ -317,19 +317,19 @@ void EZ_Insert()
 void EZ_Paste(int iNum)
 {
 	if(tra<0){
-		wsprintf(CpHelp,MessageString[IDS_STRING67]); //”ÍˆÍ‚ªw’è‚³‚ê‚Ä‚¢‚È‚¢
+		wsprintf(CpHelp,MessageString[IDS_STRING67]); //ç¯„å›²ãŒæŒ‡å®šã•ã‚Œã¦ã„ãªã„
 		PrintCpHelp();
 		return;
 	}
 	long scr_h,scr_v,lash;
 	scr_data.GetScrollPosition(&scr_h,&scr_v);
-	RECT rect = {64,0,WWidth,WHeight};//XV‚·‚é—Ìˆæ(ƒgƒ‰ƒbƒN•ÏX)
+	RECT rect = {64,0,WWidth,WHeight};//æ›´æ–°ã™ã‚‹é ˜åŸŸ(ãƒˆãƒ©ãƒƒã‚¯å¤‰æ›´)
 	//char str[5];
 	char mss[255],mks[512];
 	MUSICINFO mi;
 	org_data.GetMusicInfo(&mi);
-	//GetDlgItemText(hDlgPlayer,IDE_VIEWMEAS,str,4);//”ÍˆÍfrom
-	nc_Select.x2 = scr_h* mi.dot * mi.line; //‚±‚±‚ÉƒRƒs[
+	//GetDlgItemText(hDlgPlayer,IDE_VIEWMEAS,str,4);//ç¯„å›²from
+	nc_Select.x2 = scr_h* mi.dot * mi.line; //ã“ã“ã«ã‚³ãƒ”ãƒ¼
 	nc_Select.num = iNum;
 	int t;
 	if(ful==1){
@@ -356,13 +356,13 @@ void EZ_Paste(int iNum)
 		org_data.CheckNoteTail(tra);
 		
 	}
-	//MessageBox(NULL,"ƒRƒs[‚µ‚Ü‚µ‚½","’Ê’m",MB_OK);
+	//MessageBox(NULL,"ã‚³ãƒ”ãƒ¼ã—ã¾ã—ãŸ","é€šçŸ¥",MB_OK);
 	org_data.PutMusic();
 	RedrawWindow(hWnd,&rect,NULL,RDW_INVALIDATE|RDW_ERASENOW);
 	lash = scr_h + haba;
-	//if(ful==1)wsprintf(mss,"@%d¬ß`%d¬ß‚É%d‰ñƒRƒs[‚µ‚Ü‚µ‚½B",scr_h,lash,nc_Select.num);	// 2014.10.19 D
+	//if(ful==1)wsprintf(mss,"ã€€%då°ç¯€ã€œ%då°ç¯€ã«%då›ã‚³ãƒ”ãƒ¼ã—ã¾ã—ãŸã€‚",scr_h,lash,nc_Select.num);	// 2014.10.19 D
 	if(ful==1)wsprintf(mss,MessageString[IDS_STRING72],scr_h,lash,nc_Select.num);	// 2014.10.19 A
-	//else wsprintf(mss,"@ƒgƒ‰ƒbƒN%c ‚Ì%d¬ß`%d¬ß‚É%d‰ñƒRƒs[‚µ‚Ü‚µ‚½B",TrackN[nc_Select.track2],scr_h,lash,nc_Select.num);	// 2014.10.19 D
+	//else wsprintf(mss,"ã€€ãƒˆãƒ©ãƒƒã‚¯%c ã®%då°ç¯€ã€œ%då°ç¯€ã«%då›ã‚³ãƒ”ãƒ¼ã—ã¾ã—ãŸã€‚",TrackN[nc_Select.track2],scr_h,lash,nc_Select.num);	// 2014.10.19 D
 	else wsprintf(mss,MessageString[IDS_STRING73],TrackN[nc_Select.track2],scr_h,lash,nc_Select.num);	// 2014.10.19 A
 
 	strcpy(mks,CpHelp);
@@ -373,12 +373,12 @@ void EZ_Paste(int iNum)
 
 
 BOOL CALLBACK DialogEZCopy(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam){
-	RECT rect = {64,0,WWidth,WHeight};//XV‚·‚é—Ìˆæ(ƒgƒ‰ƒbƒN•ÏX)
+	RECT rect = {64,0,WWidth,WHeight};//æ›´æ–°ã™ã‚‹é ˜åŸŸ(ãƒˆãƒ©ãƒƒã‚¯å¤‰æ›´)
 	int i,bt;
 	long scr_h,scr_v;
 	MUSICINFO mi;
 	switch(message){
-	case WM_INITDIALOG://ƒ_ƒCƒAƒƒO‚ªŒÄ‚Î‚ê‚½
+	case WM_INITDIALOG://ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ãŒå‘¼ã°ã‚ŒãŸ
 		PrintCpHelp();
 		return 1;
 	case WM_CLOSE:
@@ -403,26 +403,26 @@ BOOL CALLBACK DialogEZCopy(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lPara
 			for(i=0;i<12;i++){
 				if(LOWORD(wParam) == Bn[i])bt=i;
 			}
-			if(bt>=0){ //{‚P‚Æ‚©‚Ìƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚½B
+			if(bt>=0){ //ï¼‹ï¼‘ã¨ã‹ã®ãƒœã‚¿ãƒ³ãŒæŠ¼ã•ã‚ŒãŸã€‚
 				int a,b,d,bb;
 				//char str[5];
 				org_data.GetMusicInfo(&mi);
 				scr_data.GetScrollPosition(&scr_h,&scr_v);
-				//GetDlgItemText(hDlgPlayer,IDE_VIEWMEAS,str,4);//”ÍˆÍfrom
+				//GetDlgItemText(hDlgPlayer,IDE_VIEWMEAS,str,4);//ç¯„å›²from
 				//b = atol(str);
 				b = scr_h;
 				bb = b + Hni[bt];
 				haba = Hni[bt];
-				a = b * mi.dot * mi.line; //ŠJn“_
-				d = bb* mi.dot * mi.line - 1; //I—¹“_
+				a = b * mi.dot * mi.line; //é–‹å§‹ç‚¹
+				d = bb* mi.dot * mi.line - 1; //çµ‚äº†ç‚¹
 				nc_Select.x1_1 = a;
 				nc_Select.x1_2 = d;
-				if(bt>=6)ful=1;else ful=0; //‘Sƒgƒ‰ƒbƒNH
+				if(bt>=6)ful=1;else ful=0; //å…¨ãƒˆãƒ©ãƒƒã‚¯ï¼Ÿ
 				tra = org_data.track;
 				//org_data.CopyNoteDataToCB(&nc_Select, tra, ful);
-				//if(ful==0)wsprintf(CpHelp,"ƒgƒ‰ƒbƒN%c ‚Ì%d¬ß`%d¬ß‚Ü‚Å‚ğ",TrackN[tra],b,bb);	// 2014.10.19 D
+				//if(ful==0)wsprintf(CpHelp,"ãƒˆãƒ©ãƒƒã‚¯%c ã®%då°ç¯€ã€œ%då°ç¯€ã¾ã§ã‚’",TrackN[tra],b,bb);	// 2014.10.19 D
 				if(ful==0)wsprintf(CpHelp,MessageString[IDS_STRING74],TrackN[tra],b,bb);	// 2014.10.19 A
-				//else wsprintf(CpHelp,"‘Sƒgƒ‰ƒbƒN‚Ì%d¬ß`%d¬ß‚Ü‚Å‚ğ",b,bb);	// 2014.10.19 D
+				//else wsprintf(CpHelp,"å…¨ãƒˆãƒ©ãƒƒã‚¯ã®%då°ç¯€ã€œ%då°ç¯€ã¾ã§ã‚’",b,bb);	// 2014.10.19 D
 				else wsprintf(CpHelp,MessageString[IDS_STRING75],b,bb);	// 2014.10.19 A
 				PrintCpHelp();
 				org_data.PutMusic();

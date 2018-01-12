@@ -6,21 +6,21 @@
 
 typedef struct ScrollData{
 	private:
-		long hpos;//‰¡ƒXƒNƒ[ƒ‹’l
-		long vpos;//cƒXƒNƒ[ƒ‹’l
+		long hpos;//æ¨ªã‚¹ã‚¯ãƒ­ãƒ¼ãƒ«å€¤
+		long vpos;//ç¸¦ã‚¹ã‚¯ãƒ­ãƒ¼ãƒ«å€¤
 		SCROLLINFO scr_info;
 		long vScrollMax;
 	public:
 		void SetIniFile();
-		BOOL InitScroll(void);//‰Šú‰»
-		void VertScrollProc(WPARAM wParam);//ƒXƒNƒ[ƒ‹‚³‚¹‚½‚Ìˆ—
+		BOOL InitScroll(void);//åˆæœŸåŒ–
+		void VertScrollProc(WPARAM wParam);//ã‚¹ã‚¯ãƒ­ãƒ¼ãƒ«ã•ã›ãŸæ™‚ã®å‡¦ç†
 		void HorzScrollProc(WPARAM wParam);
-		void WheelScrollProc(LPARAM lParam, WPARAM wParam); //ƒzƒC[ƒ‹‚ğ...
+		void WheelScrollProc(LPARAM lParam, WPARAM wParam); //ãƒ›ã‚¤ãƒ¼ãƒ«ã‚’...
 		void GetScrollPosition(long *hp,long *vp);
 		void SetHorzScroll(long x);
-		void AttachScroll(void);	//ƒEƒBƒ“ƒhƒEƒTƒCƒY•ÏX‚É‰‚¶‚ÄƒXƒNƒ[ƒ‹‚ğC³
-		void KeyScroll(int iDirection); //ƒL[‘€ì‚É‚æ‚éƒXƒNƒ[ƒ‹—p
+		void AttachScroll(void);	//ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚µã‚¤ã‚ºå¤‰æ›´ã«å¿œã˜ã¦ã‚¹ã‚¯ãƒ­ãƒ¼ãƒ«ã‚’ä¿®æ­£
+		void KeyScroll(int iDirection); //ã‚­ãƒ¼æ“ä½œã«ã‚ˆã‚‹ã‚¹ã‚¯ãƒ­ãƒ¼ãƒ«ç”¨
 		void PrintHorzPosition(void);
-		void ChangeVerticalRange(int WindowHeight = -1); //ƒEƒBƒ“ƒhƒEƒTƒCƒY‚É‰‚¶‚ÄƒXƒNƒ[ƒ‹ƒo[Range‚ğ•ÏX
+		void ChangeVerticalRange(int WindowHeight = -1); //ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚µã‚¤ã‚ºã«å¿œã˜ã¦ã‚¹ã‚¯ãƒ­ãƒ¼ãƒ«ãƒãƒ¼Rangeã‚’å¤‰æ›´
 }SCROLLDATA;
-extern SCROLLDATA scr_data;//ƒXƒNƒ[ƒ‹ƒf[ƒ^
+extern SCROLLDATA scr_data;//ã‚¹ã‚¯ãƒ­ãƒ¼ãƒ«ãƒ‡ãƒ¼ã‚¿

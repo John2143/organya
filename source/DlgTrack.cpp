@@ -7,19 +7,19 @@
 #include "Gdi.h"
 #include "Timer.h"
 #include "Sound.h"
-#include <string.h>//sprintfƒeƒXƒg—p
+#include <string.h>//sprintfãƒ†ã‚¹ãƒˆç”¨
 
 #include "rxoFunction.h"
 
 extern HWND hDlgTrack;	//A 2008/05/13
-extern HINSTANCE hInst;//ƒCƒ“ƒXƒ^ƒ“ƒXƒnƒ“ƒhƒ‹ 2010.09.23 A
+extern HINSTANCE hInst;//ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ãƒãƒ³ãƒ‰ãƒ« 2010.09.23 A
 extern HWND hDlgPlayer;
 extern HWND hDlgTrack;
 extern BOOL CALLBACK DialogSetting(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam);
 extern BOOL CALLBACK DialogWave(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 //char timer_sw = 0;
-//ŠÈ’P‚Èƒ_ƒCƒAƒƒOŠÖ”
+//ç°¡å˜ãªãƒ€ã‚¤ã‚¢ãƒ­ã‚°é–¢æ•°
 short track_name[16] = {
 	IDC_TRACK0,
 	IDC_TRACK1,
@@ -43,7 +43,7 @@ extern int mute_name[];
 
 extern char timer_sw;
 extern HWND hWnd;
-extern int sACrnt;	//”ÍˆÍ‘I‘ğ‚Íí‚É¶ÚİÄÄ×¯¸
+extern int sACrnt;	//ç¯„å›²é¸æŠã¯å¸¸ã«ï½¶ï¾šï¾ï¾„ï¾„ï¾—ï½¯ï½¸
 extern int tra, ful ,haba; 
 extern void SetEZCWindowMessage(char *Mess);
 extern char TrackN[];
@@ -51,7 +51,7 @@ extern char TrackN[];
 void ChangeTrackPlus(HWND hdwnd, int iValue){
 	char str[8];
 
-	RECT rect = {64,0,WWidth,WHeight};//XV‚·‚é—Ìˆæ(ƒgƒ‰ƒbƒN•ÏX)
+	RECT rect = {64,0,WWidth,WHeight};//æ›´æ–°ã™ã‚‹é ˜åŸŸ(ãƒˆãƒ©ãƒƒã‚¯å¤‰æ›´)
 
 
 	org_data.track += iValue;
@@ -59,7 +59,7 @@ void ChangeTrackPlus(HWND hdwnd, int iValue){
 	setRecentTrack(org_data.track); //A 2010.09.23 
 
 	if(timer_sw == 0) PlayOrganKey(36,org_data.track,1000,80);
-	//‘I‘ğƒgƒ‰ƒbƒN•\¦
+	//é¸æŠãƒˆãƒ©ãƒƒã‚¯è¡¨ç¤º
 	itoa(org_data.track,str,10);
 	
 	if(sACrnt){
@@ -93,7 +93,7 @@ void ChangeTrackPlus(HWND hdwnd, int iValue){
 void ChangeTrack(HWND hdwnd, int iTrack){
 	char str[8];
 	int i;
-	RECT rect = {64,0,WWidth,WHeight};//XV‚·‚é—Ìˆæ(ƒgƒ‰ƒbƒN•ÏX)
+	RECT rect = {64,0,WWidth,WHeight};//æ›´æ–°ã™ã‚‹é ˜åŸŸ(ãƒˆãƒ©ãƒƒã‚¯å¤‰æ›´)
 
 	i = iTrack;
 	org_data.track = i;
@@ -105,7 +105,7 @@ void ChangeTrack(HWND hdwnd, int iTrack){
 			tra = org_data.track;
 		}
 	}
-	//‘I‘ğƒgƒ‰ƒbƒN•\¦
+	//é¸æŠãƒˆãƒ©ãƒƒã‚¯è¡¨ç¤º
 	itoa(org_data.track,str,10);
 	if(sACrnt){
 		if(tra>=0){
@@ -135,19 +135,19 @@ void ChangeTrack(HWND hdwnd, int iTrack){
 }
 
 BOOL CALLBACK DialogTrack(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam){
-	RECT rect = {64,0,WWidth,WHeight};//XV‚·‚é—Ìˆæ(ƒgƒ‰ƒbƒN•ÏX)
+	RECT rect = {64,0,WWidth,WHeight};//æ›´æ–°ã™ã‚‹é ˜åŸŸ(ãƒˆãƒ©ãƒƒã‚¯å¤‰æ›´)
 	int i, j;
 	char str[8];
 	MUSICINFO mi;
 	
 	switch(message){
-	case WM_INITDIALOG://ƒ_ƒCƒAƒƒO‚ªŒÄ‚Î‚ê‚½
+	case WM_INITDIALOG://ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ãŒå‘¼ã°ã‚ŒãŸ
 		org_data.GetMusicInfo(&mi);
 		itoa(mi.wait,str,10);
 		SetDlgItemText(hdwnd,IDE_VIEWWAIT,str);
 		//itoa(org_data.track,str,10);
 		str[0]='1';
-		str[1]='\0';
+		str[1]='Â¥0';
 		SetDlgItemText(hdwnd,IDE_VIEWTRACK,str);
 		for(i = 0; i < MAXTRACK; i++)org_data.mute[i] = 0;
 		HANDLE hBmp;
@@ -221,7 +221,7 @@ BOOL CALLBACK DialogTrack(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam
 					/*
 					org_data.track = i;
 					PlayOrganKey(36,i,1000);
-					//‘I‘ğƒgƒ‰ƒbƒN•\¦
+					//é¸æŠãƒˆãƒ©ãƒƒã‚¯è¡¨ç¤º
 					itoa(org_data.track,str,10);
 					SetDlgItemText(hdwnd,IDE_VIEWTRACK,str);
 					org_data.PutMusic();
@@ -242,7 +242,7 @@ BOOL CALLBACK DialogTrack(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam
 			//SetFocus(hWnd);
 		}
 		switch(LOWORD(wParam)){
-		case IDC_BTN_SOLO:	//ƒ\ƒ
+		case IDC_BTN_SOLO:	//ã‚½ãƒ­
 			j = 1;
 			for(i = 0; i < MAXTRACK; i++){
 				if(org_data.track == i){
@@ -251,16 +251,16 @@ BOOL CALLBACK DialogTrack(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam
 					if(org_data.mute[i] != 1){j = 0; break;}
 				}
 			}
-			//j=1‚Ì‚Æ‚«AŒ»İTr‚Åƒ~ƒ…[ƒgÏ‚İ
+			//j=1ã®ã¨ãã€ç¾åœ¨Trã§ãƒŸãƒ¥ãƒ¼ãƒˆæ¸ˆã¿
 
-			if(j == 1){ //‘Sƒ~ƒ…[ƒg‰ğœ
+			if(j == 1){ //å…¨ãƒŸãƒ¥ãƒ¼ãƒˆè§£é™¤
 				for(i = 0; i < MAXTRACK; i++){
 					if(IsDlgButtonChecked(hdwnd,mute_name[i])){
 						SendMessage(GetDlgItem(hdwnd, mute_name[i]), BM_SETCHECK, (WPARAM)0, 0L);
 						org_data.mute[i] = 0;
 					}
 				}	
-			}else{ //Œ»İTrˆÈŠO‚ğƒ~ƒ…[ƒg
+			}else{ //ç¾åœ¨Trä»¥å¤–ã‚’ãƒŸãƒ¥ãƒ¼ãƒˆ
 				for(i = 0; i < MAXTRACK; i++){
 					if(org_data.track == i){
 						if(IsDlgButtonChecked(hdwnd,mute_name[i])){
@@ -286,7 +286,7 @@ BOOL CALLBACK DialogTrack(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam
 			SendMessage(hWnd, WM_COMMAND, (WPARAM)IDM_LOUPE_MINUS, 0L);
 			SetFocus(hWnd);		// 2010.11.30 A
 			break;
-		case IDC_BTN_FULL:	//ƒtƒ‹
+		case IDC_BTN_FULL:	//ãƒ•ãƒ«
 			{
 				int ib = 0;
 				for(i = 0; i < MAXTRACK; i++){
@@ -294,14 +294,14 @@ BOOL CALLBACK DialogTrack(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam
 						ib = 1;
 					}
 				}
-				if(ib!=0){ //‘Sƒ~ƒ…[ƒg‰ğœ
+				if(ib!=0){ //å…¨ãƒŸãƒ¥ãƒ¼ãƒˆè§£é™¤
 					for(i = 0; i < MAXTRACK; i++){
 						if(IsDlgButtonChecked(hdwnd,mute_name[i])){
 							SendMessage(GetDlgItem(hdwnd, mute_name[i]), BM_SETCHECK, (WPARAM)0, 0L);
 							org_data.mute[i] = 0;
 						}
 					}	
-				}else{ //‘Sƒ~ƒ…[ƒg
+				}else{ //å…¨ãƒŸãƒ¥ãƒ¼ãƒˆ
 					for(i = 0; i < MAXTRACK; i++){
 						if(IsDlgButtonChecked(hdwnd,mute_name[i])==0){
 							SendMessage(GetDlgItem(hdwnd, mute_name[i]), BM_SETCHECK, (WPARAM)1, 0L);
@@ -314,7 +314,7 @@ BOOL CALLBACK DialogTrack(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam
 			SetFocus(hWnd);		// 2010.11.30 A
 			break;
 		//A2008/05/13
-		case IDC_BTN_MELO:	//ƒƒƒfƒB‚Ì‚İ‚ğON-OFF
+		case IDC_BTN_MELO:	//ãƒ¡ãƒ­ãƒ‡ã‚£ã®ã¿ã‚’ON-OFF
 			{
 				int ib = 0;
 				for(i = 0; i < MAXMELODY; i++){
@@ -322,14 +322,14 @@ BOOL CALLBACK DialogTrack(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam
 						ib = 1;
 					}
 				}
-				if(ib!=0){ //‘Sƒ~ƒ…[ƒg‰ğœ
+				if(ib!=0){ //å…¨ãƒŸãƒ¥ãƒ¼ãƒˆè§£é™¤
 					for(i = 0; i < MAXMELODY; i++){
 						if(IsDlgButtonChecked(hdwnd,mute_name[i])){
 							SendMessage(GetDlgItem(hdwnd, mute_name[i]), BM_SETCHECK, (WPARAM)0, 0L);
 							org_data.mute[i] = 0;
 						}
 					}	
-				}else{ //‘Sƒ~ƒ…[ƒg
+				}else{ //å…¨ãƒŸãƒ¥ãƒ¼ãƒˆ
 					for(i = 0; i < MAXMELODY; i++){
 						if(IsDlgButtonChecked(hdwnd,mute_name[i])==0){
 							SendMessage(GetDlgItem(hdwnd, mute_name[i]), BM_SETCHECK, (WPARAM)1, 0L);
@@ -340,7 +340,7 @@ BOOL CALLBACK DialogTrack(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam
 			}
 			SetFocus(hWnd);		// 2010.11.30 A
 			break;
-		case IDC_BTN_DRUM:	//ƒhƒ‰ƒ€‚Ì‚İ‚ğON-OFF
+		case IDC_BTN_DRUM:	//ãƒ‰ãƒ©ãƒ ã®ã¿ã‚’ON-OFF
 			{
 				int ib = 0;
 				for(i = MAXMELODY; i < MAXTRACK; i++){
@@ -348,14 +348,14 @@ BOOL CALLBACK DialogTrack(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam
 						ib = 1;
 					}
 				}
-				if(ib!=0){ //‘Sƒ~ƒ…[ƒg‰ğœ
+				if(ib!=0){ //å…¨ãƒŸãƒ¥ãƒ¼ãƒˆè§£é™¤
 					for(i = MAXMELODY; i < MAXTRACK; i++){
 						if(IsDlgButtonChecked(hdwnd,mute_name[i])){
 							SendMessage(GetDlgItem(hdwnd, mute_name[i]), BM_SETCHECK, (WPARAM)0, 0L);
 							org_data.mute[i] = 0;
 						}
 					}	
-				}else{ //‘Sƒ~ƒ…[ƒg
+				}else{ //å…¨ãƒŸãƒ¥ãƒ¼ãƒˆ
 					for(i = MAXMELODY; i < MAXTRACK; i++){
 						if(IsDlgButtonChecked(hdwnd,mute_name[i])==0){
 							SendMessage(GetDlgItem(hdwnd, mute_name[i]), BM_SETCHECK, (WPARAM)1, 0L);
@@ -370,7 +370,7 @@ BOOL CALLBACK DialogTrack(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam
 			DialogBox(hInst,"DLGSETTING",hdwnd,DialogSetting);
 			SetFocus(hWnd);		// 2010.11.30 A
 			break;
-		case IDC_TR_TRACK: //ƒgƒ‰ƒbƒN‚ÌTRƒ{ƒ^ƒ“
+		case IDC_TR_TRACK: //ãƒˆãƒ©ãƒƒã‚¯ã®TRãƒœã‚¿ãƒ³
 			DialogBox(hInst,"DLGWAVE",hdwnd,DialogWave);
 			SetFocus(hWnd);		// 2010.11.30 A
 			break;

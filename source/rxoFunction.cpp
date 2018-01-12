@@ -1,4 +1,4 @@
-//#include <wchar.h> char‚ğwchar_t‚É’¼‚·‚Ì‚Íª‹C‚ª—v‚éB
+//#include <wchar.h> charã‚’wchar_tã«ç›´ã™ã®ã¯æ ¹æ°—ãŒè¦ã‚‹ã€‚
 #include "Setting.h"
 #include "DefOrg.h"
 #include "resource.h"
@@ -24,15 +24,15 @@
 #define MESSAGE_STRING_BUFFER_SIZE (1024*1024)
 #define MESSAGE_STRING_MAX 1024
 
-/* //«‚±‚Ìˆês‚ğ’Ç‰Á‚·‚éš
+/* //â†“ã“ã®ä¸€è¡Œã‚’è¿½åŠ ã™ã‚‹â˜…
 
 #include "rxoFunction.h"
 
   */
-/* //EditNote‚Å‚Ìƒgƒ‰ƒbƒNw’è
-	-1 : 0 ~ 8
-	-2 : 8 ~ 16
-	-3 : 0 ~ 16 
+/* //EditNoteã§ã®ãƒˆãƒ©ãƒƒã‚¯æŒ‡å®š
+	-1 : 0 â€¾ 8
+	-2 : 8 â€¾ 16
+	-3 : 0 â€¾ 16 
 	-4 : CurrentTrack
   */
 MEMORYSTATUS rMem ;
@@ -44,11 +44,11 @@ extern void ResetTitlebarChange(void);
 extern HWND hDlgTrack;
 extern int mute_name[MAXTRACK];
 extern char timer_sw;
-extern NOTECOPY nc_Select; //‘I‘ğ”ÍˆÍ
+extern NOTECOPY nc_Select; //é¸æŠç¯„å›²
 extern int tra, ful ,haba; 
-extern int sGrid;	//”ÍˆÍ‘I‘ğ‚ÍƒOƒŠƒbƒh’PˆÊ‚Å
-extern int sACrnt;	//”ÍˆÍ‘I‘ğ‚Íí‚É¶ÚİÄÄ×¯¸
-extern int gDrawDouble;	//—¼•û‚Ìƒgƒ‰ƒbƒNƒOƒ‹[ƒv‚ğ•`‰æ‚·‚é
+extern int sGrid;	//ç¯„å›²é¸æŠã¯ã‚°ãƒªãƒƒãƒ‰å˜ä½ã§
+extern int sACrnt;	//ç¯„å›²é¸æŠã¯å¸¸ã«ï½¶ï¾šï¾ï¾„ï¾„ï¾—ï½¯ï½¸
+extern int gDrawDouble;	//ä¸¡æ–¹ã®ãƒˆãƒ©ãƒƒã‚¯ã‚°ãƒ«ãƒ¼ãƒ—ã‚’æç”»ã™ã‚‹
 extern CHAR app_path[];
 extern int iDragMode;
 extern SaveWithInitVolFile;
@@ -64,7 +64,7 @@ int iChangeFinish; //2010.09.23 A
 int iActivatePAN = 0; //2014.05.01 A
 int iActivateVOL = 0; //2014.05.01 A
 
-int iSlideOverlapNotes = 0; //d‚È‚è‡‚¤‰¹•„‚Ì•\¦‚ğáŠ±‚¸‚ç‚· 2014.05.06 A
+int iSlideOverlapNotes = 0; //é‡ãªã‚Šåˆã†éŸ³ç¬¦ã®è¡¨ç¤ºã‚’è‹¥å¹²ãšã‚‰ã™ 2014.05.06 A
 
 int Menu_Recent[]={
 	IDM_RECENT1, IDM_RECENT2, IDM_RECENT3, IDM_RECENT4, IDM_RECENT5, IDM_RECENT6, IDM_RECENT7, IDM_RECENT8, IDM_RECENT9, IDM_RECENT0
@@ -73,25 +73,25 @@ char *FileAcc[]={
 	"File1", "File2", "File3", "File4", "File5", "File6", "File7", "File8", "File9", "File0"
 };
 
-char RecentFileName[10][MAX_PATH];	//Å‹ßg‚Á‚½ƒtƒ@ƒCƒ‹–¼
+char RecentFileName[10][MAX_PATH];	//æœ€è¿‘ä½¿ã£ãŸãƒ•ã‚¡ã‚¤ãƒ«å
 void SetMenuRecent(int iMenuNumber, char *strText, int iDisable);
 void CreateMenuRecent();
 
 void ShowStatusMessage(void);
 
-int iRecentTrackM[]={ // 2010.09.23 A Å‹ßg‚Á‚½ƒgƒ‰ƒbƒN”Ô†
+int iRecentTrackM[]={ // 2010.09.23 A æœ€è¿‘ä½¿ã£ãŸãƒˆãƒ©ãƒƒã‚¯ç•ªå·
 	0,1,2,3,4,5,6,7
 };
-int iRecentTrackD[]={ // 2010.09.23 A Å‹ßg‚Á‚½ƒgƒ‰ƒbƒN”Ô†
+int iRecentTrackD[]={ // 2010.09.23 A æœ€è¿‘ä½¿ã£ãŸãƒˆãƒ©ãƒƒã‚¯ç•ªå·
 	8,9,10,11,12,13,14,15
 };
 
-int NoteWidth; //‰¹•„‚Ì•
-int NoteEnlarge_Until_16px; //•\¦‚ÌÛANOTE‚Ì“ª‚ğÅ‘å16ƒsƒNƒZƒ‹‚Ü‚ÅL‚Î‚·B
+int NoteWidth; //éŸ³ç¬¦ã®å¹…
+int NoteEnlarge_Until_16px; //è¡¨ç¤ºã®éš›ã€NOTEã®é ­ã‚’æœ€å¤§16ãƒ”ã‚¯ã‚»ãƒ«ã¾ã§ä¼¸ã°ã™ã€‚
 int iPushStratch = 0; //2014.05.31
 int iLastEditNoteLength = 1;
 
-void setRecentTrack(int iNewTrack){ //Å‹ßg‚Á‚½ƒgƒ‰ƒbƒN”Ô†‚ğXV‚·‚é
+void setRecentTrack(int iNewTrack){ //æœ€è¿‘ä½¿ã£ãŸãƒˆãƒ©ãƒƒã‚¯ç•ªå·ã‚’æ›´æ–°ã™ã‚‹
 	int iRT[MAXMELODY];
 	int i,j;
 	if(iNewTrack<MAXMELODY){
@@ -122,9 +122,9 @@ void setRecentTrack(int iNewTrack){ //Å‹ßg‚Á‚½ƒgƒ‰ƒbƒN”Ô†‚ğXV‚·‚é
 	return;
 }
 
-//iOrder:0`7
-//isDrumTrack:0 ƒƒƒfƒB  ,   isDrumTrack:1 ƒhƒ‰ƒ€
-int getRecentTrack(int iOrder, int isDrumTrack){ //Å‹ßg‚Á‚½ƒgƒ‰ƒbƒN‚ğ•Ô‚·
+//iOrder:0ã€œ7
+//isDrumTrack:0 ãƒ¡ãƒ­ãƒ‡ã‚£  ,   isDrumTrack:1 ãƒ‰ãƒ©ãƒ 
+int getRecentTrack(int iOrder, int isDrumTrack){ //æœ€è¿‘ä½¿ã£ãŸãƒˆãƒ©ãƒƒã‚¯ã‚’è¿”ã™
 	int i,j;
 	j=0;
  	if(isDrumTrack==0){
@@ -138,16 +138,16 @@ int getRecentTrack(int iOrder, int isDrumTrack){ //Å‹ßg‚Á‚½ƒgƒ‰ƒbƒN‚ğ•Ô‚·
 			j++;
 		}
 	}
-	return iOrder; //–{—ˆA‚±‚Ì’l‚Å•Ô‚³‚ê‚é‚±‚Æ‚Í‚È‚¢‚Í‚¸...
+	return iOrder; //æœ¬æ¥ã€ã“ã®å€¤ã§è¿”ã•ã‚Œã‚‹ã“ã¨ã¯ãªã„ã¯ãš...
 }
 
-//Å‹ßg‚Á‚½ƒtƒ@ƒCƒ‹ŒQ‚Éƒvƒbƒg
+//æœ€è¿‘ä½¿ã£ãŸãƒ•ã‚¡ã‚¤ãƒ«ç¾¤ã«ãƒ—ãƒƒãƒˆ
 void PutRecentFile(char *FileName)
 {
 	int i,j;
 	j=9;
 	for(i=0;i<10;i++){
-		if(strcmp(RecentFileName[i],FileName)==0){ //“™‚µ‚¢‚Æ‚«
+		if(strcmp(RecentFileName[i],FileName)==0){ //ç­‰ã—ã„ã¨ã
 			j=i; i=999;
 		}
 	}
@@ -164,7 +164,7 @@ void LoadRecentFromIniFile(){
 	int i;
 	for(i=0;i<10;i++){
 		RecentFileName[i][0]='@';
-		RecentFileName[i][1]='\0';
+		RecentFileName[i][1]='Â¥0';
 		GetPrivateProfileString( "Recent",FileAcc[i],"@",RecentFileName[i],256,app_path);
 	}
 	CreateMenuRecent();
@@ -179,15 +179,15 @@ void SetMenuRecent(int iMenuNumber, char *strText, int iDisable)
 	char strCc[256];
 	strcpy(strCc,"&&");
 	itoa((iMenuNumber+1)%10, &strCc[1], 10);
-	strCc[2]='\0';
+	strCc[2]='Â¥0';
 	strcat(strCc," ");
 	//strcat(strCc,strText);
 	int y,i;
 	y = strlen(strText);
-	for(i=y;i>0;i--)if(strText[i]=='\\'){i++;break;}
+	for(i=y;i>0;i--)if(strText[i]=='Â¥Â¥'){i++;break;}
 	strcat(strCc,&strText[i]);
 	if(iMenuNumber==0){
-		strcat(strCc,"\tShift+Ctrl+Home");
+		strcat(strCc,"Â¥tShift+Ctrl+Home");
 	}
 	ModifyMenu(hMenu, Menu_Recent[iMenuNumber], MF_BYCOMMAND|MF_STRING, Menu_Recent[iMenuNumber], strCc);
 	if(iDisable){
@@ -200,20 +200,20 @@ void SetMenuRecent(int iMenuNumber, char *strText, int iDisable)
 void ClearRecentFile()
 {
 	int a;
-	//a = MessageBox(hWnd,"—š—ğ‚ğ–•ƒbÁ‚µ‚Ü‚·‚©H","uÅ‹ßg‚Á‚½ƒtƒ@ƒCƒ‹v‚ÌƒNƒŠƒA",MB_OKCANCEL|MB_ICONQUESTION|MB_DEFBUTTON2);	// 2014.10.19 D
+	//a = MessageBox(hWnd,"å±¥æ­´ã‚’æŠ¹ãƒƒæ¶ˆã—ã¾ã™ã‹ï¼Ÿ","ã€Œæœ€è¿‘ä½¿ã£ãŸãƒ•ã‚¡ã‚¤ãƒ«ã€ã®ã‚¯ãƒªã‚¢",MB_OKCANCEL|MB_ICONQUESTION|MB_DEFBUTTON2);	// 2014.10.19 D
 	a = msgbox(hWnd,IDS_NOTIFY_RECENT_INITIALIZE,IDS_CLEAR_RECENT,MB_OKCANCEL|MB_ICONQUESTION|MB_DEFBUTTON2);	// 2014.10.19 A
 	if(a == IDOK){
 		int i;
 		for(i=0;i<10;i++){
 			RecentFileName[i][0]='@';
-			RecentFileName[i][1]='\0';
+			RecentFileName[i][1]='Â¥0';
 		}
 		CreateMenuRecent();
-		//MessageBox(hWnd,"^‚Á”’‚É‚È‚Á‚½‚ºB","’Ê’m",MB_OK);	// 2014.10.19 D
+		//MessageBox(hWnd,"çœŸã£ç™½ã«ãªã£ãŸãœã€‚","é€šçŸ¥",MB_OK);	// 2014.10.19 D
 		msgbox(hWnd,IDS_INFO_INITIALIZE,IDS_NOTIFY_TITLE,MB_OK);	// 2014.10.19 A
 
 	}else{
-		//MessageBox(hWnd,"ƒLƒƒƒ“ƒZƒ‹‚µ‚Ü‚µ‚½B","’Ê’m",MB_OK);	// 2014.10.19 D
+		//MessageBox(hWnd,"ã‚­ãƒ£ãƒ³ã‚»ãƒ«ã—ã¾ã—ãŸã€‚","é€šçŸ¥",MB_OK);	// 2014.10.19 D
 		msgbox(hWnd,IDS_CANCEL,IDS_NOTIFY_TITLE,MB_OK);	// 2014.10.19 A
 	}
 
@@ -227,7 +227,7 @@ void CreateMenuRecent()
 		if(RecentFileName[i][0]!='@'){
 			SetMenuRecent(i,RecentFileName[i],0);
 		}else{
-			//SetMenuRecent(i,"–¢g—p",1);	// 2014.10.19 D
+			//SetMenuRecent(i,"æœªä½¿ç”¨",1);	// 2014.10.19 D
 			SetMenuRecent(i,MessageString[IDS_STRING76],1);	// 2014.10.19 A
 		}
 	}
@@ -252,7 +252,7 @@ void SetLoadRecentFile(int iNum)
 int GetSelectMeasBeat(int GetToValue, int addValue)
 {
 	if (tra<0)return 0;
-	int r,g;	//line ‰½”‘‚©  // dot ‚P”‘‚Ì•ªŠ„”
+	int r,g;	//line ä½•æ³Šã‹  // dot ï¼‘æ³Šã®åˆ†å‰²æ•°
 	unsigned char line,dot;
 	MUSICINFO mi;	org_data.GetMusicInfo(&mi);
 	dot = mi.dot; line = mi.line;
@@ -276,7 +276,7 @@ int GetSelectMeasBeat(int GetToValue, int addValue)
 }
 char *TrackCode[]={"1","2","3","4","5","6","7","8","Q","W","E","R","T","Y","U","I" };
 
-//‘å•¶š¬•¶š‚É’ˆÓ‚µ‚½ª‚Ì‹t”Ÿ”
+//å¤§æ–‡å­—å°æ–‡å­—ã«æ³¨æ„ã—ãŸâ†‘ã®é€†å‡½æ•°
 int ReverseTrackCode(char *strTrack)
 {
 	int i;
@@ -325,8 +325,8 @@ int ReverseTrackCode(char *strTrack)
 		case 'I':
 			return 15;
 		}
-	}while(strTrack[i]==' '); //æ“ª‚Ì‹ó”’‚Í–³‹
-	return 99; //ˆÙí‚Èƒgƒ‰ƒbƒN
+	}while(strTrack[i]==' '); //å…ˆé ­ã®ç©ºç™½ã¯ç„¡è¦–
+	return 99; //ç•°å¸¸ãªãƒˆãƒ©ãƒƒã‚¯
 }
 
 void MuteTrack(int Track)
@@ -341,7 +341,7 @@ void EditNote(int AddNotes , int Track , int Function)
 	if(AddNotes==0)return;
 	int j,jmin,jmax,Trc;
 	Trc = Track;
-	RECT rect = {64,0,WWidth,WHeight};//XV‚·‚é—Ìˆæ
+	RECT rect = {64,0,WWidth,WHeight};//æ›´æ–°ã™ã‚‹é ˜åŸŸ
 	PARCHANGE pc;
 	MUSICINFO mi;
 	org_data.GetMusicInfo(&mi);
@@ -356,7 +356,7 @@ void EditNote(int AddNotes , int Track , int Function)
 		pc.a = AddNotes;
 	}
 
-	if(tra>=0){ //‘I‘ğ”ÍˆÍ‚ª‚ ‚ê‚ÎB
+	if(tra>=0){ //é¸æŠç¯„å›²ãŒã‚ã‚Œã°ã€‚
 		if(ful == 1 || tra == org_data.track){
 			pc.x1 = nc_Select.x1_1;
 			pc.x2 = nc_Select.x1_2;
@@ -378,7 +378,7 @@ void EditNote(int AddNotes , int Track , int Function)
 			jmax = MAXTRACK;
 		}else if(Trc==-3){
 			jmax = MAXTRACK;
-		}else if(Trc==-4){ //ƒJƒŒƒ“ƒgƒgƒ‰ƒbƒN
+		}else if(Trc==-4){ //ã‚«ãƒ¬ãƒ³ãƒˆãƒˆãƒ©ãƒƒã‚¯
 			jmin = (int)org_data.track;
 			jmax = jmin + 1;
 		}
@@ -401,13 +401,13 @@ void EditNote(int AddNotes , int Track , int Function)
 			org_data.EnsureEmptyArea(&pc, Function - MODEDECAY - 20);
 		}
 	}
-	org_data.PutMusic();	//•\¦
+	org_data.PutMusic();	//è¡¨ç¤º
 	RedrawWindow(hWnd,&rect,NULL,RDW_INVALIDATE|RDW_ERASENOW);
-	//MessageBox(hdwnd,"w’è”ÍˆÍ‚ÌƒL[‚ğ•ÏX‚µ‚Ü‚µ‚½","’Ê’m",MB_OK);
+	//MessageBox(hdwnd,"æŒ‡å®šç¯„å›²ã®ã‚­ãƒ¼ã‚’å¤‰æ›´ã—ã¾ã—ãŸ","é€šçŸ¥",MB_OK);
 	return;
 }
 
-//‰¹‚Ì‚‚³‚ğã‚°‚é Track=-1‚Å‚·‚×‚Ä(ƒhƒ‰ƒ€‚Í‚Ì‚¼‚­)
+//éŸ³ã®é«˜ã•ã‚’ä¸Šã’ã‚‹ Track=-1ã§ã™ã¹ã¦(ãƒ‰ãƒ©ãƒ ã¯ã®ãã)
 void TransportNote(int AddNotes , int Track )
 {
 	EditNote(AddNotes , Track , 0);
@@ -432,7 +432,7 @@ void PanEdit(int AddNotes , int Track )
 	EditNote(AddNotes , Track , 2);
 }
 
-void ShowMemoryState(){ //ƒfƒoƒbƒO—p
+void ShowMemoryState(){ //ãƒ‡ãƒãƒƒã‚°ç”¨
 	char cc[32]; int y;
 	GlobalMemoryStatus( &rMem ) ;
 	y=rMem.dwAvailPhys/1000;
@@ -440,24 +440,24 @@ void ShowMemoryState(){ //ƒfƒoƒbƒO—p
 	MessageBox(NULL,cc,"Mem",MB_OK);
 }
 
-//‰¹•„‚Ì®—
+//éŸ³ç¬¦ã®æ•´ç†
 void SortMusicNote(void)
 {
 	int a;
-	//a = MessageBox(hWnd,"’·ŠÔ‚Ìg—p‚É‚æ‚èAƒm[ƒgi‰¹•„j‚ªƒƒ‚ƒŠã‚É\nU—‚µ‚Ä‚µ‚Ü‚¢‚Ü‚·Bi•ˆ–Ê‡‚Æƒƒ‚ƒŠ‡‚ÍˆÙ‚È‚Á‚Ä‚¢‚éj\n‚±‚ÌŠÖ”‚Íƒm[ƒg‚ğ•ˆ–Ê‚Ì‡”Ô‚É\n•À‚×Š·‚¦‚Ü‚·B\n®Aƒf[ƒ^‚ğƒ[ƒh‚µ’¼‚µ‚Ä‚à“¯‚¶Œø‰Ê‚ª“¾‚ç‚ê‚Ü‚·B\nÀs‚µ‚Ü‚·‚©H","g‚¢•û‚Æ–Ú“I",MB_OKCANCEL|MB_ICONQUESTION|MB_DEFBUTTON2);	// 2014.10.19 D
+	//a = MessageBox(hWnd,"é•·æ™‚é–“ã®ä½¿ç”¨ã«ã‚ˆã‚Šã€ãƒãƒ¼ãƒˆï¼ˆéŸ³ç¬¦ï¼‰ãŒãƒ¡ãƒ¢ãƒªä¸Šã«Â¥næ•£ä¹±ã—ã¦ã—ã¾ã„ã¾ã™ã€‚ï¼ˆè­œé¢é †ã¨ãƒ¡ãƒ¢ãƒªé †ã¯ç•°ãªã£ã¦ã„ã‚‹ï¼‰Â¥nã“ã®é–¢æ•°ã¯ãƒãƒ¼ãƒˆã‚’è­œé¢ã®é †ç•ªã«Â¥nä¸¦ã¹æ›ãˆã¾ã™ã€‚Â¥nå°šã€ãƒ‡ãƒ¼ã‚¿ã‚’ãƒ­ãƒ¼ãƒ‰ã—ç›´ã—ã¦ã‚‚åŒã˜åŠ¹æœãŒå¾—ã‚‰ã‚Œã¾ã™ã€‚Â¥nå®Ÿè¡Œã—ã¾ã™ã‹ï¼Ÿ","ä½¿ã„æ–¹ã¨ç›®çš„",MB_OKCANCEL|MB_ICONQUESTION|MB_DEFBUTTON2);	// 2014.10.19 D
 	a = msgbox(hWnd,IDS_INFO_MEMORY,IDS_USAGE,MB_OKCANCEL|MB_ICONQUESTION|MB_DEFBUTTON2);	// 2014.10.19 A
 	if(a == IDOK){
 		org_data.SortNotes();
-		//MessageBox(hWnd,"•À‚×‘Ö‚¦EÄ\’z‚µ‚Ü‚µ‚½B","’Ê’m",MB_OK);	// 2014.10.19 D
+		//MessageBox(hWnd,"ä¸¦ã¹æ›¿ãˆãƒ»å†æ§‹ç¯‰ã—ã¾ã—ãŸã€‚","é€šçŸ¥",MB_OK);	// 2014.10.19 D
 		msgbox(hWnd,IDS_INFO_NARABEKAE,IDS_NOTIFY_TITLE,MB_OK);	// 2014.10.19 A
 
 	}else{
-		//MessageBox(hWnd,"ƒLƒƒƒ“ƒZƒ‹‚µ‚Ü‚µ‚½B","’Ê’m",MB_OK);	// 2014.10.19 D
+		//MessageBox(hWnd,"ã‚­ãƒ£ãƒ³ã‚»ãƒ«ã—ã¾ã—ãŸã€‚","é€šçŸ¥",MB_OK);	// 2014.10.19 D
 		msgbox(hWnd,IDS_CANCEL,IDS_NOTIFY_TITLE,MB_OK);	// 2014.10.19 A
 	}
 }
 
-//‰¼‘z“I‚ÉƒNƒŠƒbƒvƒ{[ƒh‚ğ—pˆÓ‚µ‚ÄAƒf[ƒ^‚Ì‚â‚èæ‚è‚Í‚±‚¢‚Â‚ğ‰î‚µ‚Äs‚¤B
+//ä»®æƒ³çš„ã«ã‚¯ãƒªãƒƒãƒ—ãƒœãƒ¼ãƒ‰ã‚’ç”¨æ„ã—ã¦ã€ãƒ‡ãƒ¼ã‚¿ã®ã‚„ã‚Šå–ã‚Šã¯ã“ã„ã¤ã‚’ä»‹ã—ã¦è¡Œã†ã€‚
 char VirtualCB[VIRTUAL_CB_SIZE];
 char *readVCB;
 
@@ -480,7 +480,7 @@ void AddTrackSeparater(void)
 	strcat(VirtualCB,"@");
 }
 
-//ƒZƒpƒŒ[ƒ^‚ğ”­Œ©‚µ‚½‚çtrue
+//ã‚»ãƒ‘ãƒ¬ãƒ¼ã‚¿ã‚’ç™ºè¦‹ã—ãŸã‚‰true
 bool ReadTrackSeparater(void)
 {
 	if(*readVCB!='@')return false;
@@ -492,21 +492,21 @@ void AddStartToVirtualCB(void)
 	strcpy(VirtualCB,"OrgCBData|");
 }
 
-//“Ç‚İo‚µŠJn‚³‚¹‚é‚Æ“¯‚ÉA³‹K‚Ìƒf[ƒ^‚©ƒ`ƒFƒbƒN
+//èª­ã¿å‡ºã—é–‹å§‹ã•ã›ã‚‹ã¨åŒæ™‚ã«ã€æ­£è¦ã®ãƒ‡ãƒ¼ã‚¿ã‹ãƒã‚§ãƒƒã‚¯
 bool ReadStartFromVirtualCB(void)
 {
-	readVCB = &VirtualCB[10]; //æ“ª‚ÌŒ`®H
+	readVCB = &VirtualCB[10]; //å…ˆé ­ã®å½¢å¼ï¼Ÿ
 	if(VirtualCB[0]=='O' && VirtualCB[1]=='r' && VirtualCB[2]=='g' && 
 		VirtualCB[3]=='C' && VirtualCB[4]=='B' && VirtualCB[5]=='D' && 
 		VirtualCB[6]=='a' && VirtualCB[7]=='t' && VirtualCB[8]=='a')return true;
-	VirtualCB[10]='\0'; //ƒf[ƒ^”jŠü
+	VirtualCB[10]='Â¥0'; //ãƒ‡ãƒ¼ã‚¿ç ´æ£„
 	return false;
 
 }
 
 int ReadIntegerFromVirtualCB(void)
 {
-	if(*readVCB=='\0')return -9999;
+	if(*readVCB=='Â¥0')return -9999;
 	char ons[32], *cp;
 	cp = ons;
 	do{
@@ -521,7 +521,7 @@ int ReadIntegerFromVirtualCB(void)
 	return i;
 }
 
-//–{•¨‚ÌCB‚ÉƒRƒs[
+//æœ¬ç‰©ã®CBã«ã‚³ãƒ”ãƒ¼
 void SetClipBoardFromVCB(void)
 {
 	//MessageBox(NULL,VirtualCB,"Error(Copy)",MB_OK);
@@ -541,7 +541,7 @@ void SetClipBoardFromVCB(void)
 
 }
 
-//VCB‚Ö‘ã“ü
+//VCBã¸ä»£å…¥
 void GetClipBoardToVCB(void)
 {
 	HANDLE hText;
@@ -551,13 +551,13 @@ void GetClipBoardToVCB(void)
 
 	hText = GetClipboardData(CF_TEXT);
 	if(hText == NULL) {
-		//printf("ƒNƒŠƒbƒvƒ{[ƒh‚ÉƒeƒLƒXƒgƒf[ƒ^‚Í‚È‚¢B\n");
+		//printf("ã‚¯ãƒªãƒƒãƒ—ãƒœãƒ¼ãƒ‰ã«ãƒ†ã‚­ã‚¹ãƒˆãƒ‡ãƒ¼ã‚¿ã¯ãªã„ã€‚Â¥n");
 	} else {
 		pText = (char*)GlobalLock(hText);
 		int i;
 		for(i=0;i<640000;i++){
 			VirtualCB[i]=pText[i];
-			if(pText[i]=='\0')i=640000+1; //‹­ˆø‚Éƒ‹[ƒvI—¹
+			if(pText[i]=='Â¥0')i=640000+1; //å¼·å¼•ã«ãƒ«ãƒ¼ãƒ—çµ‚äº†
 		}
 
 		GlobalUnlock(hText);
@@ -567,21 +567,21 @@ void GetClipBoardToVCB(void)
 	ReadStartFromVirtualCB();
 }
 
-RECT rect1 = {0,0,WWidth,WHeight};//XV‚·‚é—Ìˆæ
+RECT rect1 = {0,0,WWidth,WHeight};//æ›´æ–°ã™ã‚‹é ˜åŸŸ
 
 void ReplaseUndo()
 {
 	HMENU hMenu;
 	hMenu=GetMenu(hWnd);
-	if(org_data.ReplaceFromUndoData()>0){ //‚±‚êˆÈãUNDOo—ˆ‚È‚¢
+	if(org_data.ReplaceFromUndoData()>0){ //ã“ã‚Œä»¥ä¸ŠUNDOå‡ºæ¥ãªã„
 		EnableMenuItem(hMenu,IDM_UNDO,MF_BYCOMMAND|MF_GRAYED);
 	}
 	org_data.PutBackGround();
-	org_data.PutMusic();	//•\¦
+	org_data.PutMusic();	//è¡¨ç¤º
 	//RedrawWindow(hWnd,&rect,NULL,RDW_INVALIDATE|RDW_ERASENOW);
-	//’Êí‚Ìó‘Ô‚É–ß‚·‚É‚Í
+	//é€šå¸¸ã®çŠ¶æ…‹ã«æˆ»ã™ã«ã¯
 	EnableMenuItem(hMenu,IDM_REDO,MF_BYCOMMAND|MF_ENABLED);
-	DrawMenuBar(hWnd);//ƒƒjƒ…[‚ğÄ•`‰æ
+	DrawMenuBar(hWnd);//ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã‚’å†æç”»
 	if(org_data.MinimumUndoCursor==0 && org_data.CurrentUndoCursor==0){
 		ResetTitlebarChange();
 	}else{
@@ -591,26 +591,26 @@ void ReplaseUndo()
 
 void SetUndo()
 {
-	if(org_data.SetUndoData()>0){ //ƒZƒbƒg‚µA‚à‚µAƒƒjƒ…[‚ªŠDF•\¦‚È‚ç”Z‚­‚·‚é
+	if(org_data.SetUndoData()>0){ //ã‚»ãƒƒãƒˆã—ã€ã‚‚ã—ã€ãƒ¡ãƒ‹ãƒ¥ãƒ¼ãŒç°è‰²è¡¨ç¤ºãªã‚‰æ¿ƒãã™ã‚‹
 		HMENU hMenu;
 		hMenu=GetMenu(hWnd);
-		//’Êí‚Ìó‘Ô‚É–ß‚·‚É‚Í
+		//é€šå¸¸ã®çŠ¶æ…‹ã«æˆ»ã™ã«ã¯
 		EnableMenuItem(hMenu,IDM_UNDO,MF_BYCOMMAND|MF_ENABLED);
 		EnableMenuItem(hMenu,IDM_REDO,MF_BYCOMMAND|MF_GRAYED);
-		DrawMenuBar(hWnd);//ƒƒjƒ…[‚ğÄ•`‰æ
+		DrawMenuBar(hWnd);//ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã‚’å†æç”»
 	}
 	SetTitlebarChange();
 }
 
-void ResetLastUndo() //æ‚è‚¯‚µ
+void ResetLastUndo() //å–ã‚Šã‘ã—
 {
-	if(org_data.ResetLastUndo()>0){ //ƒZƒbƒg‚µA‚à‚µAƒƒjƒ…[‚ªŠDF•\¦‚È‚ç”Z‚­‚·‚é
+	if(org_data.ResetLastUndo()>0){ //ã‚»ãƒƒãƒˆã—ã€ã‚‚ã—ã€ãƒ¡ãƒ‹ãƒ¥ãƒ¼ãŒç°è‰²è¡¨ç¤ºãªã‚‰æ¿ƒãã™ã‚‹
 		HMENU hMenu;
 		hMenu=GetMenu(hWnd);
-		//’Êí‚Ìó‘Ô‚É–ß‚·‚É‚Í
+		//é€šå¸¸ã®çŠ¶æ…‹ã«æˆ»ã™ã«ã¯
 		EnableMenuItem(hMenu,IDM_UNDO,MF_BYCOMMAND|MF_GRAYED);
 		EnableMenuItem(hMenu,IDM_REDO,MF_BYCOMMAND|MF_GRAYED);
-		DrawMenuBar(hWnd);//ƒƒjƒ…[‚ğÄ•`‰æ
+		DrawMenuBar(hWnd);//ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã‚’å†æç”»
 	}
 
 }
@@ -622,9 +622,9 @@ void ClearUndo()
 	hMenu=GetMenu(hWnd);
 	EnableMenuItem(hMenu,IDM_UNDO,MF_BYCOMMAND|MF_GRAYED);
 	EnableMenuItem(hMenu,IDM_REDO,MF_BYCOMMAND|MF_GRAYED);
-	//’Êí‚Ìó‘Ô‚É–ß‚·‚É‚Í
+	//é€šå¸¸ã®çŠ¶æ…‹ã«æˆ»ã™ã«ã¯
 	//EnableMenuItem(hMenu,IDM_UNDO,MF_BYCOMMAND|MF_ENABLED);
-	DrawMenuBar(hWnd);//ƒƒjƒ…[‚ğÄ•`‰æ
+	DrawMenuBar(hWnd);//ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã‚’å†æç”»
 
 }
 
@@ -633,13 +633,13 @@ void ReplaceRedo()
 	HMENU hMenu;
 	hMenu=GetMenu(hWnd);
 	if(org_data.ReplaceFromRedoData()>0){
-		//’Êí‚Ìó‘Ô‚É–ß‚·‚É‚Í
+		//é€šå¸¸ã®çŠ¶æ…‹ã«æˆ»ã™ã«ã¯
 		EnableMenuItem(hMenu,IDM_REDO,MF_BYCOMMAND|MF_GRAYED);
 	}
 	EnableMenuItem(hMenu,IDM_UNDO,MF_BYCOMMAND|MF_ENABLED);
-	DrawMenuBar(hWnd);//ƒƒjƒ…[‚ğÄ•`‰æ
+	DrawMenuBar(hWnd);//ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã‚’å†æç”»
 	org_data.PutBackGround();
-	org_data.PutMusic();	//•\¦
+	org_data.PutMusic();	//è¡¨ç¤º
 	//RedrawWindow(hWnd,&rect1,NULL,RDW_INVALIDATE|RDW_ERASENOW);
 
 }
@@ -705,7 +705,7 @@ void ChangeNoteEnlarge(int iValue){
 
 int MinimumGrid(int x)
 {
-	int r;	//line ‰½”‘‚©  // dot ‚P”‘‚Ì•ªŠ„”
+	int r;	//line ä½•æ³Šã‹  // dot ï¼‘æ³Šã®åˆ†å‰²æ•°
 	unsigned char dot;
 	MUSICINFO mi;	org_data.GetMusicInfo(&mi);
 	dot = mi.dot;
@@ -715,7 +715,7 @@ int MinimumGrid(int x)
 }
 int MaximumGrid(int x)
 {
-	int r;	//line ‰½”‘‚©  // dot ‚P”‘‚Ì•ªŠ„”
+	int r;	//line ä½•æ³Šã‹  // dot ï¼‘æ³Šã®åˆ†å‰²æ•°
 	unsigned char dot;
 	MUSICINFO mi;	org_data.GetMusicInfo(&mi);
 	dot = mi.dot;
@@ -725,7 +725,7 @@ int MaximumGrid(int x)
 
 int MinimumGridLine(int x)
 {
-	int r;	//line ‰½”‘‚©  // dot ‚P”‘‚Ì•ªŠ„”
+	int r;	//line ä½•æ³Šã‹  // dot ï¼‘æ³Šã®åˆ†å‰²æ•°
 	unsigned char dot;
 	MUSICINFO mi;	org_data.GetMusicInfo(&mi);
 	dot = mi.dot * mi.line;
@@ -735,7 +735,7 @@ int MinimumGridLine(int x)
 }
 int MaximumGridLine(int x)
 {
-	int r;	//line ‰½”‘‚©  // dot ‚P”‘‚Ì•ªŠ„”
+	int r;	//line ä½•æ³Šã‹  // dot ï¼‘æ³Šã®åˆ†å‰²æ•°
 	unsigned char dot;
 	MUSICINFO mi;	org_data.GetMusicInfo(&mi);
 	dot = mi.dot * mi.line;
@@ -772,7 +772,7 @@ void ChangeDrawDouble(int iValue)
 		CheckMenuItem(hMenu,IDM_DRAWDOUBLE,(MF_BYCOMMAND|MFS_UNCHECKED));
 	else
 		CheckMenuItem(hMenu,IDM_DRAWDOUBLE,(MF_BYCOMMAND|MFS_CHECKED));
-		//ModifyMenu(hMenu, IDM_DRAWDOUBLE, MF_BYCOMMAND|MF_STRING, IDM_DRAWDOUBLE, "‚¨‚¦");
+		//ModifyMenu(hMenu, IDM_DRAWDOUBLE, MF_BYCOMMAND|MF_STRING, IDM_DRAWDOUBLE, "ãŠãˆ");
 	org_data.PutMusic();
 
 	ShowStatusMessage();
@@ -887,9 +887,9 @@ bool AutoSavePVIFile()
 	int t,r;
 	for(t=0;t<MAXTRACK;t++){
 		r = (int)org_data.def_pan[t];
-		fprintf(fp,"%d\n",r);
+		fprintf(fp,"%dÂ¥n",r);
 		r = (int)org_data.def_volume[t];
-		fprintf(fp,"%d\n",r);
+		fprintf(fp,"%dÂ¥n",r);
 	}
 	fclose(fp);
 	delete [] PVIFile;
@@ -911,7 +911,7 @@ void ChangeAutoLoadMode(int iValue)
 	ShowStatusMessage();
 }
 
-// StringTable‚ğQÆ‚·‚éƒƒbƒZ[ƒWƒ{ƒbƒNƒX //2014.10.18 
+// StringTableã‚’å‚ç…§ã™ã‚‹ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ãƒœãƒƒã‚¯ã‚¹ //2014.10.18 
 int msgbox(HWND hWnd , int MessageID, int TitleID, UINT uType)
 {
 	TCHAR strMesssage[2048];
@@ -939,25 +939,25 @@ int AllocMessageStringBuffer(void)
 	ptr = MessageStringBuffer;
 	for(i = 1; i < MESSAGE_STRING_MAX; i++){
 		MessageString[i] = ptr;
-		r = LoadString(GetModuleHandle(NULL), i, ptr, 1024); //1024‚Í“K“–‚Å‚·B³Šm‚É‚ÍMESSAGE_STRING_BUFFER_SIZE‚©‚çŒvZ‚·‚é•K—v‚ª‚ ‚è‚Ü‚·B
+		r = LoadString(GetModuleHandle(NULL), i, ptr, 1024); //1024ã¯é©å½“ã§ã™ã€‚æ­£ç¢ºã«ã¯MESSAGE_STRING_BUFFER_SIZEã‹ã‚‰è¨ˆç®—ã™ã‚‹å¿…è¦ãŒã‚ã‚Šã¾ã™ã€‚
 		if(r > 0){
-			//––”ö‚Ì!!‚ğŒŸo‚·‚é
+			//æœ«å°¾ã®!!ã‚’æ¤œå‡ºã™ã‚‹
 			for(p = ptr + r - 3, flg = 0; *p != 0 ; p++){
 				if(*p == '!')flg++; else flg = 0;
 				if(flg >= 2)break;
 			}
-			//!!‚Ì‚Æ‚«A“ª‚©‚ç!‚ğ\0‚É’uŠ·
+			//!!ã®ã¨ãã€é ­ã‹ã‚‰!ã‚’Â¥0ã«ç½®æ›
 			if(flg == 2){
 				for(p = ptr ; *p != 0 ; p++)if(*p == '!')*p = 0;
 			}
-			//ƒ|ƒCƒ“ƒ^ˆÚ“®
-			ptr += (r + 1 + 1); //+ 1‚ÍNULL‚Ì•ªA‚à‚¤+1‚Í—\”õB
-		}else{ //´×°‚Ìê‡(‘¶İ‚µ‚È‚¢‚Æ‚©)
-			break; //”²‚¯‚é
+			//ãƒã‚¤ãƒ³ã‚¿ç§»å‹•
+			ptr += (r + 1 + 1); //+ 1ã¯NULLã®åˆ†ã€ã‚‚ã†+1ã¯äºˆå‚™ã€‚
+		}else{ //ï½´ï¾—ï½°ã®å ´åˆ(å­˜åœ¨ã—ãªã„ã¨ã‹)
+			break; //æŠœã‘ã‚‹
 		}
 	}
 
-	//lpstrFilter‚É‚Â‚¢‚Ä‚Í"!"‚ğ\0‚É•ÏŠ·‚·‚é•K—vƒAƒŠB
+	//lpstrFilterã«ã¤ã„ã¦ã¯"!"ã‚’Â¥0ã«å¤‰æ›ã™ã‚‹å¿…è¦ã‚¢ãƒªã€‚
 	//for(ptr = MessageString[108]; *ptr != 0; ptr++)if(*ptr == '!')*ptr = 0;
 	//for(ptr = MessageString[109]; *ptr != 0; ptr++)if(*ptr == '!')*ptr = 0;
 	//for(ptr = MessageString[110]; *ptr != 0; ptr++)if(*ptr == '!')*ptr = 0;

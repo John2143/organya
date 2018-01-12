@@ -1,54 +1,53 @@
-//•ÒW—p\‘¢‘Ì///////////////
-typedef struct{//œƒRƒs[\‘¢‘Ì
-	char track1;//‚±‚Ìƒgƒ‰ƒbƒN‚Ì
-	long x1_1;//‚±‚±‚©‚ç
-	long x1_2;//‚±‚±‚Ü‚Å‚ğ
-	char track2;//‚±‚Ìƒgƒ‰ƒbƒN‚Ì
-	long x2;//‚±‚±‚É
-	long num;//‰½‰ñ
+typedef struct{//???R?s?[?\????
+	char track1;//???Ìƒg???b?N??
+	long x1_1;//????????
+	long x1_2;// <<error>>
+	char track2;//???Ìƒg???b?N??
+	long x2;//??????
+	long num;//????
 }NOTECOPY;
 
-typedef struct{//œƒgƒ‰ƒ“ƒXƒ|[ƒg‚âƒpƒ“ƒ|ƒbƒg
-	char track;//‚±‚Ìƒgƒ‰ƒbƒN‚Ì
-	long x1;//‚±‚±‚©‚ç
-	long x2;//‚±‚±‚Ü‚Å‚ğ
-	unsigned char a;//‚±‚ê‚¾‚¯ 
-	unsigned char mode;//‚½‚·i‚Ğ‚­j
+typedef struct{//???g?????X?|?[?g?????|?b?g
+	char track;//???Ìƒg???b?N??
+	long x1;//????????
+	long x2;// <<error>>
+	unsigned char a;//???ê‚¾?? 
+	unsigned char mode;// <<error>>
 }PARCHANGE;
 
-//‰¹•„ƒŠƒXƒg\‘¢‘Ì
+//???????X?g?\????
 typedef struct NOTELIST{
-	NOTELIST *from;//‘O‚ÌƒAƒhƒŒƒX
-	NOTELIST *to;//Ÿ‚ÌƒAƒhƒŒƒX
-	long x;//ˆÊ’u
-	unsigned char length;//‰¹‚Ì’·‚³
-	unsigned char y;//‰¹‚Ì‚‚³
-	unsigned char volume;//ƒ”ƒHƒŠƒ…[ƒ€
-	unsigned char pan;//ƒpƒ“
+	NOTELIST *from;//?O?ÌƒA?h???X
+	NOTELIST *to;//???ÌƒA?h???X
+	long x;//?Ê’u
+	unsigned char length;// <<error>>
+	unsigned char y;// <<error>>
+	unsigned char volume;//???H?????[??
+	unsigned char pan;//?p??
 }NOTELIST;
-//ƒgƒ‰ƒbƒNƒf[ƒ^–‚W
+//?g???b?N?f?[?^???W
 typedef struct{
-	unsigned short freq;//+ƒ¿ü”g”(1000‚ªDefault)
-//	unsigned short note_num;//‰¹•„‚Ì”
-	unsigned char wave_no;//”gŒ`No
+	unsigned short freq;//+?????g??(1000??Default)
+//	unsigned short note_num;// <<error>>
+	unsigned char wave_no;//?g?`No
 	char pipi;
-	NOTELIST *note_p;//NoteData—Ìˆæ‚Ìæ“ªƒAƒhƒŒƒX
-	NOTELIST *note_list;//ƒŠƒXƒg‚Ìæ“ªƒAƒhƒŒƒX1
+	NOTELIST *note_p;//NoteData <<error>>
+	NOTELIST *note_list;// <<error>>
 }TRACKDATA;
-//‹È’PˆÊ‚Å‚ÂŒÅ—L‚Ìî•ñ
+//?È’P?Ê‚Å??ÂŒÅ—L?Ì?
 typedef struct MUSICINFO{
 	unsigned short wait;
-	unsigned char line;//‚P¬ß‚Ìƒ‰ƒCƒ“”
-	unsigned char dot;//ˆê”‘‚Ìƒhƒbƒg”
-	unsigned short alloc_note;//Šm•Û‚µ‚½‰¹•„‚Ì”
-	long repeat_x;//ƒŠƒs[ƒg
-	long end_x;//‹È‚ÌI‚í‚è(ƒŠƒs[ƒg‚É–ß‚é)
+	unsigned char line;//?P???ß‚Ìƒ??C????
+	unsigned char dot;//?ê”‘?Ìƒh?b?g??
+	unsigned short alloc_note;//?m?Û‚????????Ì?
+	long repeat_x;//???s?[?g
+	long end_x;//?È‚ÌI??(???s?[?g?É–ß‚?
 	TRACKDATA tdata[16];
 }MUSICINFO;
-//ƒƒCƒ“ƒNƒ‰ƒXB‚±‚ÌƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚Ì’†SBiƒNƒ‰ƒX‚Á‚Ä‚â‚Â‚ğ‰‚ß‚Äg‚¤j
+//???C???N???X?B???ÌƒA?v???P?[?V?????Ì’??S?B?i?N???X???Ä‚?????ß‚Äg???j
 typedef struct OrgData{
-	OrgData();//ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	~OrgData();//ƒfƒXƒgƒ‰ƒNƒ^
+	OrgData();//?R???X?g???N?^
+	~OrgData();//?f?X?g???N?^
 	private:
 		MUSICINFO info;
 	public:
@@ -57,67 +56,67 @@ typedef struct OrgData{
 		BOOL SetNote_onlyLength(long x, long Length);
 
 		void RedrawSelectArea(void);
-		//ƒAƒ“ƒhƒD—p
+		//?A???h?D?p
 		int ReplaceFromRedoData();
 		int ReplaceFromUndoData();
 		void ClearUndoData();
 		int SetUndoData();
-		int ResetLastUndo(void); //ÅŒã‚ÌƒAƒ“ƒhƒD‚Í‚È‚©‚Á‚½‚±‚Æ‚ÉIi‹óƒNƒŠƒbƒN‚¾‚Á‚½‚Æ‚©j
-		MUSICINFO ud_tdata[32]; //‚Æ‚è‚ ‚¦‚¸AƒAƒ“ƒhƒD‚Í32‰ñ
+		int ResetLastUndo(void); //?ÅŒ??A???h?D?Í‚È‚????????Æ‚ÉI?i?????b?N???????Æ‚??j
+		MUSICINFO ud_tdata[32]; //?Æ‚è‚ ?????A?A???h?D??2??
 		NOTELIST  ud_note[32][16][4096];
 		bool UndoEnable;
 		bool RedoEnable;
-		int CurrentUndoCursor; //‚±‚Ì”Ô†‚É‘‚«‚Ş
-		int MinimumUndoCursor; //‚±‚Ì”Ô†‚Ü‚Å‚È‚ç‚³‚©‚Ì‚Ú‚ê‚é
-		int MaximumUndoCursor; //‚±‚Ì”Ô†‚Ü‚Å‚È‚ç‚â‚è’¼‚¹‚éiƒŠƒhƒD‰Â”\j
+		int CurrentUndoCursor; //???Ì”Ô??É???????
+		int MinimumUndoCursor; //???Ì”Ô??Ü‚Å‚È‚ç‚³???Ì‚Ú‚?
+		int MaximumUndoCursor; //???Ì”Ô??Ü‚Å‚È‚??è’¼???????h?D?Â”\?j
 
 		char track;
 		char mute[MAXTRACK];
 		unsigned char def_pan[MAXTRACK];
 		unsigned char def_volume[MAXTRACK];
 		void InitOrgData(void);
-		void GetMusicInfo(MUSICINFO *mi);//‹Èî•ñ‚ğæ“¾
-		//‹Èî•ñ‚ğİ’èBflag‚Íİ’èƒAƒCƒeƒ€‚ğw’è
+		void GetMusicInfo(MUSICINFO *mi);//?È???æ“¾
+		//?È?????flag?Íİ’??C?e????w??
 		BOOL SetMusicInfo(MUSICINFO *mi,unsigned long flag);
-		BOOL NoteAlloc(unsigned short note_num);//w’è‚Ì”‚¾‚¯NoteData‚Ì—Ìˆæ‚ğŠm•Û
-		void ReleaseNote(void);//NoteData‚ğŠJ•ú
-		NOTELIST *SearchNote(NOTELIST *np);//–¢g—pNOTE‚ÌŒŸõ
-		void OrgData::TouchKeyboard(unsigned char y);//Œ®”Õ‚ÉG‚ê‚é
-		BOOL SetNote(long x,unsigned char y, int DragMode = 0);//‰¹•„‚ğ”z’u
-		BOOL CutNote(long x,unsigned char y);//‰¹•„‚ÌƒJƒbƒg
-		BOOL SetPan(long x,unsigned char y);//ƒpƒ“‰¹•„‚ğ”z’u
-		BOOL SetPan2(long x,unsigned char y);//ƒpƒ“‰¹•„‚ğ”z’u
-		BOOL CutPan(long x,unsigned char y);//ƒpƒ“‰¹•„‚ÌƒJƒbƒg
-		BOOL SetVolume(long x,unsigned char y);//ƒ{ƒŠƒ…[ƒ€‰¹•„‚ğ”z’u
-		BOOL SetVolume2(long x,unsigned char y,long fade); //ƒtƒF[ƒhƒAƒEƒg	// 2010.08.17 A
-		BOOL CutVolume(long x,unsigned char y);//ƒ{ƒŠƒ…[ƒ€‰¹•„‚ÌƒJƒbƒg
-		BOOL EnlargeAllNotes(int Power);//[V]‰¹•„‚ğPower”{‚Éˆø‚«L‚Î‚·
-		BOOL ShortenAllNotes(int Power);//[V]‰¹•„‚ğ1/Power”{‚Ék‚±‚ß‚é
+		BOOL NoteAlloc(unsigned short note_num);//?w????????NoteData?Ì—Ìˆ??m??
+		void ReleaseNote(void);//NoteData??J??
+		NOTELIST *SearchNote(NOTELIST *np);//???g?pNOTE?ÌŒ???
+		void OrgData::TouchKeyboard(unsigned char y);//???Õ‚ÉG??
+		BOOL SetNote(long x,unsigned char y, int DragMode = 0);//???????u
+		BOOL CutNote(long x,unsigned char y);//?????ÌƒJ?b?g
+		BOOL SetPan(long x,unsigned char y);//?p?????????u
+		BOOL SetPan2(long x,unsigned char y);//?p?????????uê³ ì–‘ì´ê³ ì–‘ì´ê³ ì–‘ì´ê³ ì–‘ì´ê³ ì–‘ì´ê³ ì–‘ì´
+		BOOL CutPan(long x,unsigned char y);//?p???????ÌƒJ?b?g
+		BOOL SetVolume(long x,unsigned char y);//?{?????[?????????u
+		BOOL SetVolume2(long x,unsigned char y,long fade); //?t?F?[?h?A?E?g	// 2010.08.17 A
+		BOOL CutVolume(long x,unsigned char y);//?{?????[???????ÌƒJ?b?g
+		BOOL EnlargeAllNotes(int Power);//[?V]??????ower?{?Éˆ????L?Î‚?
+		BOOL ShortenAllNotes(int Power);//[?V]??????/Power?{?Ék???ß‚?
 
-		void SortNotes(void);	//‰¹•„‚Ì®—
-		int SearchNote(long x,unsigned char y, int YuusenTrack);//‚Ç‚Ìƒgƒ‰ƒbƒN‚É‚ ‚é‰¹•„‚©H‚ÌŒŸõ
-		int SearchNoteB(long x,unsigned char y, long *lStartx, long *lLastx, int YuusenTrack);//‚Ç‚Ìƒgƒ‰ƒbƒN‚É‚ ‚é‰¹•„‚©H‚ÌŒŸõ 2014.05.02
-		int SearchNoteC(long x,unsigned char y, long xWidth, long xMod);//k¬•\¦‚ÌŒŸõB
+		void SortNotes(void);	//?????Ì???
+		int SearchNote(long x,unsigned char y, int YuusenTrack);//?Ç‚Ìƒg???b?N?É‚??é‰¹?????H?ÌŒ???
+		int SearchNoteB(long x,unsigned char y, long *lStartx, long *lLastx, int YuusenTrack);//?Ç‚Ìƒg???b?N?É‚??é‰¹?????H?ÌŒ??? 2014.05.02
+		int SearchNoteC(long x,unsigned char y, long xWidth, long xMod);//?k???\?????ÌŒ????B
 		
 
-		void GetNoteUsed(long *use,long *left,char track);//‰¹•ˆc—Ê“™
-		//ˆÈ‰º‚Í•\¦
+		void GetNoteUsed(long *use,long *left,char track);//?????c?Ê“?
+		//?È‰??Í•\??
 		void PutNotes(int TPCY=0);
 		void PutNotes2(int TPCY=0);
 		void PutMusic(void);
 		void PutNumber(void);
 		void PutRepeat(void);
-		bool PutBackGround(void);	//”wŒi‚ğÄ•`‰æ
+		bool PutBackGround(void);	//?w?i??Ä•`??
 		void PutSelectArea(void);
-		//ˆÈ‰º‚ÍÄ¶
+		//?È‰??ÍÄ?
 		void PlayData(void);
-		void SetPlayPointer(long x);//Ä¶ƒ|ƒCƒ“ƒ^[‚ğw’è‚ÌˆÊ’u‚Éİ’è
-		//ˆÈ‰º‚Íƒtƒ@ƒCƒ‹ŠÖŒW
+		void SetPlayPointer(long x);//?Ä??|?C???^?[??w???Ê’u?Éİ’?
+		//?È‰??Íƒt?@?C???ÖŒW
 		unsigned short GetNoteNumber(char track,NOTECOPY *nc);
 		BOOL OrgData::SaveMusicData(void);
 		BOOL OrgData::LoadMusicData(void);
-		int FileCheckBeforeLoad(char *checkfile); //ƒtƒ@ƒCƒ‹‚ªƒ[ƒh‰Â”\‚Å‚ ‚ê‚Î0ˆÙí‚Å‚ ‚ê‚Î1‚ğ•Ô‚·BÃŞ°Àƒ[ƒh‚Í‚³‚ê‚È‚¢B 2014.05.22
-		//ˆÈ‰º‚Í•ÒWŠÖŒW
+		int FileCheckBeforeLoad(char *checkfile); //?t?@?C???????[?h?Â”\?Å‚???0?Ù?????1?????B??????[?h?Í‚??????B 2014.05.22
+		//?È‰??Í•ÒW?ÖŒW
 		BOOL DelateNoteData(PARCHANGE *pc);
 		BOOL CopyNoteData(NOTECOPY *nc);
 		BOOL ChangePanData(PARCHANGE *pc);
@@ -125,9 +124,9 @@ typedef struct OrgData{
 		BOOL ChangeVolumeData(PARCHANGE *pc);
 		BOOL CheckNoteTail(char track);
 
-		BOOL EnsureEmptyArea(PARCHANGE *pc, int Function); //[V]‹ó”’‚ğ–„‚ß‚é 2014.05.01
-		BOOL SwapTrack(NOTECOPY *pc); //[V]ƒgƒ‰ƒbƒN‚ğ“ü‚ê‘Ö‚¦‚é 2014.05.10
-		BOOL ExportMIDIData(char *strMidiFileName, int iRepeat); //MIDI´¸½Îß°Ä,ŒJ‚è•Ô‚µ‰ñ” 2014.05.11
+		BOOL EnsureEmptyArea(PARCHANGE *pc, int Function); //[?V]?ó”’‚ğ–„‚ß‚?2014.05.01
+		BOOL SwapTrack(NOTECOPY *pc); //[?V]?g???b?N????????2014.05.10
+		BOOL ExportMIDIData(char *strMidiFileName, int iRepeat); //MIDI???????J??????2014.05.11
 
 
 

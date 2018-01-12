@@ -1,5 +1,5 @@
 #include <windows.h>
-//ƒEƒCƒ“ƒhƒE‚ÌL‚³(˜g‚ÍÈ‚­)
+//ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ã®åºƒã•(æž ã¯çœã)
 #define WINDOWWIDTH		1180
 #define WDWHEIGHTPLUS	0
 #define WINDOWHEIGHT	(432+WDWHEIGHTPLUS)
@@ -7,7 +7,7 @@
 
 #define KEYWIDTH		64
 
-//ƒrƒbƒgƒ}ƒbƒvNO
+//ãƒ“ãƒƒãƒˆãƒžãƒƒãƒ—NO
 #define BMPMUSIC		0
 #define BMPNOTE			1
 #define BMPNUMBER		2
@@ -15,13 +15,13 @@
 
 
 #define MSGCANCEL		1
-#define MSGEXISFILE		2	//Šù‘¶ƒtƒ@ƒCƒ‹‚ ‚è
-#define MSGSAVEOK		3	//•Û‘¶Š®—¹
-#define MSGLOADOK		3	//“Ç‚Ýž‚ÝŠ®—¹
+#define MSGEXISFILE		2	//æ—¢å­˜ãƒ•ã‚¡ã‚¤ãƒ«ã‚ã‚Š
+#define MSGSAVEOK		3	//ä¿å­˜å®Œäº†
+#define MSGLOADOK		3	//èª­ã¿è¾¼ã¿å®Œäº†
 
 extern char music_file[];
-extern HINSTANCE hInst;//ƒCƒ“ƒXƒ^ƒ“ƒXƒnƒ“ƒhƒ‹
-extern HWND hWnd;//ƒƒCƒ“ƒEƒBƒ“ƒhƒEƒnƒ“ƒhƒ‹
-extern BOOL actApp;//ƒEƒCƒ“ƒhƒE‚ÌƒAƒNƒeƒBƒu
+extern HINSTANCE hInst;//ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ãƒãƒ³ãƒ‰ãƒ«
+extern HWND hWnd;//ãƒ¡ã‚¤ãƒ³ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«
+extern BOOL actApp;//ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ã®ã‚¢ã‚¯ãƒ†ã‚£ãƒ–
 
-extern int  WWidth, WHeight;	//ƒEƒBƒ“ƒhƒE‚ÌƒTƒCƒY
+extern int  WWidth, WHeight;	//ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®ã‚µã‚¤ã‚º

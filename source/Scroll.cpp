@@ -4,9 +4,9 @@
 #include "OrgData.h"
 #include <stdio.h>
 #include "resource.h"
-//ÉXÉNÉçÅ[ÉãÉoÅ[ÇÃà⁄ìÆíl
+//„Çπ„ÇØ„É≠„Éº„É´„Éê„Éº„ÅÆÁßªÂãïÂÄ§
 #define MAXHORZRANGE	256
-#define MAXVERTRANGE	(72-12)//8ÉIÉNÉ^Å[Éu
+#define MAXVERTRANGE	(72-12)//8„Ç™„ÇØ„Çø„Éº„Éñ
 
 #define BUF_SIZE 256
 #define MAIN_WINDOW "WINDOW"
@@ -24,25 +24,25 @@ BOOL ScrollData::InitScroll(void)
 	scr_info.fMask = SIF_RANGE | SIF_PAGE;
 	scr_info.nMin = 0;scr_info.nMax = MAXHORZRANGE;
 	scr_info.nPage = 4;
-	SetScrollInfo(hWnd,SB_HORZ,&scr_info,1);//â°
+	SetScrollInfo(hWnd,SB_HORZ,&scr_info,1);//Ê®™
 	scr_info.cbSize = sizeof(SCROLLINFO);
 	scr_info.fMask = SIF_RANGE | SIF_PAGE;
 	scr_info.nMax = MAXVERTRANGE;
 	scr_info.nPage = 4;
-	SetScrollInfo(hWnd,SB_VERT,&scr_info,1);//èc
-	hpos = 0;//êÖïΩÉXÉNÉçÅ[Éãíl
-	//vpos = MAXVERTRANGE-27;//êÇíºèâä˙íl
+	SetScrollInfo(hWnd,SB_VERT,&scr_info,1);//Á∏¶
+	hpos = 0;//Ê∞¥Âπ≥„Çπ„ÇØ„É≠„Éº„É´ÂÄ§
+	//vpos = MAXVERTRANGE-27;//ÂûÇÁõ¥ÂàùÊúüÂÄ§
 	//vpos = GetPrivateProfileInt(MAIN_WINDOW,"VPOS",MAXVERTRANGE-27,app_path);
 	vpos = GetPrivateProfileInt(MAIN_WINDOW,"VPOS",MAXVERTRANGE-27,app_path);
 
-	//à»â∫ÇÕvposÇóLå¯Ç…Ç∑ÇÈèàóù
+	//‰ª•‰∏ã„ÅØvpos„ÇíÊúâÂäπ„Å´„Åô„ÇãÂá¶ÁêÜ
 	scr_info.fMask = SIF_POS;
 	scr_info.nPos = vpos;
 	SetScrollInfo(hWnd,SB_VERT,&scr_info,1);
 
 	return TRUE;
 }
-void ScrollData::ChangeVerticalRange(int WindowHeight){ //ÉEÉBÉìÉhÉEÉTÉCÉYÇå≥Ç…ÉXÉNÉçÅ[Éãâ¬î\àÊÇê›íË
+void ScrollData::ChangeVerticalRange(int WindowHeight){ //„Ç¶„Ç£„É≥„Éâ„Ç¶„Çµ„Ç§„Ç∫„ÇíÂÖÉ„Å´„Çπ„ÇØ„É≠„Éº„É´ÂèØËÉΩÂüü„ÇíË®≠ÂÆö
 	if(WindowHeight>0){
 		int ap;
 		ap = (WindowHeight - 158)/12;
@@ -55,7 +55,7 @@ void ScrollData::ChangeVerticalRange(int WindowHeight){ //ÉEÉBÉìÉhÉEÉTÉCÉYÇå≥Ç…
 	}
 	scr_info.cbSize = sizeof(SCROLLINFO);
 	scr_info.fMask = SIF_RANGE;
-	SetScrollInfo(hWnd, SB_VERT, &scr_info, TRUE);//èc
+	SetScrollInfo(hWnd, SB_VERT, &scr_info, TRUE);//Á∏¶
 	return;
 }
 void ScrollData::AttachScroll(void)
@@ -71,10 +71,10 @@ void ScrollData::SetIniFile()
 
 void ScrollData::SetHorzScroll(long x)
 {
-	RECT rect = {0,0,WWidth,WHeight};//çXêVÇ∑ÇÈóÃàÊ
+	RECT rect = {0,0,WWidth,WHeight};//Êõ¥Êñ∞„Åô„ÇãÈ†òÂüü
 	hpos = x;
 	if(hpos > MAXHORZRANGE)hpos = MAXHORZRANGE;
-	scr_info.fMask = SIF_POS;//nPosÇóLå¯Ç…
+	scr_info.fMask = SIF_POS;//nPos„ÇíÊúâÂäπ„Å´
 	scr_info.nPos = hpos;
 	SetScrollInfo(hWnd,SB_HORZ,&scr_info,1);
 	org_data.PutMusic();
@@ -91,44 +91,44 @@ void ScrollData::PrintHorzPosition(void)
 }
 
 void ScrollData::HorzScrollProc(WPARAM wParam){
-	RECT rect = {0,0,WWidth,WHeight};//çXêVÇ∑ÇÈóÃàÊ
+	RECT rect = {0,0,WWidth,WHeight};//Êõ¥Êñ∞„Åô„ÇãÈ†òÂüü
 	MUSICINFO mi;
 	switch(LOWORD(wParam)){
-	case SB_LINERIGHT://âEÇ÷
+	case SB_LINERIGHT://Âè≥„Å∏
 		hpos++;
 		if(hpos > MAXHORZRANGE)hpos = MAXHORZRANGE;
 		break;
-	case SB_LINELEFT://ç∂Ç÷
+	case SB_LINELEFT://Â∑¶„Å∏
 		hpos--;
 		if(hpos < 0)hpos = 0;
 		break;
 	case SB_THUMBPOSITION:
-		hpos = HIWORD(wParam);//åªç›à íuÇéÊìæ
+		hpos = HIWORD(wParam);//ÁèæÂú®‰ΩçÁΩÆ„ÇíÂèñÂæó
 		break;
 	case SB_THUMBTRACK:
-		hpos = HIWORD(wParam);//åªç›à íuÇéÊìæ
+		hpos = HIWORD(wParam);//ÁèæÂú®‰ΩçÁΩÆ„ÇíÂèñÂæó
 		break;
-	case SB_PAGERIGHT://âEÇ÷
+	case SB_PAGERIGHT://Âè≥„Å∏
 		hpos += 1;
 		if(hpos > MAXHORZRANGE)hpos = MAXHORZRANGE;
 		break;
-	case SB_PAGELEFT://ç∂Ç÷
+	case SB_PAGELEFT://Â∑¶„Å∏
 		hpos -= 1;
 		if(hpos < 0)hpos = 0;
 		break;
 	}
-	//ÉvÉåÉCÉÑÅ[Ç…îΩâf
+	//„Éó„É¨„Ç§„É§„Éº„Å´ÂèçÊò†
 	PrintHorzPosition();
 	if(timer_sw == 0){
 		org_data.GetMusicInfo(&mi);
 		org_data.SetPlayPointer(hpos*mi.dot*mi.line);
 	}
-	scr_info.fMask = SIF_POS;//nPosÇóLå¯Ç…
+	scr_info.fMask = SIF_POS;//nPos„ÇíÊúâÂäπ„Å´
 	scr_info.nPos = hpos;
 	SetScrollInfo(hWnd,SB_HORZ,&scr_info,1);
 	org_data.PutMusic();
 	RedrawWindow(hWnd,&rect,NULL,RDW_INVALIDATE|RDW_ERASENOW);
-	//à»â∫ÇÕÉeÉXÉgóp
+	//‰ª•‰∏ã„ÅØ„ÉÜ„Çπ„ÉàÁî®
 //	char str[80];
 //	HDC hdc;
 //	hdc = GetDC(hWnd);
@@ -137,38 +137,38 @@ void ScrollData::HorzScrollProc(WPARAM wParam){
 //	ReleaseDC(hWnd,hdc);
 }
 void ScrollData::VertScrollProc(WPARAM wParam){
-	RECT rect = {0,0,WWidth,WHeight};//çXêVÇ∑ÇÈóÃàÊ
+	RECT rect = {0,0,WWidth,WHeight};//Êõ¥Êñ∞„Åô„ÇãÈ†òÂüü
 	switch(LOWORD(wParam)){
-	case SB_LINEDOWN://â∫Ç÷
+	case SB_LINEDOWN://‰∏ã„Å∏
 		vpos++;
 		if(vpos > vScrollMax)vpos = vScrollMax;
 		break;
-	case SB_LINEUP://è„Ç÷
+	case SB_LINEUP://‰∏ä„Å∏
 		vpos--;
 		if(vpos < 0)vpos = 0;
 		break;
 	case SB_THUMBPOSITION:
-		vpos = HIWORD(wParam);//åªç›à íuÇéÊìæ
+		vpos = HIWORD(wParam);//ÁèæÂú®‰ΩçÁΩÆ„ÇíÂèñÂæó
 		break;
 	case SB_THUMBTRACK:
-		vpos = HIWORD(wParam);//åªç›à íuÇéÊìæ
+		vpos = HIWORD(wParam);//ÁèæÂú®‰ΩçÁΩÆ„ÇíÂèñÂæó
 		break;
-	case SB_PAGEDOWN://â∫Ç÷
+	case SB_PAGEDOWN://‰∏ã„Å∏
 		vpos += 6;
 		if(vpos > vScrollMax)vpos = vScrollMax;
 		break;
-	case SB_PAGEUP://è„Ç÷
+	case SB_PAGEUP://‰∏ä„Å∏
 		vpos -= 6;
 		if(vpos < 0)vpos = 0;
 		break;
 	}
 	PrintHorzPosition();
-	scr_info.fMask = SIF_POS;//nPosÇóLå¯Ç…
+	scr_info.fMask = SIF_POS;//nPos„ÇíÊúâÂäπ„Å´
 	scr_info.nPos = vpos;
 	SetScrollInfo(hWnd,SB_VERT,&scr_info,1);
 	org_data.PutMusic();
 	RedrawWindow(hWnd,&rect,NULL,RDW_INVALIDATE|RDW_ERASENOW);
-	//à»â∫ÇÕÉeÉXÉgóp
+	//‰ª•‰∏ã„ÅØ„ÉÜ„Çπ„ÉàÁî®
 //	char str[80];
 //	HDC hdc;
 //	hdc = GetDC(hWnd);
@@ -176,7 +176,7 @@ void ScrollData::VertScrollProc(WPARAM wParam){
 //	TextOut(hdc,100,1,str,strlen(str));
 //	ReleaseDC(hWnd,hdc);
 }
-//ÉXÉNÉçÅ[ÉãÉ|ÉWÉVÉáÉìÇÃéÊìæ
+//„Çπ„ÇØ„É≠„Éº„É´„Éù„Ç∏„Ç∑„Éß„É≥„ÅÆÂèñÂæó
 void ScrollData::GetScrollPosition(long *hp,long *vp)
 {
 	*hp = hpos;
@@ -184,7 +184,7 @@ void ScrollData::GetScrollPosition(long *hp,long *vp)
 }
 
 void ScrollData::WheelScrollProc(LPARAM lParam, WPARAM wParam){
-	RECT rect = {0,0,WWidth,WHeight};//çXêVÇ∑ÇÈóÃàÊ
+	RECT rect = {0,0,WWidth,WHeight};//Êõ¥Êñ∞„Åô„ÇãÈ†òÂüü
 
 	int fwKeys, zDelta, xPos,yPos;
 
@@ -195,25 +195,25 @@ void ScrollData::WheelScrollProc(LPARAM lParam, WPARAM wParam){
 
 	/*
 	switch(LOWORD(wParam)){
-	case SB_LINEDOWN://â∫Ç÷
+	case SB_LINEDOWN://‰∏ã„Å∏
 		vpos++;
 		if(vpos > MAXVERTRANGE)vpos = MAXVERTRANGE;
 		break;
-	case SB_LINEUP://è„Ç÷
+	case SB_LINEUP://‰∏ä„Å∏
 		vpos--;
 		if(vpos < 0)vpos = 0;
 		break;
 	case SB_THUMBPOSITION:
-		vpos = HIWORD(wParam);//åªç›à íuÇéÊìæ
+		vpos = HIWORD(wParam);//ÁèæÂú®‰ΩçÁΩÆ„ÇíÂèñÂæó
 		break;
 	case SB_THUMBTRACK:
-		vpos = HIWORD(wParam);//åªç›à íuÇéÊìæ
+		vpos = HIWORD(wParam);//ÁèæÂú®‰ΩçÁΩÆ„ÇíÂèñÂæó
 		break;
-	case SB_PAGEDOWN://â∫Ç÷
+	case SB_PAGEDOWN://‰∏ã„Å∏
 		vpos += 6;
 		if(vpos > MAXVERTRANGE)vpos = MAXVERTRANGE;
 		break;
-	case SB_PAGEUP://è„Ç÷
+	case SB_PAGEUP://‰∏ä„Å∏
 		vpos -= 6;
 		if(vpos < 0)vpos = 0;
 		break;
@@ -240,10 +240,10 @@ void ScrollData::WheelScrollProc(LPARAM lParam, WPARAM wParam){
 		}
 	}
 	PrintHorzPosition();
-	scr_info.fMask = SIF_POS;//nPosÇóLå¯Ç…
+	scr_info.fMask = SIF_POS;//nPos„ÇíÊúâÂäπ„Å´
 	scr_info.nPos = vpos;
 	SetScrollInfo(hWnd,SB_VERT,&scr_info,1);
-	scr_info.fMask = SIF_POS;//nPosÇóLå¯Ç…
+	scr_info.fMask = SIF_POS;//nPos„ÇíÊúâÂäπ„Å´
 	scr_info.nPos = hpos;
 	SetScrollInfo(hWnd,SB_HORZ,&scr_info,1);
 
@@ -255,7 +255,7 @@ void ScrollData::WheelScrollProc(LPARAM lParam, WPARAM wParam){
 
 void ScrollData::KeyScroll(int iDirection)
 {
-	RECT rect = {0,0,WWidth,WHeight};//çXêVÇ∑ÇÈóÃàÊ
+	RECT rect = {0,0,WWidth,WHeight};//Êõ¥Êñ∞„Åô„ÇãÈ†òÂüü
 	switch(	iDirection ){
 	case DIRECTION_UP:
 		vpos-=4;
@@ -276,10 +276,10 @@ void ScrollData::KeyScroll(int iDirection)
 	if(vpos < 0)vpos = 0;
 
 	PrintHorzPosition();
-	scr_info.fMask = SIF_POS;//nPosÇóLå¯Ç…
+	scr_info.fMask = SIF_POS;//nPos„ÇíÊúâÂäπ„Å´
 	scr_info.nPos = vpos;
 	SetScrollInfo(hWnd,SB_VERT,&scr_info,1);
-	scr_info.fMask = SIF_POS;//nPosÇóLå¯Ç…
+	scr_info.fMask = SIF_POS;//nPos„ÇíÊúâÂäπ„Å´
 	scr_info.nPos = hpos;
 	SetScrollInfo(hWnd,SB_HORZ,&scr_info,1);
 

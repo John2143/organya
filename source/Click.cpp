@@ -3,44 +3,44 @@
 #include "OrgData.h"
 #include "Mouse.h"
 #include "Scroll.h"
-#include <stdio.h>//sprintfƒeƒXƒg—p
-#include <string.h>//sprintfƒeƒXƒg—p
+#include <stdio.h>//sprintfãƒ†ã‚¹ãƒˆç”¨
+#include <string.h>//sprintfãƒ†ã‚¹ãƒˆç”¨
 #include "rxoFunction.h"
 #include "resource.h"
 
-//ƒNƒŠƒbƒN‚³‚ê‚½‚Ìˆ—
-extern char timer_sw;//Ä¶ƒXƒCƒbƒ`
+//ã‚¯ãƒªãƒƒã‚¯ã•ã‚ŒãŸæ™‚ã®å‡¦ç†
+extern char timer_sw;//å†ç”Ÿã‚¹ã‚¤ãƒƒãƒ
 extern void SetUndo();
-extern void ResetLastUndo(); //æ‚è‚¯‚µ
+extern void ResetLastUndo(); //å–ã‚Šã‘ã—
 
-extern NOTECOPY nc_Select; //‘I‘ğ”ÍˆÍ
+extern NOTECOPY nc_Select; //é¸æŠç¯„å›²
 extern int tra, ful ,haba; 
 extern void SetEZCWindowMessage(char *Mess);
 
-long Last_mouse_x = -99999;	//“¯ˆÊ’u‚Ì•¡”ƒNƒŠƒbƒN‚ÍƒAƒ“ƒhƒD‚Æ‚µ‚Ä‹L˜^‚µ‚È‚¢B
+long Last_mouse_x = -99999;	//åŒä½ç½®ã®è¤‡æ•°ã‚¯ãƒªãƒƒã‚¯ã¯ã‚¢ãƒ³ãƒ‰ã‚¥ã¨ã—ã¦è¨˜éŒ²ã—ãªã„ã€‚
 long Last_mouse_y = -99999;
 
-long Last_VOL_Drag_mouse_x = -99999;	//“¯ˆÊ’u‚Ì•¡”ƒNƒŠƒbƒN‚ÍƒAƒ“ƒhƒD‚Æ‚µ‚Ä‹L˜^‚µ‚È‚¢B
+long Last_VOL_Drag_mouse_x = -99999;	//åŒä½ç½®ã®è¤‡æ•°ã‚¯ãƒªãƒƒã‚¯ã¯ã‚¢ãƒ³ãƒ‰ã‚¥ã¨ã—ã¦è¨˜éŒ²ã—ãªã„ã€‚
 long Last_VOL_Drag_mouse_y = -99999;
 
 
-long DragStartx = -99999;	//ƒhƒ‰ƒbƒOŠJn“_
-long StartNotex = -99999;	//‚»‚Ìƒm[ƒg
+long DragStartx = -99999;	//ãƒ‰ãƒ©ãƒƒã‚°é–‹å§‹ç‚¹
+long StartNotex = -99999;	//ãã®ãƒãƒ¼ãƒˆ
 
-long PutStartX = -99999;	//‰¹•„‚Ìƒhƒ‰ƒbƒOŠJn“_
+long PutStartX = -99999;	//éŸ³ç¬¦ã®ãƒ‰ãƒ©ãƒƒã‚°é–‹å§‹ç‚¹
 
 extern char TrackN[];
-extern int sGrid;	//”ÍˆÍ‘I‘ğ‚ÍƒOƒŠƒbƒh’PˆÊ‚Å
+extern int sGrid;	//ç¯„å›²é¸æŠã¯ã‚°ãƒªãƒƒãƒ‰å˜ä½ã§
 extern int MinimumGrid(int x);
 extern int MaximumGrid(int x);
 void ShowStatusMessage(void);
 
 extern void ChangeTrack(HWND hdwnd, int iTrack);
 
-int iDragMode = 0;	//ÄŞ×¯¸Ş‚Å‰¹•„‚ğL‚Î‚·
+int iDragMode = 0;	//ï¾„ï¾ï¾—ï½¯ï½¸ï¾ã§éŸ³ç¬¦ã‚’ä¼¸ã°ã™
 int alt_down = 0;
 int shift_down = -1;
-long AdjustX = 0; //   k¬•\¦A‰¹•„‚Ì“ª‚ğ–Ú—§‚½‚¹‚é(&O)‚½‚ß‚Ì•â³
+long AdjustX = 0; //   ç¸®å°è¡¨ç¤ºæ™‚ã€éŸ³ç¬¦ã®é ­ã‚’ç›®ç«‹ãŸã›ã‚‹(&O)ãŸã‚ã®è£œæ­£
 
 
 void ClearDrag()
@@ -52,7 +52,7 @@ void ClearDrag()
 void RedrawClick()
 {
 	RECT rect = {64,0,WWidth,WHeight};
-	org_data.PutMusic();//Šy•ˆ‚ÌÄ•`‰æ
+	org_data.PutMusic();//æ¥½è­œã®å†æç”»
 	RedrawWindow(hWnd,&rect,NULL,RDW_INVALIDATE|RDW_ERASENOW);
 
 }
@@ -69,27 +69,27 @@ void PrintStatusMessage(int Zensentaku){
 	char wk[256],wk2[256];
 	if(Zensentaku != 0){
 		if(ful==0){
-			wsprintf(wk2,MessageString[IDS_STRING104], TrackN[tra]); //"ƒgƒ‰ƒbƒN%c ‚Ì"
+			wsprintf(wk2,MessageString[IDS_STRING104], TrackN[tra]); //"ãƒˆãƒ©ãƒƒã‚¯%c ã®"
 			strcpy(wk,wk2);
-			wsprintf(wk2,MessageString[IDS_STRING115]); // " ‚Í‚¶‚ß‚©‚ç‚¨‚í‚è‚Ü‚Å‚ğ"
+			wsprintf(wk2,MessageString[IDS_STRING115]); // " ã¯ã˜ã‚ã‹ã‚‰ãŠã‚ã‚Šã¾ã§ã‚’"
 			strcat(wk,wk2);
 			SetEZCWindowMessage(wk);
 		}
 		else if(ful==1){
-			wsprintf(wk2,MessageString[IDS_STRING116]); //"‘Sƒgƒ‰ƒbƒN‚Ì ‚Í‚¶‚ß‚©‚ç‚¨‚í‚è‚Ü‚Å‚ğ"
+			wsprintf(wk2,MessageString[IDS_STRING116]); //"å…¨ãƒˆãƒ©ãƒƒã‚¯ã® ã¯ã˜ã‚ã‹ã‚‰ãŠã‚ã‚Šã¾ã§ã‚’"
 			strcpy(wk,wk2);
 			SetEZCWindowMessage(wk);
 		}
 	}else{
 		if(ful==0){
-			wsprintf(wk2,MessageString[IDS_STRING104], TrackN[tra]); //"ƒgƒ‰ƒbƒN%c ‚Ì"
+			wsprintf(wk2,MessageString[IDS_STRING104], TrackN[tra]); //"ãƒˆãƒ©ãƒƒã‚¯%c ã®"
 			strcpy(wk,wk2);
-			wsprintf(wk2,MessageString[IDS_STRING105]); // "‘I‘ğ‚³‚ê‚Ä‚¢‚é”ÍˆÍ‚ğ"
+			wsprintf(wk2,MessageString[IDS_STRING105]); // "é¸æŠã•ã‚Œã¦ã„ã‚‹ç¯„å›²ã‚’"
 			strcat(wk,wk2);
 			SetEZCWindowMessage(wk);
 		}
 		else if(ful==1){
-			wsprintf(wk2,MessageString[IDS_STRING106]); // "‘Sƒgƒ‰ƒbƒN‚Ì‘I‘ğ‚³‚ê‚Ä‚¢‚é”ÍˆÍ‚ğ"
+			wsprintf(wk2,MessageString[IDS_STRING106]); // "å…¨ãƒˆãƒ©ãƒƒã‚¯ã®é¸æŠã•ã‚Œã¦ã„ã‚‹ç¯„å›²ã‚’"
 			strcpy(wk,wk2);
 			SetEZCWindowMessage(wk);
 		}
@@ -117,7 +117,7 @@ void LButtonUP(WPARAM wParam, LPARAM lParam)
 	if(PutStartX != -99999){
 		org_data.CheckNoteTail(org_data.track);
 		PutStartX = -99999;
-		org_data.PutMusic();//Šy•ˆ‚ÌÄ•`‰æ
+		org_data.PutMusic();//æ¥½è­œã®å†æç”»
 		RedrawWindow(hWnd,&rect,NULL,RDW_INVALIDATE|RDW_ERASENOW);
 
 	}
@@ -125,7 +125,7 @@ void LButtonUP(WPARAM wParam, LPARAM lParam)
 
 	PrintStatusMessage(0);
 	ClearDrag();
-	org_data.PutMusic();//Šy•ˆ‚ÌÄ•`‰æ
+	org_data.PutMusic();//æ¥½è­œã®å†æç”»
 	ShowStatusMessage();
 	RedrawWindow(hWnd,&rect,NULL,RDW_INVALIDATE|RDW_ERASENOW);
 	Last_VOL_Drag_mouse_x = -99999; //2014.05.02 A
@@ -137,7 +137,7 @@ void RButtonUP(WPARAM wParam, LPARAM lParam)
 	RECT rect = {64,0,WWidth,WHeight};
 	Last_VOL_Drag_mouse_x = -99999; //2014.05.02 A
 	Last_VOL_Drag_mouse_y = -99999;
-	org_data.PutMusic();//Šy•ˆ‚ÌÄ•`‰æ
+	org_data.PutMusic();//æ¥½è­œã®å†æç”»
 	ShowStatusMessage();
 	RedrawWindow(hWnd,&rect,NULL,RDW_INVALIDATE|RDW_ERASENOW);
 	alt_down = 0; shift_down = -1;
@@ -163,19 +163,19 @@ void MouseDrag(WPARAM wParam, LPARAM lParam)
 	org_data.GetMusicInfo(&mi);
 	dot = mi.dot;
 	line = mi.line;
-	//ƒ}ƒEƒX‚ÌÀ•W‚ğæ“¾
+	//ãƒã‚¦ã‚¹ã®åº§æ¨™ã‚’å–å¾—
 	mouse_data.GetMousePosition(&mouse_x,&mouse_y);
 	ptx = (mouse_x - KEYWIDTH)/NoteWidth + scr_h*line*dot ;
 	
 	long Ry;	// 2010.08.14 
 	Ry = -12*(Last_mouse_y - 95 + scr_v);	// 2010.08.14 
-	RECT rectNOTE = {64, Ry, WWidth, Ry + 12};	//Œ»İ‚Ì‰¹•„•t‹ß‚Ì‚İ	// 2010.08.14 
+	RECT rectNOTE = {64, Ry, WWidth, Ry + 12};	//ç¾åœ¨ã®éŸ³ç¬¦ä»˜è¿‘ã®ã¿	// 2010.08.14 
 
 	if(DragStartx<=-99999){
 		if(wParam & MK_LBUTTON){
 
-			//if(PutStartX>-99999+1){ //‰¹•„ƒhƒ‰ƒbƒO 2010.09.23 D
-			if(PutStartX>-99999+1 && ( 95 - (mouse_y/12 + scr_v)!=Last_mouse_y || (mouse_x - KEYWIDTH)/NoteWidth + scr_h*line*dot != Last_mouse_x)){ //‰¹•„ƒhƒ‰ƒbƒO //2010.09.23 A
+			//if(PutStartX>-99999+1){ //éŸ³ç¬¦ãƒ‰ãƒ©ãƒƒã‚° 2010.09.23 D
+			if(PutStartX>-99999+1 && ( 95 - (mouse_y/12 + scr_v)!=Last_mouse_y || (mouse_x - KEYWIDTH)/NoteWidth + scr_h*line*dot != Last_mouse_x)){ //éŸ³ç¬¦ãƒ‰ãƒ©ãƒƒã‚° //2010.09.23 A
 				if(ptx < PutStartX){	// 2010.08.14 C
 					ptx = PutStartX;	// 2010.08.14 C
 				}
@@ -183,12 +183,12 @@ void MouseDrag(WPARAM wParam, LPARAM lParam)
 					AdjustX = org_data.SearchNoteC(PutStartX, (unsigned char)(95 - (mouse_y/12 + scr_v)), 16 / NoteWidth, 16 % NoteWidth); //2014.05.28
 					if(AdjustX > 0) ptx -= AdjustX;
 				}else AdjustX = 0;
-				if( 95 - (mouse_y/12 + scr_v)!=Last_mouse_y && (mouse_x - KEYWIDTH)/NoteWidth + scr_h*line*dot == Last_mouse_x ){ // 2010.09.23 A y²‚Ì‚İ‚ÌˆÚ“®‚Å‚Ínote‚Ì’·‚³•Ï‚¦‚È‚¢
-					org_data.PutMusic();//Šy•ˆ‚ÌÄ•`‰æ
+				if( 95 - (mouse_y/12 + scr_v)!=Last_mouse_y && (mouse_x - KEYWIDTH)/NoteWidth + scr_h*line*dot == Last_mouse_x ){ // 2010.09.23 A yè»¸ã®ã¿ã®ç§»å‹•ã§ã¯noteã®é•·ã•å¤‰ãˆãªã„
+					org_data.PutMusic();//æ¥½è­œã®å†æç”»
 					RedrawWindow(hWnd,&rectNOTE,NULL,RDW_INVALIDATE|RDW_ERASENOW);
 				}else{
 					if(org_data.SetNote_onlyLength(PutStartX, ptx - PutStartX  + 1) == TRUE){ // 2010.08.14 C
-						org_data.PutMusic();//Šy•ˆ‚ÌÄ•`‰æ
+						org_data.PutMusic();//æ¥½è­œã®å†æç”»
 						RedrawWindow(hWnd,&rectNOTE,NULL,RDW_INVALIDATE|RDW_ERASENOW);
 						iLastEditNoteLength = ptx - PutStartX + 1;
 					
@@ -197,21 +197,21 @@ void MouseDrag(WPARAM wParam, LPARAM lParam)
 
 			}
 
-			if(mouse_y >= WHeight+292-WHNM && mouse_y < WHeight+(351+7)-WHNM){//ƒpƒ“”z’u
+			if(mouse_y >= WHeight+292-WHNM && mouse_y < WHeight+(351+7)-WHNM){//ãƒ‘ãƒ³é…ç½®
 				mouse_x = (mouse_x - KEYWIDTH)/NoteWidth + scr_h*line*dot ;
-				mouse_y = (WHeight+(351+5)-WHNM - mouse_y)/5;//96*12‚ÍŠy•ˆ‚ÌcƒTƒCƒY(Pixel)
+				mouse_y = (WHeight+(351+5)-WHNM - mouse_y)/5;//96*12ã¯æ¥½è­œã®ç¸¦ã‚µã‚¤ã‚º(Pixel)
 
-				if(org_data.SetPan2(mouse_x,(unsigned char)mouse_y)==TRUE){ //‘¶İ‚·‚é‰¹•„‚Ì‚İ•ÏX	// 2010.08.14 C
-					org_data.PutMusic();//Šy•ˆ‚ÌÄ•`‰æ
+				if(org_data.SetPan2(mouse_x,(unsigned char)mouse_y)==TRUE){ //å­˜åœ¨ã™ã‚‹éŸ³ç¬¦ã®ã¿å¤‰æ›´	// 2010.08.14 C
+					org_data.PutMusic();//æ¥½è­œã®å†æç”»
 					RedrawWindow(hWnd,&rectPAN,NULL,RDW_INVALIDATE|RDW_ERASENOW);
 				}
-			}else if(mouse_y >= WHeight+365-WHNM && mouse_y < WHeight+428-WHNM){//ƒ{ƒŠƒ…[ƒ€”z’u
+			}else if(mouse_y >= WHeight+365-WHNM && mouse_y < WHeight+428-WHNM){//ãƒœãƒªãƒ¥ãƒ¼ãƒ é…ç½®
 				mouse_x = (mouse_x - KEYWIDTH)/NoteWidth + scr_h*line*dot ;
-				mouse_y = (WHeight+428-WHNM - mouse_y)*4;//96*12‚ÍŠy•ˆ‚ÌcƒTƒCƒY(Pixel)
+				mouse_y = (WHeight+428-WHNM - mouse_y)*4;//96*12ã¯æ¥½è­œã®ç¸¦ã‚µã‚¤ã‚º(Pixel)
 				if(Last_VOL_Drag_mouse_x > -99999){
 					long xxx, xxxplusvalue, xxxredraw = 0;
 					xxxplusvalue = (mouse_x >= Last_VOL_Drag_mouse_x) ? 1 : -1;
-					for(xxx = Last_VOL_Drag_mouse_x; xxx != mouse_x; xxx += xxxplusvalue){ //ƒ}ƒEƒXƒ|ƒCƒ“ƒ^‚ª‚·‚Î‚â‚­‚Ä‚Æ‚ñ‚¾ŠÔ‚à•âŠ®‚µ‚Â‚ÂÁ‚·
+					for(xxx = Last_VOL_Drag_mouse_x; xxx != mouse_x; xxx += xxxplusvalue){ //ãƒã‚¦ã‚¹ãƒã‚¤ãƒ³ã‚¿ãŒã™ã°ã‚„ãã¦ã¨ã‚“ã é–“ã‚‚è£œå®Œã—ã¤ã¤æ¶ˆã™
 						long yyy;
 						if(mouse_x > Last_VOL_Drag_mouse_x){
 							yyy = (mouse_y - Last_VOL_Drag_mouse_y) / (mouse_x - Last_VOL_Drag_mouse_x) * (xxx - Last_VOL_Drag_mouse_x) + Last_VOL_Drag_mouse_y;
@@ -219,42 +219,42 @@ void MouseDrag(WPARAM wParam, LPARAM lParam)
 							yyy = (Last_VOL_Drag_mouse_y - mouse_y) / (Last_VOL_Drag_mouse_x - mouse_x) * (xxx - mouse_x) + mouse_y;
 						}else yyy = mouse_y;
 						if(org_data.SetVolume(xxx,(unsigned char)yyy)==TRUE){ 
-							//org_data.PutMusic();//Šy•ˆ‚ÌÄ•`‰æ
+							//org_data.PutMusic();//æ¥½è­œã®å†æç”»
 							xxxredraw++; //RedrawWindow(hWnd,&rectVOL,NULL,RDW_INVALIDATE|RDW_ERASENOW);
 						}
 					}
 					Last_VOL_Drag_mouse_x = mouse_x; //2014.05.02 A
 					Last_VOL_Drag_mouse_y = mouse_y;
 					if(org_data.SetVolume(mouse_x,(unsigned char)mouse_y)==TRUE){	// 2010.08.14 C
-						//org_data.PutMusic();//Šy•ˆ‚ÌÄ•`‰æ
+						//org_data.PutMusic();//æ¥½è­œã®å†æç”»
 						xxxredraw++; //RedrawWindow(hWnd,&rectVOL,NULL,RDW_INVALIDATE|RDW_ERASENOW);
 					}
-					//if(xxxredraw){org_data.PutMusic(); RedrawWindow(hWnd,&rectVOL,NULL,RDW_INVALIDATE|RDW_ERASENOW);} //Ä•`‰æŒn‚Í‚Ü‚Æ‚ß‚éB	// 2014.05.31 D
-					if(xxxredraw){org_data.PutMusic(); RedrawWindow(hWnd,&rect2,NULL,RDW_INVALIDATE|RDW_ERASENOW);} //Ä•`‰æŒn‚Í‚Ü‚Æ‚ß‚éB	// 2014.05.31 A
+					//if(xxxredraw){org_data.PutMusic(); RedrawWindow(hWnd,&rectVOL,NULL,RDW_INVALIDATE|RDW_ERASENOW);} //å†æç”»ç³»ã¯ã¾ã¨ã‚ã‚‹ã€‚	// 2014.05.31 D
+					if(xxxredraw){org_data.PutMusic(); RedrawWindow(hWnd,&rect2,NULL,RDW_INVALIDATE|RDW_ERASENOW);} //å†æç”»ç³»ã¯ã¾ã¨ã‚ã‚‹ã€‚	// 2014.05.31 A
 				}
 			}
 		}
 		else if(wParam & MK_RBUTTON){
-			if(mouse_y >= WHeight+365-WHNM && mouse_y < WHeight+428-WHNM){//ƒ{ƒŠƒ…[ƒ€”z’u
+			if(mouse_y >= WHeight+365-WHNM && mouse_y < WHeight+428-WHNM){//ãƒœãƒªãƒ¥ãƒ¼ãƒ é…ç½®
 				mouse_x = (mouse_x - KEYWIDTH)/NoteWidth + scr_h*line*dot ;
-				mouse_y = (WHeight+428-WHNM - mouse_y)*4;//96*12‚ÍŠy•ˆ‚ÌcƒTƒCƒY(Pixel)
-				if(Last_VOL_Drag_mouse_x > -99999){ //2014.05.03 A //ƒhƒ‰ƒbƒOŠJnƒ|ƒCƒ“ƒg‚ªVOL‚Å‚È‚©‚Á‚½‚çSetUndo‚ğƒLƒƒƒ“ƒZƒ‹‚³‚ê‚Ä‚¢‚é‰Â”\«‚à‚ ‚éB
+				mouse_y = (WHeight+428-WHNM - mouse_y)*4;//96*12ã¯æ¥½è­œã®ç¸¦ã‚µã‚¤ã‚º(Pixel)
+				if(Last_VOL_Drag_mouse_x > -99999){ //2014.05.03 A //ãƒ‰ãƒ©ãƒƒã‚°é–‹å§‹ãƒã‚¤ãƒ³ãƒˆãŒVOLã§ãªã‹ã£ãŸã‚‰SetUndoã‚’ã‚­ãƒ£ãƒ³ã‚»ãƒ«ã•ã‚Œã¦ã„ã‚‹å¯èƒ½æ€§ã‚‚ã‚ã‚‹ã€‚
 					long xxx, xxxplusvalue, xxxredraw = 0;
 					xxxplusvalue = (mouse_x >= Last_VOL_Drag_mouse_x) ? 1 : -1;
-					for(xxx = Last_VOL_Drag_mouse_x; xxx != mouse_x; xxx += xxxplusvalue){ //ƒ}ƒEƒXƒ|ƒCƒ“ƒ^‚ª‚·‚Î‚â‚­‚Ä‚Æ‚ñ‚¾ŠÔ‚à•âŠ®‚µ‚Â‚ÂÁ‚·
+					for(xxx = Last_VOL_Drag_mouse_x; xxx != mouse_x; xxx += xxxplusvalue){ //ãƒã‚¦ã‚¹ãƒã‚¤ãƒ³ã‚¿ãŒã™ã°ã‚„ãã¦ã¨ã‚“ã é–“ã‚‚è£œå®Œã—ã¤ã¤æ¶ˆã™
 						if(org_data.CutVolume(xxx,(unsigned char)mouse_y)==TRUE){ 
-							//org_data.PutMusic();//Šy•ˆ‚ÌÄ•`‰æ
+							//org_data.PutMusic();//æ¥½è­œã®å†æç”»
 							xxxredraw++; //RedrawWindow(hWnd,&rectVOL,NULL,RDW_INVALIDATE|RDW_ERASENOW);
 						}
 					}
 					Last_VOL_Drag_mouse_x = mouse_x; //2014.05.02 A
 					Last_VOL_Drag_mouse_y = mouse_y;
 					if(org_data.CutVolume(mouse_x,(unsigned char)mouse_y)==TRUE){	// 2010.08.14 C
-						//org_data.PutMusic();//Šy•ˆ‚ÌÄ•`‰æ
+						//org_data.PutMusic();//æ¥½è­œã®å†æç”»
 						xxxredraw++; //RedrawWindow(hWnd,&rectVOL,NULL,RDW_INVALIDATE|RDW_ERASENOW);
 					}
-					//if(xxxredraw){org_data.PutMusic(); RedrawWindow(hWnd,&rectVOL,NULL,RDW_INVALIDATE|RDW_ERASENOW);} //Ä•`‰æŒn‚Í‚Ü‚Æ‚ß‚éB	// 2014.05.31 D
-					if(xxxredraw){org_data.PutMusic(); RedrawWindow(hWnd,&rect2,NULL,RDW_INVALIDATE|RDW_ERASENOW);} //Ä•`‰æŒn‚Í‚Ü‚Æ‚ß‚éB	// 2014.05.31 A
+					//if(xxxredraw){org_data.PutMusic(); RedrawWindow(hWnd,&rectVOL,NULL,RDW_INVALIDATE|RDW_ERASENOW);} //å†æç”»ç³»ã¯ã¾ã¨ã‚ã‚‹ã€‚	// 2014.05.31 D
+					if(xxxredraw){org_data.PutMusic(); RedrawWindow(hWnd,&rect2,NULL,RDW_INVALIDATE|RDW_ERASENOW);} //å†æç”»ç³»ã¯ã¾ã¨ã‚ã‚‹ã€‚	// 2014.05.31 A
 				}
 			}
 		}
@@ -262,15 +262,15 @@ void MouseDrag(WPARAM wParam, LPARAM lParam)
 			//org_data.SetNote_afterSetLength(PutStartX);
 			org_data.CheckNoteTail(org_data.track);
 			PutStartX = -99999;
-			org_data.PutMusic();//Šy•ˆ‚ÌÄ•`‰æ
+			org_data.PutMusic();//æ¥½è­œã®å†æç”»
 			RedrawWindow(hWnd,&rectNOTE,NULL,RDW_INVALIDATE|RDW_ERASENOW);
 
 		}
 		return;
 	}
 	if(wParam & MK_LBUTTON){
-		//¶ƒ{ƒ^ƒ“ƒhƒ‰ƒbƒO
-		Note_x = (mouse_x - KEYWIDTH)/NoteWidth + scr_h*line*dot ; //ƒm[ƒg‚ÌxÀ•W
+		//å·¦ãƒœã‚¿ãƒ³ãƒ‰ãƒ©ãƒƒã‚°
+		Note_x = (mouse_x - KEYWIDTH)/NoteWidth + scr_h*line*dot ; //ãƒãƒ¼ãƒˆã®xåº§æ¨™
 		if(Note_x>StartNotex){
 			if(sGrid || alt_down == 1){
 				nc_Select.x1_1=MinimumGrid(StartNotex);
@@ -282,7 +282,7 @@ void MouseDrag(WPARAM wParam, LPARAM lParam)
 				nc_Select.x1_1=StartNotex;
 				nc_Select.x1_2=Note_x;
 			}
-		}else if(Note_x<=StartNotex){ //‚Ğ‚Á‚­‚è•Ô‚·
+		}else if(Note_x<=StartNotex){ //ã²ã£ãã‚Šè¿”ã™
 			if(sGrid || alt_down == 1){
 				nc_Select.x1_1=MinimumGrid(Note_x);
 				nc_Select.x1_2=MaximumGrid(StartNotex);
@@ -326,36 +326,36 @@ void ClickProcL(WPARAM wParam, LPARAM lParam)
 	alt_down = (GetKeyState(VK_MENU)<0)? 1: ((GetKeyState(VK_APPS)<0)? 2: 0) ;
 	shift_down = (GetKeyState(VK_TAB)<0)? 1: 0;
 
-	//ƒ}ƒEƒX‚ÌÀ•W‚ğæ“¾
+	//ãƒã‚¦ã‚¹ã®åº§æ¨™ã‚’å–å¾—
 	mouse_data.GetMousePosition(&mouse_x,&mouse_y);
 
-	//Shift‚ª‰Ÿ‚³‚ê‚Ä‚¢‚½‚çSelect(”ÍˆÍ‘I‘ğ)ˆµ‚¢
+	//ShiftãŒæŠ¼ã•ã‚Œã¦ã„ãŸã‚‰Select(ç¯„å›²é¸æŠ)æ‰±ã„
 	if(shift_down == 1 && mouse_y < WHeight+288-WHNM+144){
 		mouse_y = WHeight+288-WHNM+144 + 8;
 	}
 
 	if(mouse_x < 64){
-//		if(mouse_x >= 0 && mouse_y >= 0 && mouse_y < 288+WDWHEIGHTPLUS){//Œ®”Õ
-		if(mouse_x >= 0 && mouse_y >= 0 && mouse_y < WHeight+288-WHNM){//Œ®”Õ
-			org_data.TouchKeyboard(unsigned char(95 - (mouse_y/12 + scr_v)));//96*12‚ÍŠy•ˆ‚ÌcƒTƒCƒY
+//		if(mouse_x >= 0 && mouse_y >= 0 && mouse_y < 288+WDWHEIGHTPLUS){//éµç›¤
+		if(mouse_x >= 0 && mouse_y >= 0 && mouse_y < WHeight+288-WHNM){//éµç›¤
+			org_data.TouchKeyboard(unsigned char(95 - (mouse_y/12 + scr_v)));//96*12ã¯æ¥½è­œã®ç¸¦ã‚µã‚¤ã‚º
 		}
-		if(mouse_x >= 0 && mouse_y >= WHeight+288-WHNM+144 && mouse_y < WHeight+288-WHNM+144+16){//Select‚Ì•”ˆÊ 2014.05.01
+		if(mouse_x >= 0 && mouse_y >= WHeight+288-WHNM+144 && mouse_y < WHeight+288-WHNM+144+16){//Selectã®éƒ¨ä½ 2014.05.01
 			ChangeSelAlwaysCurrent();
-			org_data.PutMusic();//Šy•ˆ‚ğ•\¦
+			org_data.PutMusic();//æ¥½è­œã‚’è¡¨ç¤º
 			rect.left = 0; rect.right=64; rect.top = WHeight+288-WHNM+144; rect.bottom = WHeight+288-WHNM+144+16;
 			RedrawWindow(hWnd,&rect,NULL,RDW_INVALIDATE|RDW_ERASENOW);
 			return;			
 		}
-		if(mouse_x >= 0 && mouse_y >= WHeight+288-WHNM && mouse_y < WHeight+288-WHNM+72){//PAN ‚Ì•”ˆÊ 2014.05.01
+		if(mouse_x >= 0 && mouse_y >= WHeight+288-WHNM && mouse_y < WHeight+288-WHNM+72){//PAN ã®éƒ¨ä½ 2014.05.01
 			iActivatePAN = -iActivatePAN + 1;
-			org_data.PutMusic();//Šy•ˆ‚ğ•\¦
+			org_data.PutMusic();//æ¥½è­œã‚’è¡¨ç¤º
 			rect.left = 0; rect.right=64; rect.top = WHeight+288-WHNM; rect.bottom = WHeight+288-WHNM+72;
 			RedrawWindow(hWnd,&rect,NULL,RDW_INVALIDATE|RDW_ERASENOW);
 			return;			
 		}
-		if(mouse_x >= 0 && mouse_y >= WHeight+288-WHNM+72 && mouse_y < WHeight+288-WHNM+144){//VOL ‚Ì•”ˆÊ 2014.05.01
+		if(mouse_x >= 0 && mouse_y >= WHeight+288-WHNM+72 && mouse_y < WHeight+288-WHNM+144){//VOL ã®éƒ¨ä½ 2014.05.01
 			iActivateVOL = -iActivateVOL + 1;
-			org_data.PutMusic();//Šy•ˆ‚ğ•\¦
+			org_data.PutMusic();//æ¥½è­œã‚’è¡¨ç¤º
 			rect.left = 0; rect.right=64; rect.top = WHeight+288-WHNM+72; rect.bottom = WHeight+288-WHNM+144 ;
 			RedrawWindow(hWnd,&rect,NULL,RDW_INVALIDATE|RDW_ERASENOW);
 			return;			
@@ -364,49 +364,49 @@ void ClickProcL(WPARAM wParam, LPARAM lParam)
 		return;
 	}
 	
-//	if(mouse_y >= 0 && mouse_y < 288+WDWHEIGHTPLUS){//‰¹•„”z’u
-	if(mouse_y >= 0 && mouse_y < WHeight+288-WHNM){//‰¹•„”z’u
-		//æ“¾‚µ‚½À•W‚ğŠy•ˆÀ•W‚É•ÏŠ·
+//	if(mouse_y >= 0 && mouse_y < 288+WDWHEIGHTPLUS){//éŸ³ç¬¦é…ç½®
+	if(mouse_y >= 0 && mouse_y < WHeight+288-WHNM){//éŸ³ç¬¦é…ç½®
+		//å–å¾—ã—ãŸåº§æ¨™ã‚’æ¥½è­œåº§æ¨™ã«å¤‰æ›
 		mouse_x = (mouse_x - KEYWIDTH)/NoteWidth + scr_h*line*dot ;
-		mouse_y = 95 - (mouse_y/12 + scr_v);//96*12‚ÍŠy•ˆ‚ÌcƒTƒCƒY(Pixel)
-		if(mouse_y<0)return; //”ÍˆÍŠO
-		//‰¹•„‚ğ”z’u
+		mouse_y = 95 - (mouse_y/12 + scr_v);//96*12ã¯æ¥½è­œã®ç¸¦ã‚µã‚¤ã‚º(Pixel)
+		if(mouse_y<0)return; //ç¯„å›²å¤–
+		//éŸ³ç¬¦ã‚’é…ç½®
 		SetUndo();
-		if(iDragMode && (org_data.track<MAXMELODY))PutStartX = mouse_x; //‰ŠúˆÊ’u‹L‰¯
+		if(iDragMode && (org_data.track<MAXMELODY))PutStartX = mouse_x; //åˆæœŸä½ç½®è¨˜æ†¶
 		if(NoteWidth != 16){
 			AdjustX = org_data.SearchNoteC(mouse_x, (unsigned char)mouse_y, 16 / NoteWidth, 16 % NoteWidth); //2014.05.28
 			if(AdjustX > 0) mouse_x -= AdjustX;
 		}else AdjustX = 0;
-		if(org_data.SetNote(mouse_x,(unsigned char)mouse_y,iDragMode)==FALSE)ResetLastUndo(); //’·‚­‚µ‚·‚¬‚Ä¸”s‚µ‚½‚Æ‚«‚Í–ß‚·
-		org_data.PutMusic();//Šy•ˆ‚ÌÄ•`‰æ
+		if(org_data.SetNote(mouse_x,(unsigned char)mouse_y,iDragMode)==FALSE)ResetLastUndo(); //é•·ãã—ã™ãã¦å¤±æ•—ã—ãŸã¨ãã¯æˆ»ã™
+		org_data.PutMusic();//æ¥½è­œã®å†æç”»
 		RedrawWindow(hWnd,&rect,NULL,RDW_INVALIDATE|RDW_ERASENOW);
 		ClearDrag();
-//	}else if(mouse_y >= 292+WDWHEIGHTPLUS && mouse_y < 351+7+WDWHEIGHTPLUS){//ƒpƒ“”z’u
-	}else if(mouse_y >= WHeight+292-WHNM && mouse_y < WHeight+(351+7)-WHNM){//ƒpƒ“”z’u
+//	}else if(mouse_y >= 292+WDWHEIGHTPLUS && mouse_y < 351+7+WDWHEIGHTPLUS){//ãƒ‘ãƒ³é…ç½®
+	}else if(mouse_y >= WHeight+292-WHNM && mouse_y < WHeight+(351+7)-WHNM){//ãƒ‘ãƒ³é…ç½®
 		mouse_x = (mouse_x - KEYWIDTH)/NoteWidth + scr_h*line*dot ;
-//		mouse_y = (351+5+WDWHEIGHTPLUS - mouse_y)/5;//96*12‚ÍŠy•ˆ‚ÌcƒTƒCƒY(Pixel)
-		mouse_y = (WHeight+(351+5)-WHNM - mouse_y)/5;//96*12‚ÍŠy•ˆ‚ÌcƒTƒCƒY(Pixel)
+//		mouse_y = (351+5+WDWHEIGHTPLUS - mouse_y)/5;//96*12ã¯æ¥½è­œã®ç¸¦ã‚µã‚¤ã‚º(Pixel)
+		mouse_y = (WHeight+(351+5)-WHNM - mouse_y)/5;//96*12ã¯æ¥½è­œã®ç¸¦ã‚µã‚¤ã‚º(Pixel)
 		if((mouse_x != Last_mouse_x) ||(mouse_y != Last_mouse_y))SetUndo();
 		org_data.SetPan(mouse_x,(unsigned char)mouse_y);
-		org_data.PutMusic();//Šy•ˆ‚ÌÄ•`‰æ
+		org_data.PutMusic();//æ¥½è­œã®å†æç”»
 		RedrawWindow(hWnd,&rect,NULL,RDW_INVALIDATE|RDW_ERASENOW);
 		ClearDrag();
-//	}else if(mouse_y >= 365+WDWHEIGHTPLUS && mouse_y < 428+WDWHEIGHTPLUS){//ƒ{ƒŠƒ…[ƒ€”z’u
-	}else if(mouse_y >= WHeight+365-WHNM && mouse_y < WHeight+428-WHNM){//ƒ{ƒŠƒ…[ƒ€”z’u
+//	}else if(mouse_y >= 365+WDWHEIGHTPLUS && mouse_y < 428+WDWHEIGHTPLUS){//ãƒœãƒªãƒ¥ãƒ¼ãƒ é…ç½®
+	}else if(mouse_y >= WHeight+365-WHNM && mouse_y < WHeight+428-WHNM){//ãƒœãƒªãƒ¥ãƒ¼ãƒ é…ç½®
 		mouse_x = (mouse_x - KEYWIDTH)/NoteWidth + scr_h*line*dot ;
-//		mouse_y = (428+WDWHEIGHTPLUS - mouse_y)*4;//96*12‚ÍŠy•ˆ‚ÌcƒTƒCƒY(Pixel)
-		mouse_y = (WHeight+428-WHNM - mouse_y)*4;//96*12‚ÍŠy•ˆ‚ÌcƒTƒCƒY(Pixel)
+//		mouse_y = (428+WDWHEIGHTPLUS - mouse_y)*4;//96*12ã¯æ¥½è­œã®ç¸¦ã‚µã‚¤ã‚º(Pixel)
+		mouse_y = (WHeight+428-WHNM - mouse_y)*4;//96*12ã¯æ¥½è­œã®ç¸¦ã‚µã‚¤ã‚º(Pixel)
 		if((mouse_x != Last_mouse_x) ||(mouse_y != Last_mouse_y))SetUndo();
 		org_data.SetVolume(mouse_x,(unsigned char)mouse_y);
-//		org_data.SetVolume2(mouse_x,(unsigned char)mouse_y,0); //‚â‚è‚©‚¯
-		org_data.PutMusic();//Šy•ˆ‚ÌÄ•`‰æ
+//		org_data.SetVolume2(mouse_x,(unsigned char)mouse_y,0); //ã‚„ã‚Šã‹ã‘
+		org_data.PutMusic();//æ¥½è­œã®å†æç”»
 		RedrawWindow(hWnd,&rect,NULL,RDW_INVALIDATE|RDW_ERASENOW);
 		Last_VOL_Drag_mouse_x = mouse_x; //2014.05.02 A
 		Last_VOL_Drag_mouse_y = mouse_y;
 		ClearDrag();
-	}else if(mouse_y >=WHeight-13 && mouse_y<=WHeight-2){ //‘I‘ğ”ÍˆÍ
-		if((wParam & MK_SHIFT)&&(tra>=0)){ //’Ç‰Áƒ‚[ƒh
-			Note_x = (mouse_x - KEYWIDTH)/NoteWidth + scr_h*line*dot ; //ƒm[ƒg‚ÌxÀ•W
+	}else if(mouse_y >=WHeight-13 && mouse_y<=WHeight-2){ //é¸æŠç¯„å›²
+		if((wParam & MK_SHIFT)&&(tra>=0)){ //è¿½åŠ ãƒ¢ãƒ¼ãƒ‰
+			Note_x = (mouse_x - KEYWIDTH)/NoteWidth + scr_h*line*dot ; //ãƒãƒ¼ãƒˆã®xåº§æ¨™
 			if(Note_x>nc_Select.x1_1){
 				if(sGrid || alt_down == 1){
 					nc_Select.x1_2=MaximumGrid(Note_x);
@@ -415,7 +415,7 @@ void ClickProcL(WPARAM wParam, LPARAM lParam)
 				}else{
 					nc_Select.x1_2=Note_x;
 				}
-			}else{ //‚Ğ‚Á‚­‚è•Ô‚·
+			}else{ //ã²ã£ãã‚Šè¿”ã™
 				if(sGrid || alt_down == 1){
 					nc_Select.x1_1=MinimumGrid(Note_x);
 				}else if(alt_down == 2){
@@ -425,10 +425,10 @@ void ClickProcL(WPARAM wParam, LPARAM lParam)
 				}
 			}
 		}else{
-			//ƒVƒtƒg‚ª‰Ÿ‚³‚ê‚Ä‚¢‚È‚©‚Á‚½‚çŠJn“_‚Æ‚İ‚È‚·
+			//ã‚·ãƒ•ãƒˆãŒæŠ¼ã•ã‚Œã¦ã„ãªã‹ã£ãŸã‚‰é–‹å§‹ç‚¹ã¨ã¿ãªã™
 			DragStartx = mouse_x;
-			StartNotex = (mouse_x - KEYWIDTH)/NoteWidth + scr_h*line*dot ; //ƒm[ƒg‚ÌxÀ•W
-			if(sGrid || alt_down == 1){ //ƒOƒŠƒbƒhg—p
+			StartNotex = (mouse_x - KEYWIDTH)/NoteWidth + scr_h*line*dot ; //ãƒãƒ¼ãƒˆã®xåº§æ¨™
+			if(sGrid || alt_down == 1){ //ã‚°ãƒªãƒƒãƒ‰ä½¿ç”¨
 				nc_Select.x1_1 = MinimumGrid(StartNotex);
 				nc_Select.x1_2 = MaximumGrid(StartNotex);
 			}else if(alt_down == 2){
@@ -439,12 +439,12 @@ void ClickProcL(WPARAM wParam, LPARAM lParam)
 				nc_Select.x1_2 = StartNotex;
 			}
 			tra = org_data.track;
-			if(wParam & MK_CONTROL){ //ƒRƒ“ƒgƒ[ƒ‹‚ğ‰Ÿ‚µ‚Ä‚¢‚ê‚Î‘Sƒgƒ‰ƒbƒN
+			if(wParam & MK_CONTROL){ //ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ«ã‚’æŠ¼ã—ã¦ã„ã‚Œã°å…¨ãƒˆãƒ©ãƒƒã‚¯
 				ful=1;
 			}else ful=0;
 		}
 
-		org_data.PutMusic();//Šy•ˆ‚ÌÄ•`‰æ
+		org_data.PutMusic();//æ¥½è­œã®å†æç”»
 		RedrawWindow(hWnd,&rect,NULL,RDW_INVALIDATE|RDW_ERASENOW);
 		ShowStatusMessage();
 	}
@@ -453,7 +453,7 @@ void ClickProcL(WPARAM wParam, LPARAM lParam)
 	//Last_VOL_Drag_mouse_x = mouse_x; //2014.05.02 A
 	//Last_VOL_Drag_mouse_y = mouse_y;
 
-	//ˆÈ‰º‚ÍƒeƒXƒg—p
+	//ä»¥ä¸‹ã¯ãƒ†ã‚¹ãƒˆç”¨
 //	char str[80];
 //	HDC hdc;
 //	hdc = GetDC(hWnd);
@@ -477,7 +477,7 @@ void ClickProcR(WPARAM wParam, LPARAM lParam)
 	org_data.GetMusicInfo(&mi);
 	dot = mi.dot;
 	line = mi.line;
-	//ƒ}ƒEƒX‚ÌÀ•W‚ğæ“¾
+	//ãƒã‚¦ã‚¹ã®åº§æ¨™ã‚’å–å¾—
 	mouse_data.GetMousePosition(&mouse_x,&mouse_y);
 
 	if(GetKeyState(VK_TAB)<0){
@@ -487,61 +487,61 @@ void ClickProcR(WPARAM wParam, LPARAM lParam)
 	SetUndo();
 
 	if(mouse_x < 64)return;
-	//‰¹•„ƒJƒbƒg
+	//éŸ³ç¬¦ã‚«ãƒƒãƒˆ
 //	if(mouse_y >= 0 && mouse_y < 288+WDWHEIGHTPLUS){
 	if(mouse_y >= 0 && mouse_y < WHeight+288-WHNM){
-		//æ“¾‚µ‚½À•W‚ğŠy•ˆÀ•W‚É•ÏŠ·
+		//å–å¾—ã—ãŸåº§æ¨™ã‚’æ¥½è­œåº§æ¨™ã«å¤‰æ›
 		mouse_x = (mouse_x - KEYWIDTH)/NoteWidth + scr_h*line*dot ;
-		mouse_y = 95  - (mouse_y/12 + scr_v);//96*12‚ÍŠy•ˆ‚ÌcƒTƒCƒY(Pixel)
+		mouse_y = 95  - (mouse_y/12 + scr_v);//96*12ã¯æ¥½è­œã®ç¸¦ã‚µã‚¤ã‚º(Pixel)
 		if(NoteWidth != 16){
 			AdjustX = org_data.SearchNoteC(mouse_x, (unsigned char)mouse_y, 16 / NoteWidth, 16 % NoteWidth); //2014.05.28
 			if(AdjustX > 0) mouse_x -= AdjustX;
 		}
 
-		//‰¹•„‚ğ”z’u
+		//éŸ³ç¬¦ã‚’é…ç½®
 		if(org_data.CutNote(mouse_x,(unsigned char)mouse_y)==FALSE){
-			//íœ‚·‚é‚×‚«‰¹•„‚Í‘¶İ‚µ‚È‚©‚Á‚½B
+			//å‰Šé™¤ã™ã‚‹ã¹ãéŸ³ç¬¦ã¯å­˜åœ¨ã—ãªã‹ã£ãŸã€‚
 			ResetLastUndo();
 			NextTrack = org_data.SearchNote(mouse_x,(unsigned char)mouse_y,org_data.track);
 			//MessageBox(NULL,"l",NULL,NULL);
 			if(NextTrack>=0 && NextTrack!=org_data.track){
-				//ƒgƒ‰ƒbƒN•ÏX
+				//ãƒˆãƒ©ãƒƒã‚¯å¤‰æ›´
 				ChangeTrack(hWnd, NextTrack);
 			}
 		}
-		org_data.PutMusic();//Šy•ˆ‚ÌÄ•`‰æ
+		org_data.PutMusic();//æ¥½è­œã®å†æç”»
 		RedrawWindow(hWnd,&rect,NULL,RDW_INVALIDATE|RDW_ERASENOW);
-//	}else if(mouse_y >= 292+WDWHEIGHTPLUS && mouse_y < 351+7+WDWHEIGHTPLUS){//ƒpƒ“”z’u
-	}else if(mouse_y >= WHeight+292-WHNM && mouse_y < WHeight+351+7-WHNM){//ƒpƒ“”z’u
+//	}else if(mouse_y >= 292+WDWHEIGHTPLUS && mouse_y < 351+7+WDWHEIGHTPLUS){//ãƒ‘ãƒ³é…ç½®
+	}else if(mouse_y >= WHeight+292-WHNM && mouse_y < WHeight+351+7-WHNM){//ãƒ‘ãƒ³é…ç½®
 		mouse_x = (mouse_x - KEYWIDTH)/NoteWidth + scr_h*line*dot ;
-//		mouse_y = (351+5+WDWHEIGHTPLUS - mouse_y)/5;//96*12‚ÍŠy•ˆ‚ÌcƒTƒCƒY(Pixel)
-		mouse_y = (WHeight+351+5-WHNM - mouse_y)/5;//96*12‚ÍŠy•ˆ‚ÌcƒTƒCƒY(Pixel)
+//		mouse_y = (351+5+WDWHEIGHTPLUS - mouse_y)/5;//96*12ã¯æ¥½è­œã®ç¸¦ã‚µã‚¤ã‚º(Pixel)
+		mouse_y = (WHeight+351+5-WHNM - mouse_y)/5;//96*12ã¯æ¥½è­œã®ç¸¦ã‚µã‚¤ã‚º(Pixel)
 		if(org_data.CutPan(mouse_x,(unsigned char)mouse_y)==FALSE)ResetLastUndo();
-		org_data.PutMusic();//Šy•ˆ‚ÌÄ•`‰æ
+		org_data.PutMusic();//æ¥½è­œã®å†æç”»
 		RedrawWindow(hWnd,&rect,NULL,RDW_INVALIDATE|RDW_ERASENOW);
 		ClearDrag();
-//	}else if(mouse_y >= 365+WDWHEIGHTPLUS && mouse_y < 428+WDWHEIGHTPLUS){//ƒ{ƒŠƒ…[ƒ€”z’u
-	}else if(mouse_y >= WHeight+365-WHNM && mouse_y < WHeight+428-WHNM){//ƒ{ƒŠƒ…[ƒ€”z’u
+//	}else if(mouse_y >= 365+WDWHEIGHTPLUS && mouse_y < 428+WDWHEIGHTPLUS){//ãƒœãƒªãƒ¥ãƒ¼ãƒ é…ç½®
+	}else if(mouse_y >= WHeight+365-WHNM && mouse_y < WHeight+428-WHNM){//ãƒœãƒªãƒ¥ãƒ¼ãƒ é…ç½®
 		mouse_x = (mouse_x - KEYWIDTH)/NoteWidth + scr_h*line*dot ;
-//		mouse_y = (428+WDWHEIGHTPLUS - mouse_y)*4;//96*12‚ÍŠy•ˆ‚ÌcƒTƒCƒY(Pixel)
-		mouse_y = (WHeight+428-WHNM - mouse_y)*4;//96*12‚ÍŠy•ˆ‚ÌcƒTƒCƒY(Pixel)
-		//if(org_data.CutVolume(mouse_x,(unsigned char)mouse_y)==FALSE)ResetLastUndo(); //2014.05.03 D //‚±‚Ì‚Ü‚Üƒhƒ‰ƒbƒO‚³‚ê‚é‚ÆƒAƒ“ƒhƒD‚Å‚«‚È‚¢
-		org_data.PutMusic();//Šy•ˆ‚ÌÄ•`‰æ
+//		mouse_y = (428+WDWHEIGHTPLUS - mouse_y)*4;//96*12ã¯æ¥½è­œã®ç¸¦ã‚µã‚¤ã‚º(Pixel)
+		mouse_y = (WHeight+428-WHNM - mouse_y)*4;//96*12ã¯æ¥½è­œã®ç¸¦ã‚µã‚¤ã‚º(Pixel)
+		//if(org_data.CutVolume(mouse_x,(unsigned char)mouse_y)==FALSE)ResetLastUndo(); //2014.05.03 D //ã“ã®ã¾ã¾ãƒ‰ãƒ©ãƒƒã‚°ã•ã‚Œã‚‹ã¨ã‚¢ãƒ³ãƒ‰ã‚¥ã§ããªã„
+		org_data.PutMusic();//æ¥½è­œã®å†æç”»
 		ClearDrag();
 		RedrawWindow(hWnd,&rect,NULL,RDW_INVALIDATE|RDW_ERASENOW);
-		Last_VOL_Drag_mouse_x = mouse_x; //2014.05.02 A //‚±‚ê‚ÍVOL‚Å‚µ‚©g‚í‚È‚¢B
+		Last_VOL_Drag_mouse_x = mouse_x; //2014.05.02 A //ã“ã‚Œã¯VOLã§ã—ã‹ä½¿ã‚ãªã„ã€‚
 		Last_VOL_Drag_mouse_y = mouse_y;
-	}else if(mouse_y >=WHeight-13 && mouse_y<=WHeight-2){ //‘I‘ğ”ÍˆÍ
-		//DragStartx = mouse_x; //ƒhƒ‰ƒbƒOŠJn“_
+	}else if(mouse_y >=WHeight-13 && mouse_y<=WHeight-2){ //é¸æŠç¯„å›²
+		//DragStartx = mouse_x; //ãƒ‰ãƒ©ãƒƒã‚°é–‹å§‹ç‚¹
 		tra=-256;
-		org_data.PutMusic();//Šy•ˆ‚ÌÄ•`‰æ
+		org_data.PutMusic();//æ¥½è­œã®å†æç”»
 		RedrawWindow(hWnd,&rect,NULL,RDW_INVALIDATE|RDW_ERASENOW);
 		SetEZCWindowMessage("");
 		ClearDrag();
 		ShowStatusMessage();
 	}
 
-	//ˆÈ‰º‚ÍƒeƒXƒg—p
+	//ä»¥ä¸‹ã¯ãƒ†ã‚¹ãƒˆç”¨
 //	char str[80];
 //	HDC hdc;
 //	hdc = GetDC(hWnd);
@@ -566,14 +566,14 @@ void ClickProcM(WPARAM wParam, LPARAM lParam)
 	org_data.GetMusicInfo(&mi);
 	dot = mi.dot;
 	line = mi.line;
-	//ƒ}ƒEƒX‚ÌÀ•W‚ğæ“¾
+	//ãƒã‚¦ã‚¹ã®åº§æ¨™ã‚’å–å¾—
 	mouse_data.GetMousePosition(&mouse_x,&mouse_y);
 	if(mouse_x < 64)return;
 
 	if(mouse_y >= 0 && mouse_y < WHeight+288-WHNM){
-		//æ“¾‚µ‚½À•W‚ğŠy•ˆÀ•W‚É•ÏŠ·
+		//å–å¾—ã—ãŸåº§æ¨™ã‚’æ¥½è­œåº§æ¨™ã«å¤‰æ›
 		mouse_x = (mouse_x - KEYWIDTH)/NoteWidth + scr_h*line*dot ;
-		mouse_y = 95  - (mouse_y/12 + scr_v);//96*12‚ÍŠy•ˆ‚ÌcƒTƒCƒY(Pixel)
+		mouse_y = 95  - (mouse_y/12 + scr_v);//96*12ã¯æ¥½è­œã®ç¸¦ã‚µã‚¤ã‚º(Pixel)
 
 
 		NextTrack = org_data.SearchNote(mouse_x,(unsigned char)mouse_y,org_data.track);
@@ -582,16 +582,16 @@ void ClickProcM(WPARAM wParam, LPARAM lParam)
 
 		//MessageBox(NULL,"l",NULL,NULL);
 		if(NextTrack>=0 && NextTrack!=org_data.track){
-			//ƒgƒ‰ƒbƒN•ÏX
+			//ãƒˆãƒ©ãƒƒã‚¯å¤‰æ›´
 			//ChangeTrack(hWnd, NextTrack);
 		}
 		if(NextTrack<0 && NextTrackB>=0){
 			NextTrack = NextTrackB;
 		}
 		if(NextTrack>=0){
-			//‰¹•„‚ÌŠJn‚ÆI—¹‚ğæ“¾‚·‚é
+			//éŸ³ç¬¦ã®é–‹å§‹ã¨çµ‚äº†ã‚’å–å¾—ã™ã‚‹
 			
-			//‚±‚±‚Å‚ÍGrid‚ğ–³‹‚·‚éB
+			//ã“ã“ã§ã¯Gridã‚’ç„¡è¦–ã™ã‚‹ã€‚
 			nc_Select.x1_1 = x1;
 			nc_Select.x1_2 = x2;
 			tra = NextTrack;
@@ -599,22 +599,22 @@ void ClickProcM(WPARAM wParam, LPARAM lParam)
 			PrintStatusMessage(0);
 			org_data.RedrawSelectArea();
 		}else{
-			//‘I‘ğ”ÍˆÍ‚Ì¸Ø±
+			//é¸æŠç¯„å›²ã®ï½¸ï¾˜ï½±
 			tra=-256;
-			org_data.PutMusic();//Šy•ˆ‚ÌÄ•`‰æ
+			org_data.PutMusic();//æ¥½è­œã®å†æç”»
 			RedrawWindow(hWnd,&rect,NULL,RDW_INVALIDATE|RDW_ERASENOW);
 			SetEZCWindowMessage("");
 			ClearDrag();
 			ShowStatusMessage();
 		}
 
-		org_data.PutMusic();//Šy•ˆ‚ÌÄ•`‰æ
+		org_data.PutMusic();//æ¥½è­œã®å†æç”»
 		RedrawWindow(hWnd,&rect,NULL,RDW_INVALIDATE|RDW_ERASENOW);
-	}else if(mouse_y >= WHeight+292-WHNM && mouse_y < WHeight+351+7-WHNM){//ƒpƒ“”z’u
-	}else if(mouse_y >= WHeight+365-WHNM && mouse_y < WHeight+428-WHNM){//ƒ{ƒŠƒ…[ƒ€”z’u
-	}else if(mouse_y >=WHeight-13 && mouse_y<=WHeight-2){ //‘I‘ğ”ÍˆÍ
+	}else if(mouse_y >= WHeight+292-WHNM && mouse_y < WHeight+351+7-WHNM){//ãƒ‘ãƒ³é…ç½®
+	}else if(mouse_y >= WHeight+365-WHNM && mouse_y < WHeight+428-WHNM){//ãƒœãƒªãƒ¥ãƒ¼ãƒ é…ç½®
+	}else if(mouse_y >=WHeight-13 && mouse_y<=WHeight-2){ //é¸æŠç¯„å›²
 	}
-	//ˆÈ‰º‚ÍƒeƒXƒg—p
+	//ä»¥ä¸‹ã¯ãƒ†ã‚¹ãƒˆç”¨
 //	char str[80];
 //	HDC hdc;
 //	hdc = GetDC(hWnd);

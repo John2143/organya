@@ -5,22 +5,22 @@
 #define MAXBITMAP		64
 
 HBITMAP hBmp[MAXBITMAP];
-HBITMAP hbWork;//‚¢‚í‚ä‚éƒoƒbƒNƒoƒbƒtƒ@
-HBITMAP hbMparts;//Šy•ˆ—pƒ[ƒN
-HBITMAP hbPan;//ƒpƒ“ƒ{ƒŠƒ…[ƒ€—pƒ[ƒN
+HBITMAP hbWork;//ã„ã‚ã‚†ã‚‹ãƒãƒƒã‚¯ãƒãƒƒãƒ•ã‚¡
+HBITMAP hbMparts;//æ¥½è­œç”¨ãƒ¯ãƒ¼ã‚¯
+HBITMAP hbPan;//ãƒ‘ãƒ³ãƒœãƒªãƒ¥ãƒ¼ãƒ ç”¨ãƒ¯ãƒ¼ã‚¯
 
-extern int gDrawDouble;	//—¼•û‚Ìƒgƒ‰ƒbƒNƒOƒ‹[ƒv‚ğ•`‰æ‚·‚é
+extern int gDrawDouble;	//ä¸¡æ–¹ã®ãƒˆãƒ©ãƒƒã‚¯ã‚°ãƒ«ãƒ¼ãƒ—ã‚’æç”»ã™ã‚‹
 
-extern RECT WinRect; //ƒEƒBƒ“ƒhƒEƒTƒCƒY•Û‘¶—p A 2010.09.22
+extern RECT WinRect; //ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚µã‚¤ã‚ºä¿å­˜ç”¨ A 2010.09.22
 extern int NoteWidth;
 extern int NoteEnlarge_Until_16px;
-//GDI‚Ì‰Šú‰»
+//GDIã®åˆæœŸåŒ–
 BOOL StartGDI(HWND hwnd)
 {
-	HDC hdc;//ƒfƒoƒCƒXƒRƒ“ƒeƒLƒXƒg
-	BOOL status = FALSE;//‚±‚ÌŠÖ”‚Ì•Ô‚è’l
+	HDC hdc;//ãƒ‡ãƒã‚¤ã‚¹ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆ
+	BOOL status = FALSE;//ã“ã®é–¢æ•°ã®è¿”ã‚Šå€¤
     int nDesktopWidth = GetSystemMetrics( SM_CXFULLSCREEN );
-    int nDesktopHeight = GetSystemMetrics( SM_CYFULLSCREEN );	//ƒ^ƒXƒNƒo[l—¶
+    int nDesktopHeight = GetSystemMetrics( SM_CYFULLSCREEN );	//ã‚¿ã‚¹ã‚¯ãƒãƒ¼è€ƒæ…®
     int nScreenWidth = GetSystemMetrics( SM_CXSCREEN );
     int nScreenHeight = GetSystemMetrics( SM_CYSCREEN );
 
@@ -31,8 +31,8 @@ BOOL StartGDI(HWND hwnd)
 	if(nVirtualWidth > nScreenWidth)nScreenWidth = nVirtualWidth;	//A 2010.09.22
 	if(nVirtualHeight > nScreenHeight)nScreenHeight = nVirtualHeight;	//A 2010.09.22
 
-	hdc = GetDC(hwnd);//DCæ“¾
-	//ƒoƒbƒNƒT[ƒtƒFƒX‚ğì‚é‚É‚ ‚½‚é
+	hdc = GetDC(hwnd);//DCå–å¾—
+	//ãƒãƒƒã‚¯ã‚µãƒ¼ãƒ•ã‚§ã‚¹ã‚’ä½œã‚‹ã«ã‚ãŸã‚‹
 	if((hbWork = CreateCompatibleBitmap(hdc,nScreenWidth,nScreenHeight)) == NULL){
 		status = FALSE;
 	}
@@ -45,14 +45,14 @@ BOOL StartGDI(HWND hwnd)
 	ReleaseDC(hwnd,hdc);
 	return(status);
 }
-//ƒŠƒTƒCƒY‚³‚ê‚½‚Æ‚«i¸”s‚µ‚½ŠÖ”j
+//ãƒªã‚µã‚¤ã‚ºã•ã‚ŒãŸã¨ãï¼ˆå¤±æ•—ã—ãŸé–¢æ•°ï¼‰
 BOOL ResizeGDI(HWND hwnd)
 {
 	if(hbWork != NULL)DeleteObject(hbWork);
-	HDC hdc;//ƒfƒoƒCƒXƒRƒ“ƒeƒLƒXƒg
-	BOOL status = FALSE;//‚±‚ÌŠÖ”‚Ì•Ô‚è’l
+	HDC hdc;//ãƒ‡ãƒã‚¤ã‚¹ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆ
+	BOOL status = FALSE;//ã“ã®é–¢æ•°ã®è¿”ã‚Šå€¤
 
-	hdc = GetDC(hwnd);//DCæ“¾
+	hdc = GetDC(hwnd);//DCå–å¾—
 	if((hbWork = CreateCompatibleBitmap(hdc,WWidth,WHeight)) == NULL){
 		status = FALSE;
 	}
@@ -60,7 +60,7 @@ BOOL ResizeGDI(HWND hwnd)
 	return(status);
 
 }
-//GDI‚ÌŠJ•ú
+//GDIã®é–‹æ”¾
 void EndGDI(void)
 {
 	int i;
@@ -71,7 +71,7 @@ void EndGDI(void)
 	if(hbMparts != NULL)DeleteObject(hbMparts);
 	if(hbPan != NULL)DeleteObject(hbPan);
 }
-//‰æ‘œ‚Ìƒ[ƒh(ƒŠƒ\[ƒX‚©‚ç)
+//ç”»åƒã®ãƒ­ãƒ¼ãƒ‰(ãƒªã‚½ãƒ¼ã‚¹ã‹ã‚‰)
 HBITMAP InitBitmap(char *name,int no)
 {
 	hBmp[no] = (HBITMAP)LoadImage(GetModuleHandle(NULL),
@@ -79,19 +79,19 @@ HBITMAP InitBitmap(char *name,int no)
 	return hBmp[no];
 }
 
-//‚¢‚í‚ä‚éƒtƒŠƒbƒv
+//ã„ã‚ã‚†ã‚‹ãƒ•ãƒªãƒƒãƒ—
 void RefleshScreen(HDC hdc)
 {
 
-	HDC hdcwork;//ƒoƒbƒNƒT[ƒtƒFƒX‚ÌDC
-	HBITMAP hbold;//‰ß‹‚Ìƒnƒ“ƒhƒ‹‚ğ•Û‘¶
+	HDC hdcwork;//ãƒãƒƒã‚¯ã‚µãƒ¼ãƒ•ã‚§ã‚¹ã®DC
+	HBITMAP hbold;//éå»ã®ãƒãƒ³ãƒ‰ãƒ«ã‚’ä¿å­˜
 	
-	hdcwork = CreateCompatibleDC(hdc);//DC‚Ì¶¬
-	hbold = (HBITMAP)SelectObject(hdcwork,hbWork);//ƒoƒbƒNƒT[ƒtƒFƒX‚ğ‘I‘ğ
-	//•\¦(ƒtƒŠƒbƒv)
+	hdcwork = CreateCompatibleDC(hdc);//DCã®ç”Ÿæˆ
+	hbold = (HBITMAP)SelectObject(hdcwork,hbWork);//ãƒãƒƒã‚¯ã‚µãƒ¼ãƒ•ã‚§ã‚¹ã‚’é¸æŠ
+	//è¡¨ç¤º(ãƒ•ãƒªãƒƒãƒ—)
 	BitBlt(hdc, 0, 0, WWidth, WHeight,hdcwork,0,0,SRCCOPY);
-	SelectObject(hdcwork, hbold);//‘I‘ğƒIƒuƒWƒFƒNƒg‚ğŒ³‚É–ß‚·
-	DeleteDC(hdcwork);//ƒfƒoƒCƒXƒRƒ“ƒeƒLƒXƒg‚Ìíœ
+	SelectObject(hdcwork, hbold);//é¸æŠã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’å…ƒã«æˆ»ã™
+	DeleteDC(hdcwork);//ãƒ‡ãƒã‚¤ã‚¹ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆã®å‰Šé™¤
 
 }
 
@@ -107,7 +107,7 @@ void PutBitmap(long x,long y, RECT *rect, int bmp_no)
 	fromold = (HBITMAP)SelectObject(fromDC,hBmp[bmp_no]);
 
 	BitBlt(toDC,x,y,rect->right - rect->left,
-		rect->bottom - rect->top,fromDC,rect->left,rect->top,SRCCOPY);//•\¦
+		rect->bottom - rect->top,fromDC,rect->left,rect->top,SRCCOPY);//è¡¨ç¤º
 
 	SelectObject(toDC,toold);
 	SelectObject(fromDC,fromold);
@@ -116,7 +116,7 @@ void PutBitmap(long x,long y, RECT *rect, int bmp_no)
 	ReleaseDC(hWnd,hdc);
 }
 
-void PutBitmapCenter16(long x,long y, RECT *rect, int bmp_no) //’†S‚É•`‰æ‚·‚é 2014.05.26
+void PutBitmapCenter16(long x,long y, RECT *rect, int bmp_no) //ä¸­å¿ƒã«æç”»ã™ã‚‹ 2014.05.26
 {
 	if(rect->right - rect->left != 16 || NoteWidth == 16){
 		PutBitmap(x, y, rect, bmp_no);
@@ -133,9 +133,9 @@ void PutBitmapCenter16(long x,long y, RECT *rect, int bmp_no) //’†S‚É•`‰æ‚·‚é 2
 
 	int ww = NoteWidth - 4;
 
-	BitBlt(toDC,x     ,y,2   , rect->bottom - rect->top,  fromDC,  rect->left   ,rect->top,SRCCOPY);//•\¦
-	BitBlt(toDC,x+2   ,y,ww  , rect->bottom - rect->top,  fromDC,  rect->left+2 ,rect->top,SRCCOPY);//•\¦
-	BitBlt(toDC,x+2+ww,y,2   , rect->bottom - rect->top,  fromDC,  rect->left+14,rect->top,SRCCOPY);//•\¦
+	BitBlt(toDC,x     ,y,2   , rect->bottom - rect->top,  fromDC,  rect->left   ,rect->top,SRCCOPY);//è¡¨ç¤º
+	BitBlt(toDC,x+2   ,y,ww  , rect->bottom - rect->top,  fromDC,  rect->left+2 ,rect->top,SRCCOPY);//è¡¨ç¤º
+	BitBlt(toDC,x+2+ww,y,2   , rect->bottom - rect->top,  fromDC,  rect->left+14,rect->top,SRCCOPY);//è¡¨ç¤º
 
 	SelectObject(toDC,toold);
 	SelectObject(fromDC,fromold);
@@ -144,17 +144,17 @@ void PutBitmapCenter16(long x,long y, RECT *rect, int bmp_no) //’†S‚É•`‰æ‚·‚é 2
 	ReleaseDC(hWnd,hdc);
 }
 ///////////////////////////////////////////////
-////ˆÈ~‚Íƒ†ƒj[ƒN‚ÎŠÖ”////////////////////////
+////ä»¥é™ã¯ãƒ¦ãƒ‹ãƒ¼ã‚¯ã°é–¢æ•°////////////////////////
 ///////////////////////////////////////////////
-//Šy•ˆ‚Ìƒp[ƒc¶¬
+//æ¥½è­œã®ãƒ‘ãƒ¼ãƒ„ç”Ÿæˆ
 bool MakeMusicParts(unsigned char line,unsigned char dot)
 {
 	if(line*dot==0)return false;
 //	RECT m_rect[] = {
-//		{  0,  0, 64,144},//Œ®”Õ
-//		{ 64,  0, 80,144},//¬ßƒ‰ƒCƒ“
-//		{ 80,  0, 96,144},//ˆê”ƒ‰ƒCƒ“
-//		{ 96,  0,112,144},//1/16ƒ‰ƒCƒ“
+//		{  0,  0, 64,144},//éµç›¤
+//		{ 64,  0, 80,144},//å°ç¯€ãƒ©ã‚¤ãƒ³
+//		{ 80,  0, 96,144},//ä¸€æ‹ãƒ©ã‚¤ãƒ³
+//		{ 96,  0,112,144},//1/16ãƒ©ã‚¤ãƒ³
 //	};
 	HDC hdc,toDC,fromDC;
 	HBITMAP toold,fromold;
@@ -170,16 +170,16 @@ bool MakeMusicParts(unsigned char line,unsigned char dot)
 	else x=0;
 
 	for(int i = 0; i < (WWidth/NoteWidth)+15; i++){
-		if(i%(line*dot) == 0)//ü
-//			BitBlt(toDC,i*16,0,16,192+WDWHEIGHTPLUS,fromDC,x+64,0,SRCCOPY);//•\¦
-			BitBlt(toDC,i*NoteWidth,0,NoteWidth,WHeight+192-WHNM,fromDC,x+64,0,SRCCOPY);//•\¦
-		else if(i%dot == 0)//”jü
-			BitBlt(toDC,i*NoteWidth,0,NoteWidth,WHeight+192-WHNM,fromDC,x+64+16,0,SRCCOPY);//•\¦
+		if(i%(line*dot) == 0)//ç·š
+//			BitBlt(toDC,i*16,0,16,192+WDWHEIGHTPLUS,fromDC,x+64,0,SRCCOPY);//è¡¨ç¤º
+			BitBlt(toDC,i*NoteWidth,0,NoteWidth,WHeight+192-WHNM,fromDC,x+64,0,SRCCOPY);//è¡¨ç¤º
+		else if(i%dot == 0)//ç ´ç·š
+			BitBlt(toDC,i*NoteWidth,0,NoteWidth,WHeight+192-WHNM,fromDC,x+64+16,0,SRCCOPY);//è¡¨ç¤º
 		else{
 			if(NoteWidth>=8){
-				BitBlt(toDC,i*NoteWidth,0,NoteWidth,WHeight+192-WHNM,fromDC,x+64+32,0,SRCCOPY);//•\¦
+				BitBlt(toDC,i*NoteWidth,0,NoteWidth,WHeight+192-WHNM,fromDC,x+64+32,0,SRCCOPY);//è¡¨ç¤º
 			}else{
-				BitBlt(toDC,i*NoteWidth,0,NoteWidth,WHeight+192-WHNM,fromDC,x+64+32+1,0,SRCCOPY);//•\¦
+				BitBlt(toDC,i*NoteWidth,0,NoteWidth,WHeight+192-WHNM,fromDC,x+64+32+1,0,SRCCOPY);//è¡¨ç¤º
 			}
 		}
 	}
@@ -203,7 +203,7 @@ void PutMusicParts(long x,long y)
 	toold   = (HBITMAP)SelectObject(toDC,hbWork);
 	fromold = (HBITMAP)SelectObject(fromDC,hbMparts);
 
-	BitBlt(toDC,x,y,WWidth,WHeight+192-WHNM,fromDC,0,0,SRCCOPY);//•\¦
+	BitBlt(toDC,x,y,WWidth,WHeight+192-WHNM,fromDC,0,0,SRCCOPY);//è¡¨ç¤º
 
 	SelectObject(toDC,toold);
 	SelectObject(fromDC,fromold);
@@ -211,7 +211,7 @@ void PutMusicParts(long x,long y)
 	DeleteDC(fromDC);
 	ReleaseDC(hWnd,hdc);
 }
-//ƒpƒ“Eƒ{ƒŠƒ…[ƒ€ƒ‰ƒCƒ“•\¦
+//ãƒ‘ãƒ³ãƒ»ãƒœãƒªãƒ¥ãƒ¼ãƒ ãƒ©ã‚¤ãƒ³è¡¨ç¤º
 void PutPanParts(void)
 {
 	HDC hdc,toDC,fromDC;
@@ -223,7 +223,7 @@ void PutPanParts(void)
 	toold   = (HBITMAP)SelectObject(toDC,hbWork);
 	fromold = (HBITMAP)SelectObject(fromDC,hbPan);
 
-	BitBlt(toDC,64,WHeight+288-WHNM,WWidth,WHeight+192-WHNM,fromDC,0,0,SRCCOPY);//•\¦
+	BitBlt(toDC,64,WHeight+288-WHNM,WWidth,WHeight+192-WHNM,fromDC,0,0,SRCCOPY);//è¡¨ç¤º
 
 	SelectObject(toDC,toold);
 	SelectObject(fromDC,fromold);
@@ -235,10 +235,10 @@ void PutPanParts(void)
 void MakePanParts(unsigned char line,unsigned char dot)
 {
 //	RECT m_rect[] = {
-//		{  0,  0, 64,144},//Œ®”Õ
-//		{ 64,  0, 80,144},//¬ßƒ‰ƒCƒ“
-//		{ 80,  0, 96,144},//ˆê”ƒ‰ƒCƒ“
-//		{ 96,  0,112,144},//1/16ƒ‰ƒCƒ“
+//		{  0,  0, 64,144},//éµç›¤
+//		{ 64,  0, 80,144},//å°ç¯€ãƒ©ã‚¤ãƒ³
+//		{ 80,  0, 96,144},//ä¸€æ‹ãƒ©ã‚¤ãƒ³
+//		{ 96,  0,112,144},//1/16ãƒ©ã‚¤ãƒ³
 //	};
 	HDC hdc,toDC,fromDC;
 	HBITMAP toold,fromold;
@@ -252,15 +252,15 @@ void MakePanParts(unsigned char line,unsigned char dot)
 
 //	for(int i = 0; i < 40; i++){
 	for(int i = 0; i < (WWidth/NoteWidth)+15; i++){
-		if(i%(line*dot) == 0)//ü
-			BitBlt(toDC,i*NoteWidth,0,NoteWidth,WHeight+192-WHNM+16,fromDC,64,0,SRCCOPY);//•\¦
-		else if(i%dot == 0)//”jü
-			BitBlt(toDC,i*NoteWidth,0,NoteWidth,WHeight+192-WHNM+16,fromDC,64+16,0,SRCCOPY);//•\¦
+		if(i%(line*dot) == 0)//ç·š
+			BitBlt(toDC,i*NoteWidth,0,NoteWidth,WHeight+192-WHNM+16,fromDC,64,0,SRCCOPY);//è¡¨ç¤º
+		else if(i%dot == 0)//ç ´ç·š
+			BitBlt(toDC,i*NoteWidth,0,NoteWidth,WHeight+192-WHNM+16,fromDC,64+16,0,SRCCOPY);//è¡¨ç¤º
 		else {
 			if(NoteWidth>=8){
-				BitBlt(toDC,i*NoteWidth,0,NoteWidth,WHeight+192-WHNM+16,fromDC,64+32,0,SRCCOPY);//•\¦
+				BitBlt(toDC,i*NoteWidth,0,NoteWidth,WHeight+192-WHNM+16,fromDC,64+32,0,SRCCOPY);//è¡¨ç¤º
 			}else{
-				BitBlt(toDC,i*NoteWidth,0,NoteWidth,WHeight+192-WHNM+16,fromDC,64+32+1,0,SRCCOPY);//•\¦
+				BitBlt(toDC,i*NoteWidth,0,NoteWidth,WHeight+192-WHNM+16,fromDC,64+32+1,0,SRCCOPY);//è¡¨ç¤º
 			}
 		}
 	}
@@ -283,7 +283,7 @@ void PutSelectParts(void)
 	toold   = (HBITMAP)SelectObject(toDC,hbWork);
 	fromold = (HBITMAP)SelectObject(fromDC,hbPan);
 
-	BitBlt(toDC,64,WHeight-16,WWidth,WHeight,fromDC,0,144,SRCCOPY);//•\¦
+	BitBlt(toDC,64,WHeight-16,WWidth,WHeight,fromDC,0,144,SRCCOPY);//è¡¨ç¤º
 
 	SelectObject(toDC,toold);
 	SelectObject(fromDC,fromold);
@@ -293,7 +293,7 @@ void PutSelectParts(void)
 
 }
 
-//ˆÈ‰º‚Íƒ`ƒg“ÁêB‰¹•„‚ğ•`‚­‚Æ‚«‚Ì‚İ‚É—p‚¢‚é‚±‚Æ‚Æ‚·‚éB
+//ä»¥ä¸‹ã¯ãƒãƒˆç‰¹æ®Šã€‚éŸ³ç¬¦ã‚’æãã¨ãã®ã¿ã«ç”¨ã„ã‚‹ã“ã¨ã¨ã™ã‚‹ã€‚
 HDC		Dw_hdc, Dw_toDC, Dw_fromDC;
 HBITMAP Dw_toold, Dw_fromold;
 
@@ -317,27 +317,27 @@ void Dw_FinishToDraw(void)
 
 }
 
-void Dw_PutBitmap(long x,long y, RECT *rect, int bmp_no) //ÅŒã‚Ìˆø”‚ÍÅ‘ˆÓ–¡‚È‚µ.
+void Dw_PutBitmap(long x,long y, RECT *rect, int bmp_no) //æœ€å¾Œã®å¼•æ•°ã¯æœ€æ—©æ„å‘³ãªã—.
 {
 	if(NoteWidth == 16){
 		BitBlt(Dw_toDC,x,y,rect->right - rect->left,
-			rect->bottom - rect->top,Dw_fromDC,rect->left,rect->top,SRCCOPY);//•\¦
-	}else if(NoteWidth >= 4){ //’Zk‚Ìê‡
+			rect->bottom - rect->top,Dw_fromDC,rect->left,rect->top,SRCCOPY);//è¡¨ç¤º
+	}else if(NoteWidth >= 4){ //çŸ­ç¸®ã®å ´åˆ
 		int ww = NoteWidth - 4;
 		BitBlt(Dw_toDC,x,y,2, rect->bottom - rect->top,
-			Dw_fromDC,rect->left,rect->top,SRCCOPY);//•\¦
+			Dw_fromDC,rect->left,rect->top,SRCCOPY);//è¡¨ç¤º
 		
 		if(ww>0){
 			BitBlt(Dw_toDC,x+2,y,ww, rect->bottom - rect->top,
-				Dw_fromDC,rect->left + 2,rect->top,SRCCOPY);//•\¦
+				Dw_fromDC,rect->left + 2,rect->top,SRCCOPY);//è¡¨ç¤º
 		}
 		BitBlt(Dw_toDC,x+2+ww,y,2, rect->bottom - rect->top,
-			Dw_fromDC,rect->left + 14,rect->top,SRCCOPY);//•\¦
+			Dw_fromDC,rect->left + 14,rect->top,SRCCOPY);//è¡¨ç¤º
 
 	}
 }
 
-int Dw_PutBitmap_Head(long x,long y, RECT *rect, int bmp_no, int iNoteLength) //bmp_no‚ÍÅ‘ˆÓ–¡‚È‚µ. iLength‚Í•K‚¸1ˆÈãB np->length‚ğ‚»‚Ì‚Ü‚Ü‘ã“ü‚·‚é‚±‚ÆB
+int Dw_PutBitmap_Head(long x,long y, RECT *rect, int bmp_no, int iNoteLength) //bmp_noã¯æœ€æ—©æ„å‘³ãªã—. iLengthã¯å¿…ãš1ä»¥ä¸Šã€‚ np->lengthã‚’ãã®ã¾ã¾ä»£å…¥ã™ã‚‹ã“ã¨ã€‚
 {
 	int iTotalLength = NoteWidth * iNoteLength;
 	int bitWidth = iTotalLength; if(bitWidth > 16)bitWidth = 16;
@@ -345,55 +345,55 @@ int Dw_PutBitmap_Head(long x,long y, RECT *rect, int bmp_no, int iNoteLength) //
 
 	if(NoteWidth == 16 || iTotalLength >= 16){
 		BitBlt(Dw_toDC,x,y,rect->right - rect->left,
-			rect->bottom - rect->top,Dw_fromDC,rect->left,rect->top,SRCCOPY);//•\¦
+			rect->bottom - rect->top,Dw_fromDC,rect->left,rect->top,SRCCOPY);//è¡¨ç¤º
 		return 16;
-	}else if(NoteWidth >= 4){ //’Zk‚Ìê‡
+	}else if(NoteWidth >= 4){ //çŸ­ç¸®ã®å ´åˆ
 		int ww = bitWidth - 4;
 
 		BitBlt(Dw_toDC,x,y,2, rect->bottom - rect->top,
-			Dw_fromDC,rect->left,rect->top,SRCCOPY);//•\¦
+			Dw_fromDC,rect->left,rect->top,SRCCOPY);//è¡¨ç¤º
 		
 		if(ww>0){
 			BitBlt(Dw_toDC,x+2,y,ww, rect->bottom - rect->top,
-				Dw_fromDC,rect->left + 2,rect->top,SRCCOPY);//•\¦
+				Dw_fromDC,rect->left + 2,rect->top,SRCCOPY);//è¡¨ç¤º
 		}
 		BitBlt(Dw_toDC,x+2+ww,y,2, rect->bottom - rect->top,
-			Dw_fromDC,rect->left + 14,rect->top,SRCCOPY);//•\¦
+			Dw_fromDC,rect->left + 14,rect->top,SRCCOPY);//è¡¨ç¤º
 
 	}
 	return bitWidth;
 }
 
-//PAN, VOL‚É“Á‰»‚µ‚Ä‚¢‚é‚È[
-void Dw_PutBitmap_Center(long x,long y, RECT *rect, int bmp_no) //ÅŒã‚Ìˆø”‚ÍÅ‘ˆÓ–¡‚È‚µ.
+//PAN, VOLã«ç‰¹åŒ–ã—ã¦ã„ã‚‹ãªãƒ¼
+void Dw_PutBitmap_Center(long x,long y, RECT *rect, int bmp_no) //æœ€å¾Œã®å¼•æ•°ã¯æœ€æ—©æ„å‘³ãªã—.
 {
 	if(NoteWidth == 16){
 		BitBlt(Dw_toDC,x,y,rect->right - rect->left,
-			rect->bottom - rect->top,Dw_fromDC,rect->left,rect->top,SRCCOPY);//•\¦
-	}else if(NoteWidth >= 4){ //’Zk‚Ìê‡
+			rect->bottom - rect->top,Dw_fromDC,rect->left,rect->top,SRCCOPY);//è¡¨ç¤º
+	}else if(NoteWidth >= 4){ //çŸ­ç¸®ã®å ´åˆ
 //		int ww = (16 - NoteWidth) / 2;
 //		BitBlt(Dw_toDC,x ,y,rect->right - rect->left - 2 * ww,
-//			rect->bottom - rect->top,Dw_fromDC,rect->left + ww,rect->top,SRCCOPY);//•\¦
+//			rect->bottom - rect->top,Dw_fromDC,rect->left + ww,rect->top,SRCCOPY);//è¡¨ç¤º
 		int ww = NoteWidth / 2;
 		BitBlt(Dw_toDC,x ,y,
 			ww,
 			rect->bottom - rect->top,
-			Dw_fromDC,rect->left ,rect->top,SRCCOPY);//•\¦
+			Dw_fromDC,rect->left ,rect->top,SRCCOPY);//è¡¨ç¤º
 
 		//BitBlt(Dw_toDC,x+ww-1 ,y-3,
 		//	2,
 		//	rect->bottom - rect->top,
-		//	Dw_fromDC,rect->left+7 ,rect->top,SRCCOPY);//•\¦
+		//	Dw_fromDC,rect->left+7 ,rect->top,SRCCOPY);//è¡¨ç¤º
 
 		BitBlt(Dw_toDC,x+ww ,y,
 			ww,
 			rect->bottom - rect->top,
-			Dw_fromDC,rect->left+16-ww ,rect->top,SRCCOPY);//•\¦
+			Dw_fromDC,rect->left+16-ww ,rect->top,SRCCOPY);//è¡¨ç¤º
 
 		BitBlt(Dw_toDC,x+ww-1 ,y,
 			2,
 			rect->bottom - rect->top,
-			Dw_fromDC,rect->left+7 ,rect->top,SRCCOPY);//•\¦
+			Dw_fromDC,rect->left+7 ,rect->top,SRCCOPY);//è¡¨ç¤º
 
 	}
 }

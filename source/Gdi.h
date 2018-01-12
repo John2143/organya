@@ -2,21 +2,21 @@
 #define MAXBITMAP		64
 
 //void PutMusic(void);
-//GDI‚Ì‰Šú‰»
+//GDIã®åˆæœŸåŒ–
 BOOL StartGDI(HWND hwnd);
 
 BOOL ResizeGDI(HWND hwnd);
 
-//GDI‚ÌŠJ•ú
+//GDIã®é–‹æ”¾
 void EndGDI(void);
-//‰æ‘œ‚Ìƒ[ƒh(ƒŠƒ\[ƒX‚©‚ç)
+//ç”»åƒã®ãƒ­ãƒ¼ãƒ‰(ãƒªã‚½ãƒ¼ã‚¹ã‹ã‚‰)
 HBITMAP InitBitmap(char *name,int bmp_no);
-//‚¢‚í‚ä‚éƒtƒŠƒbƒv
+//ã„ã‚ã‚†ã‚‹ãƒ•ãƒªãƒƒãƒ—
 void RefleshScreen(HDC hdc);
 void PutBitmap(long x,long y, RECT *rect, int bmp_no);
 void PutBitmapCenter16(long x,long y, RECT *rect, int bmp_no);
 ////////////////////////////////
-///ˆÈ‰º‚Íƒ†ƒj[ƒN‚ÈŠÖ”//////////
+///ä»¥ä¸‹ã¯ãƒ¦ãƒ‹ãƒ¼ã‚¯ãªé–¢æ•°//////////
 bool MakeMusicParts(unsigned char line,unsigned char dot);
 void PutMusicParts(long x,long y);
 void PutPanParts(void);
@@ -24,7 +24,7 @@ void MakePanParts(unsigned char line,unsigned char dot);
 
 void PutSelectParts(void);
 
-//ˆÈ‰º‚Íƒ`ƒg“ÁêB‰¹•„‚ğ•`‚­‚Æ‚«‚Ì‚İ‚É—p‚¢‚é‚±‚Æ‚Æ‚·‚éB
+//ä»¥ä¸‹ã¯ãƒãƒˆç‰¹æ®Šã€‚éŸ³ç¬¦ã‚’æãã¨ãã®ã¿ã«ç”¨ã„ã‚‹ã“ã¨ã¨ã™ã‚‹ã€‚
 void Dw_BeginToDraw(void);
 void Dw_FinishToDraw(void);
 void Dw_PutBitmap(long x,long y, RECT *rect, int bmp_no);

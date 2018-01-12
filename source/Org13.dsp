@@ -1,24 +1,24 @@
 # Microsoft Developer Studio Project File - Name="Org13" - Package Owner=<4>
 # Microsoft Developer Studio Generated Build File, Format Version 6.00
-# ** �ҏW���Ȃ��ł������� **
+# ** 編集しないでください **
 
 # TARGTYPE "Win32 (x86) Application" 0x0101
 
 CFG=Org13 - Win32 Debug
-!MESSAGE ����͗L����Ҳ�̧�قł͂���܂���B ������ۼު�Ă�����ނ��邽�߂ɂ� NMAKE ���g�p���Ă��������B
-!MESSAGE [Ҳ�̧�ق̴���߰�] ����ނ��g�p���Ď��s���Ă�������
+!MESSAGE これは有効なﾒｲｸﾌｧｲﾙではありません。 このﾌﾟﾛｼﾞｪｸﾄをﾋﾞﾙﾄﾞするためには NMAKE を使用してください。
+!MESSAGE [ﾒｲｸﾌｧｲﾙのｴｸｽﾎﾟｰﾄ] ｺﾏﾝﾄﾞを使用して実行してください
 !MESSAGE 
 !MESSAGE NMAKE /f "Org13.mak".
 !MESSAGE 
-!MESSAGE NMAKE �̎��s���ɍ\�����w��ł��܂�
-!MESSAGE ����� ײݏ��ϸۂ̐ݒ���`���܂��B��:
+!MESSAGE NMAKE の実行時に構成を指定できます
+!MESSAGE ｺﾏﾝﾄﾞ ﾗｲﾝ上でﾏｸﾛの設定を定義します。例:
 !MESSAGE 
 !MESSAGE NMAKE /f "Org13.mak" CFG="Org13 - Win32 Debug"
 !MESSAGE 
-!MESSAGE �I���\������� Ӱ��:
+!MESSAGE 選択可能なﾋﾞﾙﾄﾞ ﾓｰﾄﾞ:
 !MESSAGE 
-!MESSAGE "Org13 - Win32 Release" ("Win32 (x86) Application" �p)
-!MESSAGE "Org13 - Win32 Debug" ("Win32 (x86) Application" �p)
+!MESSAGE "Org13 - Win32 Release" ("Win32 (x86) Application" 用)
+!MESSAGE "Org13 - Win32 Debug" ("Win32 (x86) Application" 用)
 !MESSAGE 
 
 # Begin Project
@@ -92,87 +92,87 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
-SOURCE=.\Click.cpp
+SOURCE=.¥Click.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\DlgEdit.cpp
+SOURCE=.¥DlgEdit.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\DlgEZCopy.cpp
+SOURCE=.¥DlgEZCopy.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\DlgPlayer.cpp
+SOURCE=.¥DlgPlayer.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\DlgSet.cpp
+SOURCE=.¥DlgSet.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\DlgTrack.cpp
+SOURCE=.¥DlgTrack.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\Filer.cpp
+SOURCE=.¥Filer.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\Gdi.cpp
+SOURCE=.¥Gdi.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\MainPut.cpp
+SOURCE=.¥MainPut.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\Mouse.cpp
+SOURCE=.¥Mouse.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\OrgData.cpp
+SOURCE=.¥OrgData.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\OrgEdit.cpp
+SOURCE=.¥OrgEdit.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\OrgFile.cpp
+SOURCE=.¥OrgFile.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\OrgFileMIDI.cpp
+SOURCE=.¥OrgFileMIDI.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\OrgPlay.cpp
+SOURCE=.¥OrgPlay.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\rxoFunction.cpp
+SOURCE=.¥rxoFunction.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\Script1.rc
+SOURCE=.¥Script1.rc
 # End Source File
 # Begin Source File
 
-SOURCE=.\Scroll.cpp
+SOURCE=.¥Scroll.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\Sound.cpp
+SOURCE=.¥Sound.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\WinMain.cpp
+SOURCE=.¥WinMain.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\WinTimer.cpp
+SOURCE=.¥WinTimer.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -180,51 +180,51 @@ SOURCE=.\WinTimer.cpp
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
-SOURCE=.\Click.h
+SOURCE=.¥Click.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\DefOrg.h
+SOURCE=.¥DefOrg.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\Filer.h
+SOURCE=.¥Filer.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\Gdi.h
+SOURCE=.¥Gdi.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\Mouse.h
+SOURCE=.¥Mouse.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\OrgData.h
+SOURCE=.¥OrgData.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\resource.h
+SOURCE=.¥resource.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\rxoFunction.h
+SOURCE=.¥rxoFunction.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\Scroll.h
+SOURCE=.¥Scroll.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\Setting.h
+SOURCE=.¥Setting.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\Sound.h
+SOURCE=.¥Sound.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\Timer.h
+SOURCE=.¥Timer.h
 # End Source File
 # End Group
 # Begin Group "Resource Files"
@@ -232,332 +232,332 @@ SOURCE=.\Timer.h
 # PROP Default_Filter "ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
 # Begin Source File
 
-SOURCE=.\Bitmap\button_track_1.bmp
+SOURCE=.¥Bitmap¥button_track_1.bmp
 # End Source File
 # Begin Source File
 
-SOURCE=.\Bitmap\button_track_2.bmp
+SOURCE=.¥Bitmap¥button_track_2.bmp
 # End Source File
 # Begin Source File
 
-SOURCE=.\Bitmap\button_track_3.bmp
+SOURCE=.¥Bitmap¥button_track_3.bmp
 # End Source File
 # Begin Source File
 
-SOURCE=.\Bitmap\button_track_4.bmp
+SOURCE=.¥Bitmap¥button_track_4.bmp
 # End Source File
 # Begin Source File
 
-SOURCE=.\Bitmap\cursor.cur
+SOURCE=.¥Bitmap¥cursor.cur
 # End Source File
 # Begin Source File
 
-SOURCE=.\Bitmap\cursor1.cur
+SOURCE=.¥Bitmap¥cursor1.cur
 # End Source File
 # Begin Source File
 
-SOURCE=.\Bitmap\ffff.ico
+SOURCE=.¥Bitmap¥ffff.ico
 # End Source File
 # Begin Source File
 
-SOURCE=.\Bitmap\Head.bmp
+SOURCE=.¥Bitmap¥Head.bmp
 # End Source File
 # Begin Source File
 
-SOURCE=.\Bitmap\icon1.ico
+SOURCE=.¥Bitmap¥icon1.ico
 # End Source File
 # Begin Source File
 
-SOURCE=.\Bitmap\Left.bmp
+SOURCE=.¥Bitmap¥Left.bmp
 # End Source File
 # Begin Source File
 
-SOURCE=.\Bitmap\Loupe_MINUS.bmp
+SOURCE=.¥Bitmap¥Loupe_MINUS.bmp
 # End Source File
 # Begin Source File
 
-SOURCE=.\Bitmap\Loupe_PLUS.bmp
+SOURCE=.¥Bitmap¥Loupe_PLUS.bmp
 # End Source File
 # Begin Source File
 
-SOURCE=.\Bitmap\Music.bmp
+SOURCE=.¥Bitmap¥Music.bmp
 # End Source File
 # Begin Source File
 
-SOURCE=.\Bitmap\Note.bmp
+SOURCE=.¥Bitmap¥Note.bmp
 # End Source File
 # Begin Source File
 
-SOURCE=.\Bitmap\Number.bmp
+SOURCE=.¥Bitmap¥Number.bmp
 # End Source File
 # Begin Source File
 
-SOURCE=.\Bitmap\org_back.bmp
+SOURCE=.¥Bitmap¥org_back.bmp
 # End Source File
 # Begin Source File
 
-SOURCE=.\Bitmap\org_home.bmp
+SOURCE=.¥Bitmap¥org_home.bmp
 # End Source File
 # Begin Source File
 
-SOURCE=.\Bitmap\org_next.bmp
+SOURCE=.¥Bitmap¥org_next.bmp
 # End Source File
 # Begin Source File
 
-SOURCE=.\Bitmap\org_play.bmp
+SOURCE=.¥Bitmap¥org_play.bmp
 # End Source File
 # Begin Source File
 
-SOURCE=.\Bitmap\org_stop.bmp
+SOURCE=.¥Bitmap¥org_stop.bmp
 # End Source File
 # Begin Source File
 
-SOURCE=.\Bitmap\Pan.bmp
+SOURCE=.¥Bitmap¥Pan.bmp
 # End Source File
 # Begin Source File
 
-SOURCE=.\Bitmap\Play.bmp
+SOURCE=.¥Bitmap¥Play.bmp
 # End Source File
 # Begin Source File
 
-SOURCE=.\Bitmap\Right.bmp
+SOURCE=.¥Bitmap¥Right.bmp
 # End Source File
 # Begin Source File
 
-SOURCE=.\Bitmap\Solo.bmp
+SOURCE=.¥Bitmap¥Solo.bmp
 # End Source File
 # Begin Source File
 
-SOURCE=.\Bitmap\Stop.bmp
+SOURCE=.¥Bitmap¥Stop.bmp
 # End Source File
 # Begin Source File
 
-SOURCE=.\Bitmap\wave100.bmp
+SOURCE=.¥Bitmap¥wave100.bmp
 # End Source File
 # End Group
 # Begin Source File
 
-SOURCE=.\Wave\Bass01.wav
+SOURCE=.¥Wave¥Bass01.wav
 # End Source File
 # Begin Source File
 
-SOURCE=.\Wave\Bass02.wav
+SOURCE=.¥Wave¥Bass02.wav
 # End Source File
 # Begin Source File
 
-SOURCE=.\Wave\Bass03.wav
+SOURCE=.¥Wave¥Bass03.wav
 # End Source File
 # Begin Source File
 
-SOURCE=.\Wave\Bass04.wav
+SOURCE=.¥Wave¥Bass04.wav
 # End Source File
 # Begin Source File
 
-SOURCE=.\Wave\Bass05.wav
+SOURCE=.¥Wave¥Bass05.wav
 # End Source File
 # Begin Source File
 
-SOURCE=.\Wave\Bass06.wav
+SOURCE=.¥Wave¥Bass06.wav
 # End Source File
 # Begin Source File
 
-SOURCE=.\Wave\Bass07.wav
+SOURCE=.¥Wave¥Bass07.wav
 # End Source File
 # Begin Source File
 
-SOURCE=.\Wave\Bass08.wav
+SOURCE=.¥Wave¥Bass08.wav
 # End Source File
 # Begin Source File
 
-SOURCE=.\Wave\Bell.wav
+SOURCE=.¥Wave¥Bell.wav
 # End Source File
 # Begin Source File
 
-SOURCE=.\Wave\cat.wav
+SOURCE=.¥Wave¥cat.wav
 # End Source File
 # Begin Source File
 
-SOURCE=.\Wave\Clap01.wav
+SOURCE=.¥Wave¥Clap01.wav
 # End Source File
 # Begin Source File
 
-SOURCE=.\Wave\Clash.wav
+SOURCE=.¥Wave¥Clash.wav
 # End Source File
 # Begin Source File
 
-SOURCE=.\Wave\Crash.wav
+SOURCE=.¥Wave¥Crash.wav
 # End Source File
 # Begin Source File
 
-SOURCE=.\Wave\Crash02.wav
+SOURCE=.¥Wave¥Crash02.wav
 # End Source File
 # Begin Source File
 
-SOURCE=.\Wave\Dram00.wav
+SOURCE=.¥Wave¥Dram00.wav
 # End Source File
 # Begin Source File
 
-SOURCE=.\Wave\Dram01.wav
+SOURCE=.¥Wave¥Dram01.wav
 # End Source File
 # Begin Source File
 
-SOURCE=.\Wave\Dram02.wav
+SOURCE=.¥Wave¥Dram02.wav
 # End Source File
 # Begin Source File
 
-SOURCE=.\Wave\Dram03.wav
+SOURCE=.¥Wave¥Dram03.wav
 # End Source File
 # Begin Source File
 
-SOURCE=.\Wave\Dram04.wav
+SOURCE=.¥Wave¥Dram04.wav
 # End Source File
 # Begin Source File
 
-SOURCE=.\Wave\Dram05.wav
+SOURCE=.¥Wave¥Dram05.wav
 # End Source File
 # Begin Source File
 
-SOURCE=.\Wave\Dram06.wav
+SOURCE=.¥Wave¥Dram06.wav
 # End Source File
 # Begin Source File
 
-SOURCE=.\Wave\Dram07.wav
+SOURCE=.¥Wave¥Dram07.wav
 # End Source File
 # Begin Source File
 
-SOURCE=.\Wave\Dram08.wav
+SOURCE=.¥Wave¥Dram08.wav
 # End Source File
 # Begin Source File
 
-SOURCE=.\Wave\Dram09.wav
+SOURCE=.¥Wave¥Dram09.wav
 # End Source File
 # Begin Source File
 
-SOURCE=.\help.html
+SOURCE=.¥help.html
 # End Source File
 # Begin Source File
 
-SOURCE=.\help.txt
+SOURCE=.¥help.txt
 # End Source File
 # Begin Source File
 
-SOURCE=.\Wave\HiClose.wav
+SOURCE=.¥Wave¥HiClose.wav
 # End Source File
 # Begin Source File
 
-SOURCE=.\Wave\HiClose03.wav
+SOURCE=.¥Wave¥HiClose03.wav
 # End Source File
 # Begin Source File
 
-SOURCE=.\Wave\HiClose04.wav
+SOURCE=.¥Wave¥HiClose04.wav
 # End Source File
 # Begin Source File
 
-SOURCE=.\Wave\HiClose05.wav
+SOURCE=.¥Wave¥HiClose05.wav
 # End Source File
 # Begin Source File
 
-SOURCE=.\Wave\HiClose2.wav
+SOURCE=.¥Wave¥HiClose2.wav
 # End Source File
 # Begin Source File
 
-SOURCE=.\Wave\HiOpen.wav
+SOURCE=.¥Wave¥HiOpen.wav
 # End Source File
 # Begin Source File
 
-SOURCE=.\Wave\HiOpen03.wav
+SOURCE=.¥Wave¥HiOpen03.wav
 # End Source File
 # Begin Source File
 
-SOURCE=.\Wave\HiOpen04.wav
+SOURCE=.¥Wave¥HiOpen04.wav
 # End Source File
 # Begin Source File
 
-SOURCE=.\Wave\HiOpen2.wav
+SOURCE=.¥Wave¥HiOpen2.wav
 # End Source File
 # Begin Source File
 
-SOURCE=.\Wave\OrcDrm01.wav
+SOURCE=.¥Wave¥OrcDrm01.wav
 # End Source File
 # Begin Source File
 
-SOURCE=.\Wave\Per01.wav
+SOURCE=.¥Wave¥Per01.wav
 # End Source File
 # Begin Source File
 
-SOURCE=.\Wave\Per02.wav
+SOURCE=.¥Wave¥Per02.wav
 # End Source File
 # Begin Source File
 
-SOURCE=.\Wave\Pesi01.wav
+SOURCE=.¥Wave¥Pesi01.wav
 # End Source File
 # Begin Source File
 
-SOURCE=.\Wave\Quick01.wav
+SOURCE=.¥Wave¥Quick01.wav
 # End Source File
 # Begin Source File
 
-SOURCE=.\Wave\RevSym01.wav
+SOURCE=.¥Wave¥RevSym01.wav
 # End Source File
 # Begin Source File
 
-SOURCE=.\Wave\Ride01.wav
+SOURCE=.¥Wave¥Ride01.wav
 # End Source File
 # Begin Source File
 
-SOURCE=.\Wave\Snare01.wav
+SOURCE=.¥Wave¥Snare01.wav
 # End Source File
 # Begin Source File
 
-SOURCE=.\Wave\Snare02.wav
+SOURCE=.¥Wave¥Snare02.wav
 # End Source File
 # Begin Source File
 
-SOURCE=.\Wave\Snare03.wav
+SOURCE=.¥Wave¥Snare03.wav
 # End Source File
 # Begin Source File
 
-SOURCE=.\Wave\Snare04.wav
+SOURCE=.¥Wave¥Snare04.wav
 # End Source File
 # Begin Source File
 
-SOURCE=.\Wave\Snare05.wav
+SOURCE=.¥Wave¥Snare05.wav
 # End Source File
 # Begin Source File
 
-SOURCE=.\Wave\Snare06.wav
+SOURCE=.¥Wave¥Snare06.wav
 # End Source File
 # Begin Source File
 
-SOURCE=.\Wave\Snare07.wav
+SOURCE=.¥Wave¥Snare07.wav
 # End Source File
 # Begin Source File
 
-SOURCE=.\Wave\Snare08.wav
+SOURCE=.¥Wave¥Snare08.wav
 # End Source File
 # Begin Source File
 
-SOURCE=.\Wave\Tom01.wav
+SOURCE=.¥Wave¥Tom01.wav
 # End Source File
 # Begin Source File
 
-SOURCE=.\Wave\Tom02.wav
+SOURCE=.¥Wave¥Tom02.wav
 # End Source File
 # Begin Source File
 
-SOURCE=.\Wave\Tom03.wav
+SOURCE=.¥Wave¥Tom03.wav
 # End Source File
 # Begin Source File
 
-SOURCE=.\Wave\Tom04.wav
+SOURCE=.¥Wave¥Tom04.wav
 # End Source File
 # Begin Source File
 
-SOURCE=.\Wave\Tom05.wav
+SOURCE=.¥Wave¥Tom05.wav
 # End Source File
 # Begin Source File
 
-SOURCE=.\Wave\Wave.dat
+SOURCE=.¥Wave¥Wave.dat
 # End Source File
 # End Target
 # End Project

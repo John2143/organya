@@ -28,7 +28,7 @@ int mute_name[MAXTRACK] = {
 	IDC_MUTE14,
 	IDC_MUTE15,
 };
-//ŠÈ’P‚Èƒ_ƒCƒAƒƒOŠÖ”
+//ç°¡å˜ãªãƒ€ã‚¤ã‚¢ãƒ­ã‚°é–¢æ•°
 BOOL CALLBACK DialogPlayer(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam){
 	int i;
 	HMENU hmenu,hsubmenu;
@@ -38,27 +38,27 @@ BOOL CALLBACK DialogPlayer(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lPara
 	long hp,vp;
 	char str[32];
 	switch(message){
-	case WM_INITDIALOG://ƒ_ƒCƒAƒƒO‚ªŒÄ‚Î‚ê‚½
+	case WM_INITDIALOG://ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ãŒå‘¼ã°ã‚ŒãŸ
 		HANDLE hBmp;
 		org_data.GetMusicInfo(&mi);
 		itoa(mi.wait,str,10);
 		SetDlgItemText(hdwnd,IDE_VIEWWAIT,str);
-		org_data.SetPlayPointer(0);//“ªo‚µ
-		//ƒvƒŒƒCƒ„[‚É•\¦
-		//hFont1 = CreateFont(0, 0, 0, 0, 900, 0, 0, 0, SHIFTJIS_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, ANTIALIASED_QUALITY, DEFAULT_PITCH, "‚l‚r ƒSƒVƒbƒN");
+		org_data.SetPlayPointer(0);//é ­å‡ºã—
+		//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã«è¡¨ç¤º
+		//hFont1 = CreateFont(0, 0, 0, 0, 900, 0, 0, 0, SHIFTJIS_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, ANTIALIASED_QUALITY, DEFAULT_PITCH, "ï¼­ï¼³ ã‚´ã‚·ãƒƒã‚¯");
 		hFont1 = CreateFont(18, 0, 0, 0, FW_NORMAL, FALSE, FALSE, 0,
 			ANSI_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS,
 			ANTIALIASED_QUALITY, DEFAULT_PITCH, "Arial Black");
 		hCtrlWnd = GetDlgItem(hdwnd, IDE_VIEWMEAS);
-		SendMessage(hCtrlWnd, WM_SETFONT, (WPARAM)hFont1, MAKELPARAM(FALSE, 0)); /* ƒtƒHƒ“ƒg‚Ì•ÏX */
+		SendMessage(hCtrlWnd, WM_SETFONT, (WPARAM)hFont1, MAKELPARAM(FALSE, 0)); /* ãƒ•ã‚©ãƒ³ãƒˆã®å¤‰æ›´ */
 		SetDlgItemText(hdwnd,IDE_VIEWMEAS,"0");
 
 		hCtrlWnd = GetDlgItem(hdwnd, IDE_VIEWXPOS);
-		SendMessage(hCtrlWnd, WM_SETFONT, (WPARAM)hFont1, MAKELPARAM(FALSE, 0)); /* ƒtƒHƒ“ƒg‚Ì•ÏX */
+		SendMessage(hCtrlWnd, WM_SETFONT, (WPARAM)hFont1, MAKELPARAM(FALSE, 0)); /* ãƒ•ã‚©ãƒ³ãƒˆã®å¤‰æ›´ */
 		SetDlgItemText(hdwnd,IDE_VIEWXPOS,"0");
-		DeleteObject(hFont1); //ƒtƒHƒ“ƒgƒIƒuƒWƒFƒNƒg‚Ìíœ
+		DeleteObject(hFont1); //ãƒ•ã‚©ãƒ³ãƒˆã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®å‰Šé™¤
 
-		//‰æ‘œ’£‚è‚Â‚¯
+		//ç”»åƒå¼µã‚Šã¤ã‘
 /*
 		hBmp = (HBITMAP)LoadImage( hInst, "HEAD", IMAGE_BITMAP, 32, 16, LR_DEFAULTCOLOR );
 		SendDlgItemMessage( hdwnd, IDC_START, BM_SETIMAGE, IMAGE_BITMAP, (long)hBmp );
@@ -93,7 +93,7 @@ BOOL CALLBACK DialogPlayer(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lPara
 		case IDC_PLAY:
 			if(timer_sw == 0){
 				
-				//ƒƒjƒ…[‚ğ–³Œø‚É‚·‚éB
+				//ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã‚’ç„¡åŠ¹ã«ã™ã‚‹ã€‚
 				hmenu = GetMenu(hWnd);
 				hsubmenu = GetSubMenu(hmenu,0);
 				EnableMenuItem(hmenu,0,MF_BYPOSITION|MF_DISABLED);
@@ -105,8 +105,8 @@ BOOL CALLBACK DialogPlayer(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lPara
 				EnableMenuItem(hmenu,6,MF_BYPOSITION|MF_DISABLED);
 				EnableMenuItem(hmenu,7,MF_BYPOSITION|MF_DISABLED);
 				EnableMenuItem(hmenu,8,MF_BYPOSITION|MF_DISABLED);
-				DragAcceptFiles(hWnd,FALSE);//ƒhƒ‰ƒbƒO‹Ö~
-				//ƒgƒ‰ƒbƒN ƒ~ƒ…[ƒg ‚Ìƒ`ƒFƒbƒN
+				DragAcceptFiles(hWnd,FALSE);//ãƒ‰ãƒ©ãƒƒã‚°ç¦æ­¢
+				//ãƒˆãƒ©ãƒƒã‚¯ ãƒŸãƒ¥ãƒ¼ãƒˆ ã®ãƒã‚§ãƒƒã‚¯
 				for(i = 0; i < MAXTRACK; i++){
 					if(SendDlgItemMessage(hDlgTrack,mute_name[i],BM_GETCHECK,0,0)){
 						org_data.mute[i] = 1;
@@ -114,13 +114,13 @@ BOOL CALLBACK DialogPlayer(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lPara
 						org_data.mute[i] = 0;
 					}
 				}
-				//ƒvƒŒƒCƒ|ƒCƒ“ƒ^[‚Ìİ’è
+				//ãƒ—ãƒ¬ã‚¤ãƒã‚¤ãƒ³ã‚¿ãƒ¼ã®è¨­å®š
 				scr_data.GetScrollPosition(&hp,&vp);
 				org_data.GetMusicInfo(&mi);
 				org_data.SetPlayPointer(hp*mi.dot*mi.line);
 				timer_sw = 1;
 				InitMMTimer();
-				//ƒeƒ“ƒ|‚ğæ“¾
+				//ãƒ†ãƒ³ãƒã‚’å–å¾—
 				MUSICINFO mi;
 				org_data.GetMusicInfo(&mi);
 				StartTimer(mi.wait);
@@ -130,7 +130,7 @@ BOOL CALLBACK DialogPlayer(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lPara
 		case IDC_STOP:
 		case IDC_START:
 			if(timer_sw){
-				//ƒƒjƒ…[‚ğ—LŒø‚É‚·‚éB
+				//ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã‚’æœ‰åŠ¹ã«ã™ã‚‹ã€‚
 				hmenu = GetMenu(hWnd);
 				hsubmenu = GetSubMenu(hmenu,0);
 				EnableMenuItem(hmenu,0,MF_BYPOSITION|MF_ENABLED);
@@ -142,7 +142,7 @@ BOOL CALLBACK DialogPlayer(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lPara
 				EnableMenuItem(hmenu,6,MF_BYPOSITION|MF_ENABLED);
 				EnableMenuItem(hmenu,7,MF_BYPOSITION|MF_ENABLED);
 				EnableMenuItem(hmenu,8,MF_BYPOSITION|MF_ENABLED);
-				DragAcceptFiles(hWnd,TRUE);//ƒhƒ‰ƒbƒO‹–‰Â
+				DragAcceptFiles(hWnd,TRUE);//ãƒ‰ãƒ©ãƒƒã‚°è¨±å¯
 				org_data.GetMusicInfo(&mi);
 				Rxo_StopAllSoundNow();	// 2010.11.30 C
 				/*
@@ -154,8 +154,8 @@ BOOL CALLBACK DialogPlayer(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lPara
 			}
 			SetFocus(hWnd);
 //			return 1;
-//			if(timer_sw){//ƒXƒgƒbƒv‚ÌŒø‰Ê‚à
-//				//ƒƒjƒ…[‚ğ—LŒø‚É‚·‚éB
+//			if(timer_sw){//ã‚¹ãƒˆãƒƒãƒ—ã®åŠ¹æœã‚‚
+//				//ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã‚’æœ‰åŠ¹ã«ã™ã‚‹ã€‚
 //				hmenu = GetMenu(hWnd);
 //				hsubmenu = GetSubMenu(hmenu,0);
 //				EnableMenuItem(hmenu,0,MF_BYPOSITION|MF_ENABLED);
@@ -167,7 +167,7 @@ BOOL CALLBACK DialogPlayer(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lPara
 //				EnableMenuItem(hmenu,6,MF_BYPOSITION|MF_ENABLED);
 //				EnableMenuItem(hmenu,7,MF_BYPOSITION|MF_ENABLED);
 //				EnableMenuItem(hmenu,8,MF_BYPOSITION|MF_ENABLED);
-//				DragAcceptFiles(hWnd,TRUE);//ƒhƒ‰ƒbƒO‹–‰Â
+//				DragAcceptFiles(hWnd,TRUE);//ãƒ‰ãƒ©ãƒƒã‚°è¨±å¯
 //				org_data.GetMusicInfo(&mi);
 //				Rxo_StopAllSoundNow();	// 2010.11.30 C
 //				/*
@@ -183,7 +183,7 @@ BOOL CALLBACK DialogPlayer(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lPara
 				SetDlgItemText(hdwnd,IDE_VIEWMEAS,"0");
 				SetDlgItemText(hdwnd,IDE_VIEWXPOS,"0");
 				scr_data.SetHorzScroll(0);
-				org_data.SetPlayPointer(0);//“ªo‚µ
+				org_data.SetPlayPointer(0);//é ­å‡ºã—
 				SetFocus(hWnd);
 			}
 			return 1;
@@ -215,7 +215,7 @@ BOOL CALLBACK DialogPlayer(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lPara
 			*/
 		//	break;
 	case WM_CLOSE:
-		//DeleteObject(hFont1); //ƒtƒHƒ“ƒgƒIƒuƒWƒFƒNƒg‚Ìíœ
+		//DeleteObject(hFont1); //ãƒ•ã‚©ãƒ³ãƒˆã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®å‰Šé™¤
 		return 1;
 	}
 	return 0;

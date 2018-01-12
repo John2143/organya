@@ -5,9 +5,9 @@
 #include "resource.h"
 #include "Scroll.h"
 
-long play_p;//Œ»İÄ¶ˆÊ’uiƒLƒƒƒ“ƒoƒXj
-NOTELIST *np[MAXTRACK];//Œ»İÄ¶€”õ‚Ì‰¹•„
-long now_leng[MAXMELODY] = {NULL};//Ä¶’†‰¹•„‚Ì’·‚³
+long play_p;//ç¾åœ¨å†ç”Ÿä½ç½®ï¼ˆã‚­ãƒ£ãƒ³ãƒã‚¹ï¼‰
+NOTELIST *np[MAXTRACK];//ç¾åœ¨å†ç”Ÿæº–å‚™ã®éŸ³ç¬¦
+long now_leng[MAXMELODY] = {NULL};//å†ç”Ÿä¸­éŸ³ç¬¦ã®é•·ã•
 extern HWND hDlgPlayer;
 void OrgData::PlayData(void)
 {
@@ -15,10 +15,10 @@ void OrgData::PlayData(void)
 	char oldstr[10];
 	char end_cnt = MAXTRACK;
 //	PlaySoundObject(1,1);
-	//ƒƒƒfƒB‚ÌÄ¶
+	//ãƒ¡ãƒ­ãƒ‡ã‚£ã®å†ç”Ÿ
 	for(int i = 0; i < MAXMELODY; i++){
 //	int i = 6;
-		if(np[i] != NULL &&play_p == np[i]->x ){//‰¹‚ª—ˆ‚½B
+		if(np[i] != NULL &&play_p == np[i]->x ){//éŸ³ãŒæ¥ãŸã€‚
 			if(mute[i] == 0){
 				if(np[i]->y != KEYDUMMY){
 					if( info.tdata[i].pipi )
@@ -29,7 +29,7 @@ void OrgData::PlayData(void)
 			}
 			if(np[i]->pan != PANDUMMY)ChangeOrganPan(np[i]->y,np[i]->pan,i);
 			if(np[i]->volume != VOLDUMMY)ChangeOrganVolume(np[i]->y,np[i]->volume,i);
-			np[i] = np[i]->to;//Ÿ‚Ì‰¹•„‚ğw‚·
+			np[i] = np[i]->to;//æ¬¡ã®éŸ³ç¬¦ã‚’æŒ‡ã™
 		}
 		if(now_leng[i] == 0 ){
 			if(info.tdata[i].pipi == 0)
@@ -38,18 +38,18 @@ void OrgData::PlayData(void)
 		}
 		if(now_leng[i] > 0)now_leng[i]--;
 	}
-	//ƒhƒ‰ƒ€‚ÌÄ¶
+	//ãƒ‰ãƒ©ãƒ ã®å†ç”Ÿ
 	for(i = MAXMELODY; i < MAXTRACK; i++){
-		if(np[i] != NULL &&play_p == np[i]->x ){//‰¹‚ª—ˆ‚½B
-			if(np[i]->y != KEYDUMMY){//‚È‚ç‚·
+		if(np[i] != NULL &&play_p == np[i]->x ){//éŸ³ãŒæ¥ãŸã€‚
+			if(np[i]->y != KEYDUMMY){//ãªã‚‰ã™
 				if(mute[i] == 0)PlayDramObject(np[i]->y,1,i-MAXMELODY);
 			}
 			if(np[i]->pan != PANDUMMY)ChangeDramPan(np[i]->pan,i-MAXMELODY);
 			if(np[i]->volume != VOLDUMMY)ChangeDramVolume(np[i]->volume,i-MAXMELODY);
-			np[i] = np[i]->to;//Ÿ‚Ì‰¹•„‚ğw‚·
+			np[i] = np[i]->to;//æ¬¡ã®éŸ³ç¬¦ã‚’æŒ‡ã™
 		}
 	}
-	//ƒvƒŒƒCƒ„[‚É•\¦
+	//ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã«è¡¨ç¤º
 	itoa(play_p/(info.dot*info.line),str,10);
 	GetDlgItemText(hDlgPlayer,IDE_VIEWMEAS,oldstr,10);
 	if(strcmp(str, oldstr) != 0) SetDlgItemText(hDlgPlayer,IDE_VIEWMEAS,str);
@@ -57,14 +57,14 @@ void OrgData::PlayData(void)
 	itoa(play_p%(info.dot*info.line),str,10);
 	GetDlgItemText(hDlgPlayer,IDE_VIEWXPOS,oldstr,10);
 	if(strcmp(str, oldstr) != 0)SetDlgItemText(hDlgPlayer,IDE_VIEWXPOS,str);
-	//©“®ƒXƒNƒ[ƒ‹
-	if(actApp){//ƒAƒNƒeƒBƒu‚Ì‚¾‚¯
+	//è‡ªå‹•ã‚¹ã‚¯ãƒ­ãƒ¼ãƒ«
+	if(actApp){//ã‚¢ã‚¯ãƒ†ã‚£ãƒ–ã®æ™‚ã ã‘
 		if(play_p%(info.dot*info.line) == 0 && play_p+1 != info.end_x )
 			scr_data.SetHorzScroll(play_p/(info.dot*info.line));
 	}
 	play_p++;
 	if(play_p >= info.end_x){
-		play_p = info.repeat_x;//++‚³‚ê‚é‚Ì‚Å
+		play_p = info.repeat_x;//++ã•ã‚Œã‚‹ã®ã§
 		SetPlayPointer(play_p);
 	}
 
@@ -74,7 +74,7 @@ void OrgData::SetPlayPointer(long x)
 	int i;
 	for(i = 0; i < MAXTRACK; i++){
 		np[i] = info.tdata[i].note_list;
-		while(np[i] != NULL && np[i]->x < x)np[i] = np[i]->to;//Œ©‚é‚×‚«‰¹•„‚ğİ’è		
+		while(np[i] != NULL && np[i]->x < x)np[i] = np[i]->to;//è¦‹ã‚‹ã¹ãéŸ³ç¬¦ã‚’è¨­å®š		
 	}
 	play_p = x;
 }

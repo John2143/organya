@@ -6,44 +6,44 @@
 #include "DefOrg.h"
 #define SE_MAX	512
 
-// ƒVƒ“ƒ{ƒ‹’è‹`.
-#define	SMPFRQ			48000				//!< ƒTƒ“ƒvƒŠƒ“ƒOü”g”.
-#define	BUFSIZE			((SMPFRQ * 4) / 10)	//!< ƒf[ƒ^ƒoƒbƒtƒ@ƒTƒCƒY (100ms‘Š“–).
+// ã‚·ãƒ³ãƒœãƒ«å®šç¾©.
+#define	SMPFRQ			48000				//!< ã‚µãƒ³ãƒ—ãƒªãƒ³ã‚°å‘¨æ³¢æ•°.
+#define	BUFSIZE			((SMPFRQ * 4) / 10)	//!< ãƒ‡ãƒ¼ã‚¿ãƒãƒƒãƒ•ã‚¡ã‚µã‚¤ã‚º (100msç›¸å½“).
 
 
-// DirectSound\‘¢‘Ì 
-LPDIRECTSOUND       lpDS = NULL;            // DirectSoundƒIƒuƒWƒFƒNƒg
-LPDIRECTSOUNDBUFFER lpPRIMARYBUFFER = NULL; // ˆêƒoƒbƒtƒ@
+// DirectSoundæ§‹é€ ä½“ 
+LPDIRECTSOUND       lpDS = NULL;            // DirectSoundã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
+LPDIRECTSOUNDBUFFER lpPRIMARYBUFFER = NULL; // ä¸€æ™‚ãƒãƒƒãƒ•ã‚¡
 LPDIRECTSOUNDBUFFER lpSECONDARYBUFFER[SE_MAX] = {NULL};
 LPDIRECTSOUNDBUFFER lpORGANBUFFER[8][8][2] = {NULL};
 LPDIRECTSOUNDBUFFER lpDRAMBUFFER[8] = {NULL};
 
-//˜^‰¹—p
-//HANDLE						CapEvent[2];			//!< “ü—ÍƒCƒxƒ“ƒgEƒIƒuƒWƒFƒNƒg.
-//DWORD						CapBufSize;				//!< ƒLƒƒƒvƒ`ƒƒƒoƒbƒtƒ@EƒTƒCƒY.
-//DWORD						GetPos;					//!< ƒLƒƒƒvƒ`ƒƒƒoƒbƒtƒ@‚Ì“Ç‚İ‚İŠJnˆÊ’u.
-//DWORD						PutPos;					//!< ƒLƒƒƒvƒ`ƒƒƒoƒbƒtƒ@‚Ì‘‚«‚İŠJnˆÊ’u.
-//BYTE*						DataBuff;				//!< ƒf[ƒ^ƒoƒbƒtƒ@.
-//LPDIRECTSOUNDCAPTURE 		CapDev;					//!< IDirectSoundCaptureƒCƒ“ƒ^[ƒtƒFƒCƒX ƒ|ƒCƒ“ƒ^.
-//LPDIRECTSOUNDCAPTUREBUFFER	CapBuf;					//!< IDirectSoundBufferƒCƒ“ƒ^[ƒtƒFƒCƒX ƒ|ƒCƒ“ƒ^.
+//éŒ²éŸ³ç”¨
+//HANDLE						CapEvent[2];			//!< å…¥åŠ›ã‚¤ãƒ™ãƒ³ãƒˆãƒ»ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ.
+//DWORD						CapBufSize;				//!< ã‚­ãƒ£ãƒ—ãƒãƒ£ãƒãƒƒãƒ•ã‚¡ãƒ»ã‚µã‚¤ã‚º.
+//DWORD						GetPos;					//!< ã‚­ãƒ£ãƒ—ãƒãƒ£ãƒãƒƒãƒ•ã‚¡ã®èª­ã¿è¾¼ã¿é–‹å§‹ä½ç½®.
+//DWORD						PutPos;					//!< ã‚­ãƒ£ãƒ—ãƒãƒ£ãƒãƒƒãƒ•ã‚¡ã®æ›¸ãè¾¼ã¿é–‹å§‹ä½ç½®.
+//BYTE*						DataBuff;				//!< ãƒ‡ãƒ¼ã‚¿ãƒãƒƒãƒ•ã‚¡.
+//LPDIRECTSOUNDCAPTURE 		CapDev;					//!< IDirectSoundCaptureã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ã‚¤ã‚¹ ãƒã‚¤ãƒ³ã‚¿.
+//LPDIRECTSOUNDCAPTUREBUFFER	CapBuf;					//!< IDirectSoundBufferã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ã‚¤ã‚¹ ãƒã‚¤ãƒ³ã‚¿.
 
-DWORD						OutBufSize;				//!< ƒXƒgƒŠ[ƒ€ƒoƒbƒtƒ@EƒTƒCƒY.
+DWORD						OutBufSize;				//!< ã‚¹ãƒˆãƒªãƒ¼ãƒ ãƒãƒƒãƒ•ã‚¡ãƒ»ã‚µã‚¤ã‚º.
 
 
-// DirectSound‚ÌŠJn 
+// DirectSoundã®é–‹å§‹ 
 BOOL InitDirectSound(HWND hwnd)
 {
 //    int i;
     DSBUFFERDESC dsbd;
 
-    // DirectDraw‚Ì‰Šú‰»
+    // DirectDrawã®åˆæœŸåŒ–
     if(DirectSoundCreate(NULL, &lpDS, NULL) != DS_OK){
 		lpDS = NULL;
 		return(FALSE);
 	}
     lpDS->SetCooperativeLevel(hwnd, DSSCL_EXCLUSIVE);
 
-    // ˆêŸƒoƒbƒtƒ@‚Ì‰Šú‰»
+    // ä¸€æ¬¡ãƒãƒƒãƒ•ã‚¡ã®åˆæœŸåŒ–
     ZeroMemory(&dsbd, sizeof(DSBUFFERDESC));
     dsbd.dwSize = sizeof(DSBUFFERDESC);
     dsbd.dwFlags = DSBCAPS_PRIMARYBUFFER; // | DSBCAPS_CTRLPOSITIONNOTIFY;
@@ -51,18 +51,18 @@ BOOL InitDirectSound(HWND hwnd)
 
 //    for(i = 0; i < SE_MAX; i++) lpSECONDARYBUFFER[i] = NULL;
 	
-	//ƒLƒƒƒvƒ`ƒƒƒoƒbƒtƒ@‚Ìì¬ ‘æˆêˆø”NULL‚ÅƒfƒtƒHƒ‹ƒgB‚±‚ê‚Í‚Ç‚¤‚©B
+	//ã‚­ãƒ£ãƒ—ãƒãƒ£ãƒãƒƒãƒ•ã‚¡ã®ä½œæˆ ç¬¬ä¸€å¼•æ•°NULLã§ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã€‚ã“ã‚Œã¯ã©ã†ã‹ã€‚
 //	if( DirectSoundCaptureCreate( NULL, &CapDev, NULL ) != S_OK ){
 //		return FALSE;
 //	}
-//	dsbd.dwFlags = 0; //ƒZƒJƒ“ƒ_ƒŠƒoƒbƒtƒ@
+//	dsbd.dwFlags = 0; //ã‚»ã‚«ãƒ³ãƒ€ãƒªãƒãƒƒãƒ•ã‚¡
 //	CapDev->CreateCaptureBuffer(&dsbd, &CapBuf, NULL);
 
 
     return(TRUE);
 }
 
-// DirectSound‚ÌI—¹ 
+// DirectSoundã®çµ‚äº† 
 void EndDirectSound(void)
 {
     int i;
@@ -97,43 +97,43 @@ void ReleaseSoundObject(int no){
 }
 
 
-// ƒTƒEƒ“ƒh‚Ìİ’è 
+// ã‚µã‚¦ãƒ³ãƒ‰ã®è¨­å®š 
 BOOL InitSoundObject( LPCSTR resname, int no)
 {
     HRSRC hrscr;
     DSBUFFERDESC dsbd;
-    DWORD *lpdword;//ƒŠƒ\[ƒX‚ÌƒAƒhƒŒƒX
-    // ƒŠƒ\[ƒX‚ÌŒŸõ
+    DWORD *lpdword;//ãƒªã‚½ãƒ¼ã‚¹ã®ã‚¢ãƒ‰ãƒ¬ã‚¹
+    // ãƒªã‚½ãƒ¼ã‚¹ã®æ¤œç´¢
     if((hrscr = FindResource(NULL, resname, "WAVE")) == NULL)
                                                     return(FALSE);
-    // ƒŠƒ\[ƒX‚ÌƒAƒhƒŒƒX‚ğæ“¾
+    // ãƒªã‚½ãƒ¼ã‚¹ã®ã‚¢ãƒ‰ãƒ¬ã‚¹ã‚’å–å¾—
     lpdword = (DWORD*)LockResource(LoadResource(NULL, hrscr));
-	// “ñŸƒoƒbƒtƒ@‚Ì¶¬
+	// äºŒæ¬¡ãƒãƒƒãƒ•ã‚¡ã®ç”Ÿæˆ
 	ZeroMemory(&dsbd, sizeof(DSBUFFERDESC));
 	dsbd.dwSize = sizeof(DSBUFFERDESC);
 	dsbd.dwFlags = 
 		DSBCAPS_STATIC|
 		DSBCAPS_STICKYFOCUS
 		|DSBCAPS_CTRLPAN | DSBCAPS_CTRLVOLUME | DSBCAPS_CTRLFREQUENCY;
-	dsbd.dwBufferBytes = *(DWORD*)((BYTE*)lpdword+0x36);//WAVEƒf[ƒ^‚ÌƒTƒCƒY
+	dsbd.dwBufferBytes = *(DWORD*)((BYTE*)lpdword+0x36);//WAVEãƒ‡ãƒ¼ã‚¿ã®ã‚µã‚¤ã‚º
 	dsbd.lpwfxFormat = (LPWAVEFORMATEX)(lpdword+5); 
 	if(lpDS->CreateSoundBuffer(&dsbd, &lpSECONDARYBUFFER[no],
 								NULL) != DS_OK) return(FALSE);
     LPVOID lpbuf1, lpbuf2;
     DWORD dwbuf1, dwbuf2;
-    // “ñŸƒoƒbƒtƒ@‚ÌƒƒbƒN
+    // äºŒæ¬¡ãƒãƒƒãƒ•ã‚¡ã®ãƒ­ãƒƒã‚¯
     lpSECONDARYBUFFER[no]->Lock(0, *(DWORD*)((BYTE*)lpdword+0x36),
                         &lpbuf1, &dwbuf1, &lpbuf2, &dwbuf2, 0); 
-	// ‰¹Œ¹ƒf[ƒ^‚Ìİ’è
+	// éŸ³æºãƒ‡ãƒ¼ã‚¿ã®è¨­å®š
 	CopyMemory(lpbuf1, (BYTE*)lpdword+0x3a, dwbuf1);
     if(dwbuf2 != 0) CopyMemory(lpbuf2, (BYTE*)lpdword+0x3a+dwbuf1, dwbuf2);
-	// “ñŸƒoƒbƒtƒ@‚ÌƒƒbƒN‰ğœ
+	// äºŒæ¬¡ãƒãƒƒãƒ•ã‚¡ã®ãƒ­ãƒƒã‚¯è§£é™¤
 	lpSECONDARYBUFFER[no]->Unlock(lpbuf1, dwbuf1, lpbuf2, dwbuf2); 
 
     return(TRUE);
 }
 
-//extern LPDIRECTDRAW            lpDD;	// DirectDrawƒIƒuƒWƒFƒNƒg
+//extern LPDIRECTDRAW            lpDD;	// DirectDrawã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
 BOOL LoadSoundObject(char *file_name, int no)
 {
 	DWORD i;
@@ -141,11 +141,11 @@ BOOL LoadSoundObject(char *file_name, int no)
 	char check_box[58];
 	FILE *fp;
 	if((fp=fopen(file_name,"rb"))==NULL){
-//		char msg_str[64];				//”’lŠm”F—p
-//		lpDD->FlipToGDISurface(); //ƒƒbƒZ[ƒW•\¦‚Ì•û‚ÉƒtƒŠƒbƒv
-//		sprintf(msg_str,"%s‚ªŒ©“–‚½‚è‚Ü‚¹‚ñ",file_name);
+//		char msg_str[64];				//æ•°å€¤ç¢ºèªç”¨
+//		lpDD->FlipToGDISurface(); //ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸è¡¨ç¤ºã®æ–¹ã«ãƒ•ãƒªãƒƒãƒ—
+//		sprintf(msg_str,"%sãŒè¦‹å½“ãŸã‚Šã¾ã›ã‚“",file_name);
 //		MessageBox(hWND,msg_str,"title",MB_OK);
-//		SetCursor(FALSE); // ƒJ[ƒ\ƒ‹Á‹
+//		SetCursor(FALSE); // ã‚«ãƒ¼ã‚½ãƒ«æ¶ˆå»
 		return(FALSE);
 	}
 	for(i = 0; i < 58; i++){
@@ -158,18 +158,18 @@ BOOL LoadSoundObject(char *file_name, int no)
 	file_size = *((DWORD *)&check_box[4]);
 
 	DWORD *wp;
-	wp = (DWORD*)malloc(file_size);//ƒtƒ@ƒCƒ‹‚Ìƒ[ƒNƒXƒy[ƒX‚ğì‚é
+	wp = (DWORD*)malloc(file_size);//ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ¯ãƒ¼ã‚¯ã‚¹ãƒšãƒ¼ã‚¹ã‚’ä½œã‚‹
 	fseek(fp,0,SEEK_SET);
 	for(i = 0; i < file_size; i++){
 		fread((BYTE*)wp+i,sizeof(BYTE),1,fp);
 	}
 	fclose(fp);
-	//ƒZƒJƒ“ƒ_ƒŠƒoƒbƒtƒ@‚Ì¶¬
+	//ã‚»ã‚«ãƒ³ãƒ€ãƒªãƒãƒƒãƒ•ã‚¡ã®ç”Ÿæˆ
 	DSBUFFERDESC dsbd;
 	ZeroMemory(&dsbd, sizeof(DSBUFFERDESC));
 	dsbd.dwSize = sizeof(DSBUFFERDESC);
 	dsbd.dwFlags = DSBCAPS_STATIC|DSBCAPS_STICKYFOCUS|DSBCAPS_CTRLPAN | DSBCAPS_CTRLVOLUME | DSBCAPS_CTRLFREQUENCY;
-	dsbd.dwBufferBytes = *(DWORD*)((BYTE*)wp+0x36);//WAVEƒf[ƒ^‚ÌƒTƒCƒY
+	dsbd.dwBufferBytes = *(DWORD*)((BYTE*)wp+0x36);//WAVEãƒ‡ãƒ¼ã‚¿ã®ã‚µã‚¤ã‚º
 	dsbd.lpwfxFormat = (LPWAVEFORMATEX)(wp+5); 
 	if(lpDS->CreateSoundBuffer(&dsbd, &lpSECONDARYBUFFER[no],
 								NULL) != DS_OK){
@@ -185,7 +185,7 @@ BOOL LoadSoundObject(char *file_name, int no)
 		free(wp);
 		return (FALSE);
 	}
-	CopyMemory(lpbuf1, (BYTE*)wp+0x3a, dwbuf1);//+3a‚Íƒf[ƒ^‚Ì“ª
+	CopyMemory(lpbuf1, (BYTE*)wp+0x3a, dwbuf1);//+3aã¯ãƒ‡ãƒ¼ã‚¿ã®é ­
 	if(dwbuf2 != 0)	CopyMemory(lpbuf2, (BYTE*)wp+0x3a+dwbuf1, dwbuf2);
 	lpSECONDARYBUFFER[no]->Unlock(lpbuf1, dwbuf1, lpbuf2, dwbuf2); 
 	
@@ -193,51 +193,51 @@ BOOL LoadSoundObject(char *file_name, int no)
 	return(TRUE);
 }
 
-// ƒTƒEƒ“ƒh‚ÌÄ¶ 
+// ã‚µã‚¦ãƒ³ãƒ‰ã®å†ç”Ÿ 
 void PlaySoundObject(int no, int mode)
 {
     if(lpSECONDARYBUFFER[no] != NULL){
 		switch(mode){
-		case 0: // ’â~
+		case 0: // åœæ­¢
 			lpSECONDARYBUFFER[no]->Stop();
 			break;
-		case 1: // Ä¶
+		case 1: // å†ç”Ÿ
 			lpSECONDARYBUFFER[no]->Stop();
 			lpSECONDARYBUFFER[no]->SetCurrentPosition(0);
             lpSECONDARYBUFFER[no]->Play(0, 0, 0);
             break;
-		case -1: // ƒ‹[ƒvÄ¶
+		case -1: // ãƒ«ãƒ¼ãƒ—å†ç”Ÿ
 			lpSECONDARYBUFFER[no]->Play(0, 0, DSBPLAY_LOOPING);
 			break;
 		}
     }
 }
 
-void ChangeSoundFrequency(int no, DWORD rate)//100‚ªMIN9999‚ªMAX‚Å2195?‚ªÉ°ÏÙ
+void ChangeSoundFrequency(int no, DWORD rate)//100ãŒMIN9999ãŒMAXã§2195?ãŒï¾‰ï½°ï¾ï¾™
 {
 	if(lpSECONDARYBUFFER[no] != NULL)
 		lpSECONDARYBUFFER[no]->SetFrequency( rate );
 }
-void ChangeSoundVolume(int no, long volume)//300‚ªMAX‚Å300‚ªÉ°ÏÙ
+void ChangeSoundVolume(int no, long volume)//300ãŒMAXã§300ãŒï¾‰ï½°ï¾ï¾™
 {
 	if(lpSECONDARYBUFFER[no] != NULL)
 		lpSECONDARYBUFFER[no]->SetVolume((volume-300)*8);
 }
-void ChangeSoundPan(int no, long pan)//512‚ªMAX‚Å256‚ªÉ°ÏÙ
+void ChangeSoundPan(int no, long pan)//512ãŒMAXã§256ãŒï¾‰ï½°ï¾ï¾™
 {
 	if(lpSECONDARYBUFFER[no] != NULL)
 		lpSECONDARYBUFFER[no]->SetPan((pan-256)*10);
 }
 
 /////////////////////////////////////////////
-//¡ƒIƒ‹ƒK[ƒjƒƒ¡¡¡¡¡¡¡¡¡¡¡¡///////
+//â– ã‚ªãƒ«ã‚¬ãƒ¼ãƒ‹ãƒ£â– â– â– â– â– â– â– â– â– â– â– â– ///////
 /////////////////////
 
 
 typedef struct{
-	short wave_size;//”gŒ`‚ÌƒTƒCƒY
-	short oct_par;//ƒIƒNƒ^[ƒu‚ğÀŒ»‚·‚éŠ|‚¯—¦(/8)
-	short oct_size;//ƒIƒNƒ^[ƒu‚ğÀŒ»‚·‚éŠ|‚¯—¦(/8)
+	short wave_size;//æ³¢å½¢ã®ã‚µã‚¤ã‚º
+	short oct_par;//ã‚ªã‚¯ã‚¿ãƒ¼ãƒ–ã‚’å®Ÿç¾ã™ã‚‹æ›ã‘ç‡(/8)
+	short oct_size;//ã‚ªã‚¯ã‚¿ãƒ¼ãƒ–ã‚’å®Ÿç¾ã™ã‚‹æ›ã‘ç‡(/8)
 }OCTWAVE;
 
 OCTWAVE oct_wave[8] = {
@@ -250,20 +250,20 @@ OCTWAVE oct_wave[8] = {
 	{ 16, 64, 28},
 	{  8,128, 32},
 };
-BYTE format_tbl2[] = {0x01,0x00,0x01,0x00,0x22,0x56,0x00,//22050Hz‚ÌFormat
+BYTE format_tbl2[] = {0x01,0x00,0x01,0x00,0x22,0x56,0x00,//22050Hzã®Format
 0x00,0x22,0x56,0x00,0x00,0x01,0x00,0x08,0x00,0x00,0x00};
-//BYTE format_tbl3[] = {0x01,0x00,0x01,0x00,0x44,0xac,0x00,//441000Hz‚ÌFormat
+//BYTE format_tbl3[] = {0x01,0x00,0x01,0x00,0x44,0xac,0x00,//441000Hzã®Format
 //0x00,0x44,0xac,0x00,0x00,0x08,0x00,0x00,0x00,0x66,0x61};
 BOOL MakeSoundObject8(char *wavep,char track, char pipi )
 {
 	DWORD i,j,k;
-	unsigned long wav_tp;//WAVƒe[ƒuƒ‹‚ğ‚³‚·ƒ|ƒCƒ“ƒ^
+	unsigned long wav_tp;//WAVãƒ†ãƒ¼ãƒ–ãƒ«ã‚’ã•ã™ãƒã‚¤ãƒ³ã‚¿
 	DWORD wave_size;//256;
 	DWORD data_size;
 	BYTE *wp;
 	BYTE *wp_sub;
 	int work;
-	//ƒZƒJƒ“ƒ_ƒŠƒoƒbƒtƒ@‚Ì¶¬
+	//ã‚»ã‚«ãƒ³ãƒ€ãƒªãƒãƒƒãƒ•ã‚¡ã®ç”Ÿæˆ
 	DSBUFFERDESC dsbd;
 
 	for(j = 0; j < 8; j++){
@@ -280,7 +280,7 @@ BOOL MakeSoundObject8(char *wavep,char track, char pipi )
 			dsbd.lpwfxFormat = (LPWAVEFORMATEX)(&format_tbl2[0]);
 				if(lpDS->CreateSoundBuffer(&dsbd, &lpORGANBUFFER[track][j][k],//j = se_no
 										NULL) != DS_OK) return(FALSE);
-			wp = (BYTE*)malloc(data_size);//ƒtƒ@ƒCƒ‹‚Ìƒ[ƒNƒXƒy[ƒX‚ğì‚é
+			wp = (BYTE*)malloc(data_size);//ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ¯ãƒ¼ã‚¯ã‚¹ãƒšãƒ¼ã‚¹ã‚’ä½œã‚‹
 			wp_sub = wp;
 			wav_tp = 0;
 			for(i = 0; i < data_size; i++){
@@ -291,7 +291,7 @@ BOOL MakeSoundObject8(char *wavep,char track, char pipi )
 				if( wav_tp > 255 ) wav_tp -= 256;
 				wp_sub++;
 			}
-			//ƒf[ƒ^‚Ì“]‘—
+			//ãƒ‡ãƒ¼ã‚¿ã®è»¢é€
 			LPVOID lpbuf1, lpbuf2;
 			DWORD dwbuf1, dwbuf2=0;
 			HRESULT hr;
@@ -301,7 +301,7 @@ BOOL MakeSoundObject8(char *wavep,char track, char pipi )
 				free( wp );
 				return (FALSE);
 			}
-			CopyMemory(lpbuf1, (BYTE*)wp,dwbuf1);//+3a‚Íƒf[ƒ^‚Ì“ª
+			CopyMemory(lpbuf1, (BYTE*)wp,dwbuf1);//+3aã¯ãƒ‡ãƒ¼ã‚¿ã®é ­
 			if(dwbuf2 != 0)	CopyMemory(lpbuf2, (BYTE*)wp+dwbuf1, dwbuf2);
 			lpORGANBUFFER[track][j][k]->Unlock(lpbuf1, dwbuf1, lpbuf2, dwbuf2); 
 			lpORGANBUFFER[track][j][k]->SetCurrentPosition(0);
@@ -310,7 +310,7 @@ BOOL MakeSoundObject8(char *wavep,char track, char pipi )
 	}
 	return(TRUE);
 }
-//2.1.0‚Å ®”Œ^‚©‚ç¬”“_Œ^‚É•ÏX‚µ‚Ä‚İ‚½B20140401
+//2.1.0ã§ æ•´æ•°å‹ã‹ã‚‰å°æ•°ç‚¹å‹ã«å¤‰æ›´ã—ã¦ã¿ãŸã€‚20140401
 //short freq_tbl[12] = {261,278,294,311,329,349,371,391,414,440,466,494};
 double freq_tbl[12] = {261.62556530060, 277.18263097687, 293.66476791741, 311.12698372208, 329.62755691287, 349.22823143300, 369.99442271163, 391.99543598175, 415.30469757995, 440.00000000000, 466.16376151809, 493.88330125612};
 void ChangeOrganFrequency(unsigned char key,char track, DWORD a)
@@ -321,69 +321,69 @@ void ChangeOrganFrequency(unsigned char key,char track, DWORD a)
 			tmpDouble = (((double)oct_wave[j].wave_size * freq_tbl[key])*(double)oct_wave[j].oct_par)/8.00f + ((double)a - 1000.0f);
 			
 			
-			lpORGANBUFFER[track][j][i]->SetFrequency(//1000‚ğ+ƒ¿‚ÌƒfƒtƒHƒ‹ƒg’l‚Æ‚·‚é
+			lpORGANBUFFER[track][j][i]->SetFrequency(//1000ã‚’+Î±ã®ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆå€¤ã¨ã™ã‚‹
 				(DWORD)tmpDouble
 //				((oct_wave[j].wave_size*freq_tbl[key])*oct_wave[j].oct_par)/8 + (a-1000)
 			);
 		}
 }
 short pan_tbl[13] = {0,43,86,129,172,215,256,297,340,383,426,469,512}; 
-unsigned char old_key[MAXTRACK] = {255,255,255,255,255,255,255,255};//Ä¶’†‚Ì‰¹
-unsigned char key_on[MAXTRACK] = {0};//ƒL[ƒXƒCƒbƒ`
-unsigned char key_twin[MAXTRACK] = {0};//¡g‚Á‚Ä‚¢‚éƒL[(˜A‘±‚ÌƒmƒCƒY–h~‚Ìˆ×‚É“ñ‚Â—pˆÓ)
-void ChangeOrganPan(unsigned char key, unsigned char pan,char track)//512‚ªMAX‚Å256‚ªÉ°ÏÙ
+unsigned char old_key[MAXTRACK] = {255,255,255,255,255,255,255,255};//å†ç”Ÿä¸­ã®éŸ³
+unsigned char key_on[MAXTRACK] = {0};//ã‚­ãƒ¼ã‚¹ã‚¤ãƒƒãƒ
+unsigned char key_twin[MAXTRACK] = {0};//ä»Šä½¿ã£ã¦ã„ã‚‹ã‚­ãƒ¼(é€£ç¶šæ™‚ã®ãƒã‚¤ã‚ºé˜²æ­¢ã®ç‚ºã«äºŒã¤ç”¨æ„)
+void ChangeOrganPan(unsigned char key, unsigned char pan,char track)//512ãŒMAXã§256ãŒï¾‰ï½°ï¾ï¾™
 {
 	if(old_key[track] != 255)
 		lpORGANBUFFER[track][old_key[track]/12][key_twin[track]]->SetPan((pan_tbl[pan]-256)*10);
 }
-void ChangeOrganVolume(int no, long volume,char track)//300‚ªMAX‚Å300‚ªÉ°ÏÙ
+void ChangeOrganVolume(int no, long volume,char track)//300ãŒMAXã§300ãŒï¾‰ï½°ï¾ï¾™
 {
 	if(old_key[track] != 255)
 		lpORGANBUFFER[track][old_key[track]/12][key_twin[track]]->SetVolume((volume-255)*8);
 }
-// ƒTƒEƒ“ƒh‚ÌÄ¶ 
+// ã‚µã‚¦ãƒ³ãƒ‰ã®å†ç”Ÿ 
 void PlayOrganObject(unsigned char key, int mode,char track,DWORD freq)
 {
 	
     if(lpORGANBUFFER[track][key/12][key_twin[track]] != NULL){
 		switch(mode){
-		case 0: // ’â~
+		case 0: // åœæ­¢
 			lpORGANBUFFER[track][old_key[track]/12][key_twin[track]]->Stop();
 			lpORGANBUFFER[track][old_key[track]/12][key_twin[track]]->SetCurrentPosition(0);
 			break;
-		case 1: // Ä¶
+		case 1: // å†ç”Ÿ
 //			if(key_on == 1 && no == old_key/12)//
 //				lpORGANBUFFER[old_key/12]->Stop();
-//				ChangeOrganFrequency(key%12);//ü”g”‚ğİ’è‚µ‚Ä
+//				ChangeOrganFrequency(key%12);//å‘¨æ³¢æ•°ã‚’è¨­å®šã—ã¦
 //				lpORGANBUFFER[no]->Play(0, 0, 0);
-//			if(key_on == 1 && no == old_key/12){//–Â‚Á‚Ä‚éWAV‚ª“¯‚¶WAVNO‚È‚ç
+//			if(key_on == 1 && no == old_key/12){//é³´ã£ã¦ã‚‹WAVãŒåŒã˜WAVNOãªã‚‰
 //				old_key = key;
-//				ChangeOrganFrequency(key%12);//ü”g”‚ğ•Ï‚¦‚é‚¾‚¯
+//				ChangeOrganFrequency(key%12);//å‘¨æ³¢æ•°ã‚’å¤‰ãˆã‚‹ã ã‘
 //			}
 			break;
-		case 2: // •à‚©‚¹’â~
+		case 2: // æ­©ã‹ã›åœæ­¢
 			if(old_key[track] != 255){
 				lpORGANBUFFER[track][old_key[track]/12][key_twin[track]]->Play(0, 0, 0);
 				old_key[track] = 255;
 			}
             break;
 		case -1:
-			if(old_key[track] == 255){//V‹K–Â‚ç‚·
-				ChangeOrganFrequency(key%12,track,freq);//ü”g”‚ğİ’è‚µ‚Ä
+			if(old_key[track] == 255){//æ–°è¦é³´ã‚‰ã™
+				ChangeOrganFrequency(key%12,track,freq);//å‘¨æ³¢æ•°ã‚’è¨­å®šã—ã¦
 				lpORGANBUFFER[track][key/12][key_twin[track]]->Play(0, 0, DSBPLAY_LOOPING);
 				old_key[track] = key;
 				key_on[track] = 1;
-			}else if(key_on[track] == 1 && old_key[track] == key){//“¯‚¶‰¹
-				//¡‚È‚Á‚Ä‚¢‚é‚Ì‚ğ•à‚©‚¹’â~
+			}else if(key_on[track] == 1 && old_key[track] == key){//åŒã˜éŸ³
+				//ä»Šãªã£ã¦ã„ã‚‹ã®ã‚’æ­©ã‹ã›åœæ­¢
 				lpORGANBUFFER[track][old_key[track]/12][key_twin[track]]->Play(0, 0, 0);
 				key_twin[track]++;
 				if(key_twin[track] == 2)key_twin[track] = 0; 
 				lpORGANBUFFER[track][key/12][key_twin[track]]->Play(0, 0, DSBPLAY_LOOPING);
-			}else{//ˆá‚¤‰¹‚ğ–Â‚ç‚·‚È‚ç
-				lpORGANBUFFER[track][old_key[track]/12][key_twin[track]]->Play(0, 0, 0);//¡‚È‚Á‚Ä‚¢‚é‚Ì‚ğ•à‚©‚¹’â~
+			}else{//é•ã†éŸ³ã‚’é³´ã‚‰ã™ãªã‚‰
+				lpORGANBUFFER[track][old_key[track]/12][key_twin[track]]->Play(0, 0, 0);//ä»Šãªã£ã¦ã„ã‚‹ã®ã‚’æ­©ã‹ã›åœæ­¢
 				key_twin[track]++;
 				if(key_twin[track] == 2)key_twin[track] = 0; 
-				ChangeOrganFrequency(key%12,track,freq);//ü”g”‚ğİ’è‚µ‚Ä
+				ChangeOrganFrequency(key%12,track,freq);//å‘¨æ³¢æ•°ã‚’è¨­å®šã—ã¦
 				lpORGANBUFFER[track][key/12][key_twin[track]]->Play(0, 0, DSBPLAY_LOOPING);
 				old_key[track] = key;
 			}
@@ -391,49 +391,49 @@ void PlayOrganObject(unsigned char key, int mode,char track,DWORD freq)
 		}
     }
 }
-//‚Ò‚Ò
+//ã´ã´
 void PlayOrganObject2(unsigned char key, int mode,char track,DWORD freq)
 {
 	
     if(lpORGANBUFFER[track][key/12][key_twin[track]] != NULL){
 		switch(mode){
-		case 0: // ’â~
+		case 0: // åœæ­¢
 			lpORGANBUFFER[track][old_key[track]/12][key_twin[track]]->Stop();
 			lpORGANBUFFER[track][old_key[track]/12][key_twin[track]]->SetCurrentPosition(0);
 			break;
-		case 1: // Ä¶
+		case 1: // å†ç”Ÿ
 //			if(key_on == 1 && no == old_key/12)//
 //				lpORGANBUFFER[old_key/12]->Stop();
-//				ChangeOrganFrequency(key%12);//ü”g”‚ğİ’è‚µ‚Ä
+//				ChangeOrganFrequency(key%12);//å‘¨æ³¢æ•°ã‚’è¨­å®šã—ã¦
 //				lpORGANBUFFER[no]->Play(0, 0, 0);
-//			if(key_on == 1 && no == old_key/12){//–Â‚Á‚Ä‚éWAV‚ª“¯‚¶WAVNO‚È‚ç
+//			if(key_on == 1 && no == old_key/12){//é³´ã£ã¦ã‚‹WAVãŒåŒã˜WAVNOãªã‚‰
 //				old_key = key;
-//				ChangeOrganFrequency(key%12);//ü”g”‚ğ•Ï‚¦‚é‚¾‚¯
+//				ChangeOrganFrequency(key%12);//å‘¨æ³¢æ•°ã‚’å¤‰ãˆã‚‹ã ã‘
 //			}
 			break;
-		case 2: // •à‚©‚¹’â~
+		case 2: // æ­©ã‹ã›åœæ­¢
 			if(old_key[track] != 255){
 //				lpORGANBUFFER[track][old_key[track]/12][key_twin[track]]->Play(0, 0, 0);
 				old_key[track] = 255;
 			}
             break;
 		case -1:
-			if(old_key[track] == 255){//V‹K–Â‚ç‚·
-				ChangeOrganFrequency(key%12,track,freq);//ü”g”‚ğİ’è‚µ‚Ä
+			if(old_key[track] == 255){//æ–°è¦é³´ã‚‰ã™
+				ChangeOrganFrequency(key%12,track,freq);//å‘¨æ³¢æ•°ã‚’è¨­å®šã—ã¦
 				lpORGANBUFFER[track][key/12][key_twin[track]]->Play(0, 0, 0);//DSBPLAY_LOOPING);
 				old_key[track] = key;
 				key_on[track] = 1;
-			}else if(key_on[track] == 1 && old_key[track] == key){//“¯‚¶‰¹
-				//¡‚È‚Á‚Ä‚¢‚é‚Ì‚ğ•à‚©‚¹’â~
+			}else if(key_on[track] == 1 && old_key[track] == key){//åŒã˜éŸ³
+				//ä»Šãªã£ã¦ã„ã‚‹ã®ã‚’æ­©ã‹ã›åœæ­¢
 //				lpORGANBUFFER[track][old_key[track]/12][key_twin[track]]->Play(0, 0, 0);
 				key_twin[track]++;
 				if(key_twin[track] == 2)key_twin[track] = 0; 
 				lpORGANBUFFER[track][key/12][key_twin[track]]->Play(0, 0, 0);//DSBPLAY_LOOPING);
-			}else{//ˆá‚¤‰¹‚ğ–Â‚ç‚·‚È‚ç
-//				lpORGANBUFFER[track][old_key[track]/12][key_twin[track]]->Play(0, 0, 0);//¡‚È‚Á‚Ä‚¢‚é‚Ì‚ğ•à‚©‚¹’â~
+			}else{//é•ã†éŸ³ã‚’é³´ã‚‰ã™ãªã‚‰
+//				lpORGANBUFFER[track][old_key[track]/12][key_twin[track]]->Play(0, 0, 0);//ä»Šãªã£ã¦ã„ã‚‹ã®ã‚’æ­©ã‹ã›åœæ­¢
 				key_twin[track]++;
 				if(key_twin[track] == 2)key_twin[track] = 0; 
-				ChangeOrganFrequency(key%12,track,freq);//ü”g”‚ğİ’è‚µ‚Ä
+				ChangeOrganFrequency(key%12,track,freq);//å‘¨æ³¢æ•°ã‚’è¨­å®šã—ã¦
 				lpORGANBUFFER[track][key/12][key_twin[track]]->Play(0, 0, 0);//DSBPLAY_LOOPING);
 				old_key[track] = key;
 			}
@@ -441,7 +441,7 @@ void PlayOrganObject2(unsigned char key, int mode,char track,DWORD freq)
 		}
     }
 }
-//ƒIƒ‹ƒK[ƒjƒƒƒIƒuƒWƒFƒNƒg‚ğŠJ•ú
+//ã‚ªãƒ«ã‚¬ãƒ¼ãƒ‹ãƒ£ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’é–‹æ”¾
 void ReleaseOrganyaObject(char track){
 	for(int i = 0; i < 8; i++){
 		if(lpORGANBUFFER[track][i][0] != NULL){
@@ -454,18 +454,18 @@ void ReleaseOrganyaObject(char track){
 		}
 	}
 }
-//”gŒ`ƒf[ƒ^‚ğƒ[ƒh
+//æ³¢å½¢ãƒ‡ãƒ¼ã‚¿ã‚’ãƒ­ãƒ¼ãƒ‰
 //char wave_data[100*256];
 char *wave_data = NULL;
 BOOL InitWaveData100(void)
 {
 	if(wave_data == NULL)wave_data = (char *)malloc(sizeof(char) * 256 * 256);
     HRSRC hrscr;
-    DWORD *lpdword;//ƒŠƒ\[ƒX‚ÌƒAƒhƒŒƒX
-    // ƒŠƒ\[ƒX‚ÌŒŸõ
+    DWORD *lpdword;//ãƒªã‚½ãƒ¼ã‚¹ã®ã‚¢ãƒ‰ãƒ¬ã‚¹
+    // ãƒªã‚½ãƒ¼ã‚¹ã®æ¤œç´¢
     if((hrscr = FindResource(NULL, "WAVE100", "WAVE")) == NULL)
                                                     return(FALSE);
-    // ƒŠƒ\[ƒX‚ÌƒAƒhƒŒƒX‚ğæ“¾
+    // ãƒªã‚½ãƒ¼ã‚¹ã®ã‚¢ãƒ‰ãƒ¬ã‚¹ã‚’å–å¾—
     lpdword = (DWORD*)LockResource(LoadResource(NULL, hrscr));
 	memcpy(wave_data,lpdword,100*256);
 	return TRUE;
@@ -488,7 +488,7 @@ BOOL DeleteWaveData100(void)
 	free(wave_data);
 	return TRUE;
 }
-//”gŒ`‚ğ‚P‚O‚OŒÂ‚Ì’†‚©‚ç‘I‘ğ‚µ‚Äì¬
+//æ³¢å½¢ã‚’ï¼‘ï¼ï¼å€‹ã®ä¸­ã‹ã‚‰é¸æŠã—ã¦ä½œæˆ
 BOOL MakeOrganyaWave(char track,char wave_no, char pipi)
 {
 	if(wave_no > 99)return FALSE;
@@ -497,9 +497,9 @@ BOOL MakeOrganyaWave(char track,char wave_no, char pipi)
 	return TRUE;
 }
 /////////////////////////////////////////////
-//¡ƒIƒ‹ƒK[ƒjƒƒƒhƒ‰ƒ€ƒX¡¡¡¡¡¡¡¡///////
+//â– ã‚ªãƒ«ã‚¬ãƒ¼ãƒ‹ãƒ£ãƒ‰ãƒ©ãƒ ã‚¹â– â– â– â– â– â– â– â– ///////
 /////////////////////
-//ƒIƒ‹ƒK[ƒjƒƒƒIƒuƒWƒFƒNƒg‚ğŠJ•ú
+//ã‚ªãƒ«ã‚¬ãƒ¼ãƒ‹ãƒ£ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’é–‹æ”¾
 void ReleaseDramObject(char track){
 	for(int i = 0; i < 8; i++){
 		if(lpDRAMBUFFER[track] != NULL){
@@ -508,35 +508,35 @@ void ReleaseDramObject(char track){
 		}
 	}
 }
-// ƒTƒEƒ“ƒh‚Ìİ’è 
+// ã‚µã‚¦ãƒ³ãƒ‰ã®è¨­å®š 
 BOOL InitDramObject( LPCSTR resname, int no)
 {
     HRSRC hrscr;
     DSBUFFERDESC dsbd;
-    DWORD *lpdword;//ƒŠƒ\[ƒX‚ÌƒAƒhƒŒƒX
-    // ƒŠƒ\[ƒX‚ÌŒŸõ
-	ReleaseDramObject(no); //‚±‚±‚É‚¨‚¢‚Ä‚İ‚½B
+    DWORD *lpdword;//ãƒªã‚½ãƒ¼ã‚¹ã®ã‚¢ãƒ‰ãƒ¬ã‚¹
+    // ãƒªã‚½ãƒ¼ã‚¹ã®æ¤œç´¢
+	ReleaseDramObject(no); //ã“ã“ã«ãŠã„ã¦ã¿ãŸã€‚
 
     if((hrscr = FindResource(NULL, resname, "WAVE")) == NULL)
                                                     return(FALSE);
-    // ƒŠƒ\[ƒX‚ÌƒAƒhƒŒƒX‚ğæ“¾
+    // ãƒªã‚½ãƒ¼ã‚¹ã®ã‚¢ãƒ‰ãƒ¬ã‚¹ã‚’å–å¾—
     lpdword = (DWORD*)LockResource(LoadResource(NULL, hrscr));
-	// “ñŸƒoƒbƒtƒ@‚Ì¶¬
+	// äºŒæ¬¡ãƒãƒƒãƒ•ã‚¡ã®ç”Ÿæˆ
 	ZeroMemory(&dsbd, sizeof(DSBUFFERDESC));
 	dsbd.dwSize = sizeof(DSBUFFERDESC);
 	dsbd.dwFlags = 
 		DSBCAPS_STATIC|
 		DSBCAPS_STICKYFOCUS
 		|DSBCAPS_CTRLPAN | DSBCAPS_CTRLVOLUME | DSBCAPS_CTRLFREQUENCY;
-	dsbd.dwBufferBytes = *(DWORD*)((BYTE*)lpdword+0x36);//WAVEƒf[ƒ^‚ÌƒTƒCƒY
+	dsbd.dwBufferBytes = *(DWORD*)((BYTE*)lpdword+0x36);//WAVEãƒ‡ãƒ¼ã‚¿ã®ã‚µã‚¤ã‚º
 	dsbd.lpwfxFormat = (LPWAVEFORMATEX)(lpdword+5); 
 	if(lpDS->CreateSoundBuffer(&dsbd, &lpDRAMBUFFER[no],NULL) != DS_OK) return(FALSE);
     LPVOID lpbuf1, lpbuf2;
     DWORD dwbuf1, dwbuf2;
-    // “ñŸƒoƒbƒtƒ@‚ÌƒƒbƒN
+    // äºŒæ¬¡ãƒãƒƒãƒ•ã‚¡ã®ãƒ­ãƒƒã‚¯
     lpDRAMBUFFER[no]->Lock(0, *(DWORD*)((BYTE*)lpdword+0x36),
                         &lpbuf1, &dwbuf1, &lpbuf2, &dwbuf2, 0); 
-	// ‰¹Œ¹ƒf[ƒ^‚Ìİ’è
+	// éŸ³æºãƒ‡ãƒ¼ã‚¿ã®è¨­å®š
 	CopyMemory(lpbuf1, (BYTE*)lpdword+0x3a, dwbuf1);
     if(dwbuf2 != 0){
 		CopyMemory(lpbuf2, (BYTE*)lpdword+0x3a+dwbuf1, dwbuf2);
@@ -544,7 +544,7 @@ BOOL InitDramObject( LPCSTR resname, int no)
 		
 	}
 
-	// “ñŸƒoƒbƒtƒ@‚ÌƒƒbƒN‰ğœ
+	// äºŒæ¬¡ãƒãƒƒãƒ•ã‚¡ã®ãƒ­ãƒƒã‚¯è§£é™¤
 	lpDRAMBUFFER[no]->Unlock(lpbuf1, dwbuf1, lpbuf2, dwbuf2); 
 	lpDRAMBUFFER[no]->SetCurrentPosition(0);
 
@@ -560,11 +560,11 @@ BOOL LoadDramObject(char *file_name, int no)
 	FILE *fp;
 	ReleaseDramObject(no);
 	if((fp=fopen(file_name,"rb"))==NULL){
-//		char msg_str[64];				//”’lŠm”F—p
-//		lpDD->FlipToGDISurface(); //ƒƒbƒZ[ƒW•\¦‚Ì•û‚ÉƒtƒŠƒbƒv
-//		sprintf(msg_str,"%s‚ªŒ©“–‚½‚è‚Ü‚¹‚ñ",file_name);
+//		char msg_str[64];				//æ•°å€¤ç¢ºèªç”¨
+//		lpDD->FlipToGDISurface(); //ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸è¡¨ç¤ºã®æ–¹ã«ãƒ•ãƒªãƒƒãƒ—
+//		sprintf(msg_str,"%sãŒè¦‹å½“ãŸã‚Šã¾ã›ã‚“",file_name);
 //		MessageBox(hWND,msg_str,"title",MB_OK);
-//		SetCursor(FALSE); // ƒJ[ƒ\ƒ‹Á‹
+//		SetCursor(FALSE); // ã‚«ãƒ¼ã‚½ãƒ«æ¶ˆå»
 		return(FALSE);
 	}
 	for(i = 0; i < 58; i++){
@@ -577,20 +577,20 @@ BOOL LoadDramObject(char *file_name, int no)
 	file_size = *((DWORD *)&check_box[4]);
 
 	DWORD *wp;
-	wp = (DWORD*)malloc(file_size);//ƒtƒ@ƒCƒ‹‚Ìƒ[ƒNƒXƒy[ƒX‚ğì‚é
+	wp = (DWORD*)malloc(file_size);//ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ¯ãƒ¼ã‚¯ã‚¹ãƒšãƒ¼ã‚¹ã‚’ä½œã‚‹
 	fseek(fp,0,SEEK_SET);
 	for(i = 0; i < file_size; i++){
 		fread((BYTE*)wp+i,sizeof(BYTE),1,fp);
 	}
 	fclose(fp);
-	//ƒZƒJƒ“ƒ_ƒŠƒoƒbƒtƒ@‚Ì¶¬
+	//ã‚»ã‚«ãƒ³ãƒ€ãƒªãƒãƒƒãƒ•ã‚¡ã®ç”Ÿæˆ
 	DSBUFFERDESC dsbd;
 	ZeroMemory(&dsbd, sizeof(DSBUFFERDESC));
 	dsbd.dwSize = sizeof(DSBUFFERDESC);
 	dsbd.dwFlags = DSBCAPS_STATIC|
 		DSBCAPS_STICKYFOCUS
 		|DSBCAPS_CTRLDEFAULT;
-	dsbd.dwBufferBytes = *(DWORD*)((BYTE*)wp+0x36);//WAVEƒf[ƒ^‚ÌƒTƒCƒY
+	dsbd.dwBufferBytes = *(DWORD*)((BYTE*)wp+0x36);//WAVEãƒ‡ãƒ¼ã‚¿ã®ã‚µã‚¤ã‚º
 	dsbd.lpwfxFormat = (LPWAVEFORMATEX)(wp+5); 
 	if(lpDS->CreateSoundBuffer(&dsbd, &lpDRAMBUFFER[no],
 								NULL) != DS_OK) return(FALSE);	
@@ -600,7 +600,7 @@ BOOL LoadDramObject(char *file_name, int no)
 	hr = lpDRAMBUFFER[no]->Lock(0, file_size-58,
 							&lpbuf1, &dwbuf1, &lpbuf2, &dwbuf2, 0); 
 	if(hr != DS_OK)return (FALSE);
-	CopyMemory(lpbuf1, (BYTE*)wp+0x3a, dwbuf1);//+3a‚Íƒf[ƒ^‚Ì“ª
+	CopyMemory(lpbuf1, (BYTE*)wp+0x3a, dwbuf1);//+3aã¯ãƒ‡ãƒ¼ã‚¿ã®é ­
 	if(dwbuf2 != 0)	CopyMemory(lpbuf2, (BYTE*)wp+0x3a+dwbuf1, dwbuf2);
 	lpDRAMBUFFER[no]->Unlock(lpbuf1, dwbuf1, lpbuf2, dwbuf2); 
 	
@@ -611,7 +611,7 @@ void ChangeDramFrequency(unsigned char key,char track)
 {
 	lpDRAMBUFFER[track]->SetFrequency(key*800+100);
 }
-void ChangeDramPan(unsigned char pan,char track)//512‚ªMAX‚Å256‚ªÉ°ÏÙ
+void ChangeDramPan(unsigned char pan,char track)//512ãŒMAXã§256ãŒï¾‰ï½°ï¾ï¾™
 {
 	lpDRAMBUFFER[track]->SetPan((pan_tbl[pan]-256)*10);
 }
@@ -619,23 +619,23 @@ void ChangeDramVolume(long volume,char track)//
 {
 	lpDRAMBUFFER[track]->SetVolume((volume-255)*8);
 }
-// ƒTƒEƒ“ƒh‚ÌÄ¶ 
+// ã‚µã‚¦ãƒ³ãƒ‰ã®å†ç”Ÿ 
 void PlayDramObject(unsigned char key, int mode,char track)
 {
 	
     if(lpDRAMBUFFER[track] != NULL){
 		switch(mode){
-		case 0: // ’â~
+		case 0: // åœæ­¢
 			lpDRAMBUFFER[track]->Stop();
 			lpDRAMBUFFER[track]->SetCurrentPosition(0);
 			break;
-		case 1: // Ä¶
+		case 1: // å†ç”Ÿ
 			lpDRAMBUFFER[track]->Stop();
 			lpDRAMBUFFER[track]->SetCurrentPosition(0);
-			ChangeDramFrequency(key,track);//ü”g”‚ğİ’è‚µ‚Ä
+			ChangeDramFrequency(key,track);//å‘¨æ³¢æ•°ã‚’è¨­å®šã—ã¦
 			lpDRAMBUFFER[track]->Play(0, 0, 0);
 			break;
-		case 2: // •à‚©‚¹’â~
+		case 2: // æ­©ã‹ã›åœæ­¢
             break;
 		case -1:
 			break;
@@ -647,17 +647,17 @@ void PlayOrganKey(unsigned char key,char track,DWORD freq,int Nagasa)
 	if(key>96)return;
 	if(track < MAXMELODY){
 		DWORD wait = timeGetTime();
-		ChangeOrganFrequency(key%12,track,freq);//ü”g”‚ğİ’è‚µ‚Ä
+		ChangeOrganFrequency(key%12,track,freq);//å‘¨æ³¢æ•°ã‚’è¨­å®šã—ã¦
 		lpORGANBUFFER[track][key/12][0]->SetVolume((160-255)*8);
 		lpORGANBUFFER[track][key/12][0]->Play(0, 0, DSBPLAY_LOOPING);
 		do{
 		}while(timeGetTime() < wait + (DWORD)Nagasa);
-//		lpORGANBUFFER[track][key/12][0]->Play(0, 0, 0); //C 2010.09.23 ‘¦’â~‚·‚éB
+//		lpORGANBUFFER[track][key/12][0]->Play(0, 0, 0); //C 2010.09.23 å³æ™‚åœæ­¢ã™ã‚‹ã€‚
 		lpORGANBUFFER[track][key/12][0]->Stop();
 	}else{
 		lpDRAMBUFFER[track - MAXMELODY]->Stop();
 		lpDRAMBUFFER[track - MAXMELODY]->SetCurrentPosition(0);
-		ChangeDramFrequency(key,track - MAXMELODY);//ü”g”‚ğİ’è‚µ‚Ä
+		ChangeDramFrequency(key,track - MAXMELODY);//å‘¨æ³¢æ•°ã‚’è¨­å®šã—ã¦
 		lpDRAMBUFFER[track - MAXMELODY]->SetVolume((160-255)*8);
 		lpDRAMBUFFER[track - MAXMELODY]->Play(0, 0, 0);
 	}
@@ -675,7 +675,7 @@ void Rxo_PlayKey(unsigned char key,char track,DWORD freq, int Phase)
 	}else{
 		lpDRAMBUFFER[track - MAXMELODY]->Stop();
 		lpDRAMBUFFER[track - MAXMELODY]->SetCurrentPosition(0);
-		ChangeDramFrequency(key,track - MAXMELODY);//ü”g”‚ğİ’è‚µ‚Ä
+		ChangeDramFrequency(key,track - MAXMELODY);//å‘¨æ³¢æ•°ã‚’è¨­å®šã—ã¦
 		lpDRAMBUFFER[track - MAXMELODY]->SetVolume((160-255)*8);
 		lpDRAMBUFFER[track - MAXMELODY]->Play(0, 0, 0);
 	}
@@ -692,13 +692,13 @@ void Rxo_StopKey(unsigned char key,char track, int Phase)
 	}	
 }
 
-//ƒfƒoƒbƒO—pB‚¢‚ë‚ñ‚Èó‘Ô‚ğo—ÍB
+//ãƒ‡ãƒãƒƒã‚°ç”¨ã€‚ã„ã‚ã‚“ãªçŠ¶æ…‹ã‚’å‡ºåŠ›ã€‚
 void Rxo_ShowDirectSoundObject(HWND hwnd)
 {
 	
 }
 
-//‰¹‚ğ‚·‚®‚É‘S•”~‚ß‚é
+//éŸ³ã‚’ã™ãã«å…¨éƒ¨æ­¢ã‚ã‚‹
 void Rxo_StopAllSoundNow(void)
 {
 	int i,j,k;
@@ -708,5 +708,5 @@ void Rxo_StopAllSoundNow(void)
 		for(j=0;j<8;j++)for(k=0;k<2;k++)lpORGANBUFFER[i][j][k]->Stop();
 		lpDRAMBUFFER[i]->Stop();
 	}
-	for(i=0;i<MAXTRACK;i++)old_key[i]=255; //2014.05.02 A ‚±‚ê‚Å“ª‚ª•Ï‚È‰¹‚É‚È‚ç‚È‚­‚·‚éB
+	for(i=0;i<MAXTRACK;i++)old_key[i]=255; //2014.05.02 A ã“ã‚Œã§é ­ãŒå¤‰ãªéŸ³ã«ãªã‚‰ãªãã™ã‚‹ã€‚
 }
