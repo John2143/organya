@@ -7,20 +7,20 @@
 
 #include "rxoFunction.h"
 
-extern int sACrnt;	//範囲選択は常にｶﾚﾝﾄﾄﾗｯｸ
+extern int sACrnt;	//Range selection is always the current track
 
-//◆◆表示部◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
+//◆◆Display unit◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆◆
 RECT note_rect[] = {
-	{  0,  0, 16,  6},//キー音符(編集)
-	{  0,  6, 16, 12},//キー音符
-	{ 16,  0, 32,  4},//尻尾(編集)
-	{ 16,  4, 32,  8},//尻尾
-	{ 16, 16, 32, 21},//パン・ボリューム
+	{  0,  0, 16,  6},//Key notes(Edit)
+	{  0,  6, 16, 12},//Key notes
+	{ 16,  0, 32,  4},//tail(Edit)
+	{ 16,  4, 32,  8},//tail
+	{ 16, 16, 32, 21},//Pan / volume
 	{  0, 32, 16, 44},//Repeat(5)
 	{ 16, 32, 32, 44},//end
 };
 
-RECT note_blue_rect[]={ //数字入りのキー音符（頭）
+RECT note_blue_rect[]={ //Key notes with numbers (head)
 	{ 0,  48, 16,  54},
 	{16,  48, 32,  54},
 	{ 0,  56, 16,  62},
@@ -56,7 +56,7 @@ RECT note_blue_rect[]={ //数字入りのキー音符（頭）
 };
 
 /*
-RECT note_tail_rect[]={ //しっぽ
+RECT note_tail_rect[]={ //tail
 	{32,   0, 64,   4},
 	{32,   4, 64,   8},
 	{32,   8, 64,  12},
@@ -76,7 +76,7 @@ RECT note_tail_rect[]={ //しっぽ
 	{32,  64, 64,  68}, //yobun
 };
 */
-RECT note_tail_rect[]={ //しっぽ
+RECT note_tail_rect[]={ //tail
 	{32,   0, 48,   4},
 	{32,   4, 48,   8},
 	{32,   8, 48,  12},
@@ -96,14 +96,14 @@ RECT note_tail_rect[]={ //しっぽ
 	{32,  64, 48,  68}, //yobun
 };
 RECT msc_rect[] = {
-	{  0,  0, 64,144+16},//鍵盤
-	{ 64,  0, 80,144+16},//小節ライン
-	{ 80,  0, 96,144+16},//一拍ライン
-	{ 96,  0,112,144+16},//1/16ライン
-	{112+  0,  0,112+ 64,144+16},//鍵盤
-	{112+ 64,  0,112+ 80,144+16},//小節ライン
-	{112+ 80,  0,112+ 96,144+16},//一拍ライン
-	{112+ 96,  0,112+112,144+16},//1/16ライン
+	{  0,  0, 64,144+16},//keyboard
+	{ 64,  0, 80,144+16},//Bar line
+	{ 80,  0, 96,144+16},//One beat line
+	{ 96,  0,112,144+16},//1/16line
+	{112+  0,  0,112+ 64,144+16},//keyboard
+	{112+ 64,  0,112+ 80,144+16},//Bar line
+	{112+ 80,  0,112+ 96,144+16},//One beat line
+	{112+ 96,  0,112+112,144+16},//1/16line
 };
 RECT num_rect[] = {
 	{  0,  0,  8, 12},
@@ -129,14 +129,14 @@ RECT num_rect[] = {
 	{ 72, 12, 80, 24},
 };
 RECT rc_SelArea[] ={
-	{0, 176, 16, 187}, //選択範囲
-	{16, 176, 32, 187}, //選択範囲
-	{32, 176, 48, 187}, //選択範囲
-	{0, 192, 16, 203},  //選択範囲(他のTr)
-	{16, 192, 32, 203}, //選択範囲(他のTr)
-	{32, 192, 48, 203}, //選択範囲(他のTr)
+	{0, 176, 16, 187}, //Selection range
+	{16, 176, 32, 187}, //Selection range
+	{32, 176, 48, 187}, //Selection range
+	{0, 192, 16, 203},  //Selection range(otherTr)
+	{16, 192, 32, 203}, //Selection range(otherTr)
+	{32, 192, 48, 203}, //Selection range(otherTr)
 	{32, 160, 48, 171}, //FULL
-	{32, 144, 48, 155}, //１マス
+	{32, 144, 48, 155}, //1 squares
 };
 
 RECT rc_CurrentSelect = {0, 208, 64, 224}; //2014.04.30
@@ -150,7 +150,7 @@ RECT rc_TCPY[]={
 	{32,100,48,104},
 };
 
-RECT rc_PushKB[] ={    // 2010.09.23 A 押された鍵盤
+RECT rc_PushKB[] ={    // 2010.09.23 A Pushed keyboard
 	{112, 132, 208, 144}, //
 	{112, 120, 208, 132}, //
 	{112, 108, 208, 120}, //
@@ -165,7 +165,7 @@ RECT rc_PushKB[] ={    // 2010.09.23 A 押された鍵盤
 	{112, 0, 208, 12}, //
 };
 
-RECT rc_PushKB2[] ={	// 2010.09.23 A 押された鍵盤（光る鍵盤背景つき）
+RECT rc_PushKB2[] ={	// 2010.09.23 A Pressed keyboard (with glowing keyboard background)
 	{112, 132, 176, 144}, //
 	{112, 120, 176, 132}, //
 	{112, 108, 176, 120}, //
@@ -180,7 +180,7 @@ RECT rc_PushKB2[] ={	// 2010.09.23 A 押された鍵盤（光る鍵盤背景つ�
 	{112, 0, 176, 12}, //
 };
 
-RECT rc_PushKB3[] ={    // 2010.09.24 A 押された鍵盤(オクターブ違い）
+RECT rc_PushKB3[] ={    // 2010.09.24 A Pushed keyboard(Octave difference)
 	{208, 132, 272, 144}, //
 	{208, 120, 272, 132}, //
 	{208, 108, 272, 120}, //
@@ -196,14 +196,14 @@ RECT rc_PushKB3[] ={    // 2010.09.24 A 押された鍵盤(オクターブ違い
 };
 
 
-extern NOTECOPY nc_Select; //選択範囲
+extern NOTECOPY nc_Select; //Selection range
 extern int tra, ful ,haba; 
-extern int gDrawDouble;	//両方のトラックグループを描画する
+extern int gDrawDouble;	//Draw both track groups
 
-extern int iKeyPushDown[256]; // 2010.09.22 A ピアノキーの押され具合
+extern int iKeyPushDown[256]; // 2010.09.22 A Piano key pressed
 
 
-//キーボードとピアノロールの位置
+//Position of keyboard and piano roll
 void OrgData::PutNumber(void)
 {
 	long scr_h,scr_v;
@@ -211,7 +211,7 @@ void OrgData::PutNumber(void)
 	char i,j;
 	char k = info.dot*info.line;
 	j = (WWidth/NoteWidth)/k;
-	//小節を表示
+	//Show measures
 	for(i = 0; i <= j; i++){
 		scr_data.GetScrollPosition(&scr_h,&scr_v);
 		scr_h += i;
@@ -234,7 +234,7 @@ void OrgData::PutNumber(void)
 			PutBitmap(k*i*NoteWidth+16+KEYWIDTH+1,WHeight+288-WHNM-12,&num_rect[scr_h],BMPNUMBER);
 		}
 	}
-	//キーを表示
+	//Show key
 	for(i = 0; i <  8; i++){
 		PutBitmap(55,(95 - scr_v - i*12)*12,&num_rect[i+10],BMPNUMBER);
 	}
@@ -250,7 +250,7 @@ void OrgData::PutRepeat(void)
 	PutBitmap(x,WHeight+276-WHNM-12,&note_rect[6],BMPNOTE);
 }
 
-//音符の表示
+//Show notes
 void OrgData::PutNotes(int TPCY)
 {
 	int i,j,k,t,addY;
@@ -271,29 +271,29 @@ void OrgData::PutNotes(int TPCY)
 		trkmaskUpper[i] = (unsigned char)(256-2*k); // 254, 252, 248, 240,  224, ...
 	}
 	*/
-	//必要なデータを取得
+	//Obtain necessary data
 	GetMusicInfo(&mi);line = mi.line;dot = mi.dot;
 	scr_data.GetScrollPosition(&scr_h,&scr_v);
 
 	//for(i=0;i<128*92;i++)noteon[i] = 0;
 
 	/*
-	//音符の重なり具合を確認する //A 2014.05.03
+	//Check the overlapping condition of notes //A 2014.05.03
 	memset((void *)noteon, 0, 128*12*8);
 	for(n = 0; n < MAXMELODY; n++){
 		k = getRecentTrack(n , 0);
 		if(k == track)continue;
-		if((p = info.tdata[k].note_list) == NULL)continue;//音符が無ければ中止
-		while(p != NULL && p->to != NULL){//どこから表示するか
+		if((p = info.tdata[k].note_list) == NULL)continue;//Abandon if there is no note
+		while(p != NULL && p->to != NULL){//Where to display from
 			xpos = (p->x - line*dot*scr_h)*16 + KEYWIDTH;
-			if(xpos >= KEYWIDTH)break;//表示領域に入った
+			if(xpos >= KEYWIDTH)break;//I entered the display area
 			p = p->to;
 		}
-		//尻尾を表示する為に、一つ前の音符から・・・。
+		//To display the tail, from the previous note ....
 		if(p == NULL)continue;
 		if(p->from != NULL)p = p->from;
 		while(p->from != NULL && p->y == KEYDUMMY)p = p->from;
-		//音符ががなくなるか、X座標が表示領域を超えるまで表示。
+		//Whether the musical notes are gone,XDisplayed until the coordinates exceed the display area.
 		while(p != NULL){
 			//xmax128
 			if(p->y != KEYDUMMY){
@@ -307,35 +307,35 @@ void OrgData::PutNotes(int TPCY)
 	*/
 	Dw_BeginToDraw();
 
-	//編集しない音符を先に表示///////////
+	//Display notes that you do not want to edit first///////////
 	for(n = 0; n < MAXMELODY; n++){
 		k = getRecentTrack(n , 0);
 		if(k == track)continue;
-		if((p = info.tdata[k].note_list) == NULL)continue;//音符が無ければ中止
-		while(p != NULL && p->to != NULL){//どこから表示するか
+		if((p = info.tdata[k].note_list) == NULL)continue;//Abandon if there is no note
+		while(p != NULL && p->to != NULL){//Where to display from
 			xpos = (p->x - line*dot*scr_h)*NoteWidth + KEYWIDTH;
-			if(xpos >= KEYWIDTH)break;//表示領域に入った
+			if(xpos >= KEYWIDTH)break;//I entered the display area
 			p = p->to;
 		}
-		//尻尾を表示する為に、一つ前の音符から・・・。
+		//To display the tail, from the previous note ....
 		if(p == NULL)continue;
 		if(p->from != NULL)p = p->from;
 		while(p->from != NULL && p->y == KEYDUMMY)p = p->from;
-		//音符ががなくなるか、X座標が表示領域を超えるまで表示。
+		//Whether the musical notes are gone,XDisplayed until the coordinates exceed the display area.
 		while(p != NULL){
-			ypos = (95 - p->y - scr_v)*12;//下が0になる95が最大
+			ypos = (95 - p->y - scr_v)*12;//Below is0become95Is the maximum
 			xpos = (p->x - line*dot*scr_h)*NoteWidth + KEYWIDTH;
 			t = (p->y % 12); if(t==1 || t==3 || t==6 || t==8 || t==10)t=1;else t=0;
-			if(xpos > WWidth)break;//表示領域を超えた。
-			if(ypos >= 0 && ypos < WHeight+286-WHNM){//表示範囲YPOS
+			if(xpos > WWidth)break;//It exceeds the display area.
+			if(ypos >= 0 && ypos < WHeight+286-WHNM){//Display rangeYPOS
 				addY = 0;
 				/*
-				for(i = p->length-1; i >= 0; i--){//尻尾ふくめて(>0)頭まで(==0)検索 //A 2014.05.06
+				for(i = p->length-1; i >= 0; i--){//Including the tail(>0)To the head(==0)Search //A 2014.05.06
 					e = p->x - line*dot*scr_h + i;
 					unsigned char uct = noteon[p->y * 128 + e];
-					if((uct & trkmaskLower[track]) && track < n){ //自Trより小さいTr番号の音符があった
+					if((uct & trkmaskLower[track]) && track < n){ //OwnTrLess thanTrThere was a note of the number
 						addY-=2; break;
-					}else if((uct & trkmaskLower[track]) && track > n){ //自Trより大きいTr番号の音符があった
+					}else if((uct & trkmaskLower[track]) && track > n){ //OwnTrGreater thanTrThere was a note of the number
 						addY+=2; break;
 					}
 				}
@@ -346,50 +346,50 @@ void OrgData::PutNotes(int TPCY)
 					if(k>=4)addY--;
 				}
 
-				for(j = 0,i = p->length-1; i > 0; i--,j++){//尻尾
+				for(j = 0,i = p->length-1; i > 0; i--,j++){//tail
 					if(TPCY==0)Dw_PutBitmap(xpos+j*NoteWidth+NoteWidth,ypos+3 +addY  ,&note_tail_rect[k+8],BMPNOTE);
 					else Dw_PutBitmap(xpos+j*NoteWidth+NoteWidth,ypos+3 +addY  ,&rc_TCPY[2+t],BMPNOTE);
 				}
-				if(TPCY==0)Dw_PutBitmap_Head(xpos,ypos+2 +addY  ,&note_blue_rect[k],BMPNOTE,p->length);//音符(新)
-				else Dw_PutBitmap_Head(xpos,ypos+2 +addY  ,&rc_TCPY[t],BMPNOTE,p->length);//音符(新)
+				if(TPCY==0)Dw_PutBitmap_Head(xpos,ypos+2 +addY  ,&note_blue_rect[k],BMPNOTE,p->length);//note(new)
+				else Dw_PutBitmap_Head(xpos,ypos+2 +addY  ,&rc_TCPY[t],BMPNOTE,p->length);//note(new)
 			}
 			p = p->to;
 		}
 	}
-	//編集する音符を表示///////////
+	//Show notes to edit///////////
 	if((p = info.tdata[track].note_list) == NULL || TPCY==1){
-		//return;//音符が無ければ中止
+		//return;//Abandon if there is no note
 	}else{
-		while(p != NULL && p->to != NULL){//どこから表示するか
+		while(p != NULL && p->to != NULL){//Where to display from
 			xpos = (p->x - line*dot*scr_h)*NoteWidth + KEYWIDTH;
 			if(xpos >= KEYWIDTH)break;
 			p = p->to;
 		}
-		//尻尾を表示する為に、一つ前の音符から・・・。
+		//To display the tail, from the previous note ....
 		if(p == NULL){
 			//return;
 		}else{
 			if(p->from != NULL)p = p->from;
 			while(p->from != NULL && p->y == KEYDUMMY)p = p->from;
-			//音符ががなくなるか、X座標が表示領域を超えるまで表示。
+			//Whether the musical notes are gone,XDisplayed until the coordinates exceed the display area.
 			while(p != NULL){
-				ypos = (95 - p->y - scr_v)*12;//下が0になる95が最大
+				ypos = (95 - p->y - scr_v)*12;//Below is0become95Is the maximum
 				xpos = (p->x - line*dot*scr_h)*NoteWidth + KEYWIDTH;
-				if(xpos > WWidth)break;//表示領域を超えた。
-				if(ypos >= 0 && ypos < WHeight+286-WHNM){//表示範囲YPOS
-					//tBitmap(xpos,ypos+2,&note_rect[0],BMPNOTE);//音符
-					for(j = 0,i = p->length-1; i > 0; i--,j++){//尻尾
+				if(xpos > WWidth)break;//It exceeds the display area.
+				if(ypos >= 0 && ypos < WHeight+286-WHNM){//Display rangeYPOS
+					//tBitmap(xpos,ypos+2,&note_rect[0],BMPNOTE);//note
+					for(j = 0,i = p->length-1; i > 0; i--,j++){//tail
 						//PutBitmap(xpos+j*16+16,ypos+3,&note_rect[2],BMPNOTE);
 						Dw_PutBitmap(xpos+j*NoteWidth+NoteWidth,ypos+3,&note_tail_rect[track],BMPNOTE);
 					}
-					Dw_PutBitmap_Head(xpos,ypos+2,&note_blue_rect[track+16],BMPNOTE,p->length);//音符(新)
+					Dw_PutBitmap_Head(xpos,ypos+2,&note_blue_rect[track+16],BMPNOTE,p->length);//note(new)
 				}
 				if(p->pan != PANDUMMY){
-					ypos = WHeight + 351-WHNM - (p->pan * 5);//パン
+					ypos = WHeight + 351-WHNM - (p->pan * 5);//Bread
 					Dw_PutBitmap_Center(xpos,ypos,&note_rect[4],BMPNOTE);
 				}
 				if(p->volume != VOLDUMMY){
-					ypos = WHeight + 426 -WHNM - (p->volume/4);//ボリューム
+					ypos = WHeight + 426 -WHNM - (p->volume/4);//volume
 					Dw_PutBitmap_Center(xpos,ypos,&note_rect[4],BMPNOTE);
 				}
 				p = p->to;
@@ -398,7 +398,7 @@ void OrgData::PutNotes(int TPCY)
 	}
 	Dw_FinishToDraw();
 }
-//音符(ドラム)の表示
+//note(drum)Display of
 void OrgData::PutNotes2(int TPCY)
 {
 	int i,j,k,t,addY;
@@ -408,86 +408,86 @@ void OrgData::PutNotes2(int TPCY)
 	long scr_h,scr_v;
 	unsigned char line,dot;
 	MUSICINFO mi;
-	//必要なデータを取得
+	//Obtain necessary data
 	GetMusicInfo(&mi);line = mi.line;dot = mi.dot;
 	scr_data.GetScrollPosition(&scr_h,&scr_v);
 
 	Dw_BeginToDraw();
 
-	//編集しない音符を先に表示///////////
+	//Display notes that you do not want to edit first///////////
 	for(n = MAXMELODY; n < MAXTRACK; n++){
 		k = getRecentTrack(n - MAXMELODY, 1);
 		if(k == track)continue;
 		if((p = info.tdata[k].note_list) == NULL){
 //			MessageBox(hWnd,"","",MB_OK);
-			continue;//音符が無ければ中止
+			continue;//Abandon if there is no note
 		}
-		while(p != NULL && p->to != NULL){//どこから表示するか
+		while(p != NULL && p->to != NULL){//Where to display from
 			xpos = (p->x - line*dot*scr_h)*NoteWidth + KEYWIDTH;
 			if(xpos >= KEYWIDTH)break;
 			p = p->to;
 		}
-		//尻尾を表示する為に、一つ前の音符から・・・。
+		//To display the tail, from the previous note ....
 		if(p == NULL)continue;
 		if(p->from != NULL)p = p->from;
 		while(p->from != NULL && p->y == KEYDUMMY)p = p->from;
-		//音符ががなくなるか、X座標が表示領域を超えるまで表示。
+		//Whether the musical notes are gone,XDisplayed until the coordinates exceed the display area.
 		while(p != NULL){
-			ypos = (95 - p->y - scr_v)*12;//下が0になる95が最大
+			ypos = (95 - p->y - scr_v)*12;//Below is0become95Is the maximum
 			xpos = (p->x - line*dot*scr_h)*NoteWidth + KEYWIDTH;
 			t = (p->y % 12); if(t==1 || t==3 || t==6 || t==8 || t==10)t=1;else t=0;
-			if(xpos > WWidth)break;//表示領域を超えた。
-//			if(ypos >= 0 && ypos < 286+WDWHEIGHTPLUS){//表示範囲YPOS
-			if(ypos >= 0 && ypos < WHeight+286-WHNM){//表示範囲YPOS
+			if(xpos > WWidth)break;//It exceeds the display area.
+//			if(ypos >= 0 && ypos < 286+WDWHEIGHTPLUS){//Display rangeYPOS
+			if(ypos >= 0 && ypos < WHeight+286-WHNM){//Display rangeYPOS
 				addY = 0;
 				/*if(iSlideOverlapNotes!=0){
 					addY=-(k-MAXMELODY)/2+2; //if(addY>=0)addY++;
 					if((k-MAXMELODY)>=4)addY--;
 				}*/
-				for(j = 0,i = p->length-1; i > 0; i--,j++){//尻尾
+				for(j = 0,i = p->length-1; i > 0; i--,j++){//tail
 					if(TPCY==0)Dw_PutBitmap(xpos+j*NoteWidth+NoteWidth,ypos+3+addY,&note_tail_rect[k],BMPNOTE);
 					else Dw_PutBitmap(xpos+j*NoteWidth+NoteWidth,ypos+3+addY,&rc_TCPY[2+t],BMPNOTE);
 				}
-				if(TPCY==0)Dw_PutBitmap_Head(xpos,ypos+2+addY,&note_blue_rect[k],BMPNOTE,p->length);//音符
-				else Dw_PutBitmap_Head(xpos,ypos+2+addY,&rc_TCPY[0+t],BMPNOTE,p->length);//音符
+				if(TPCY==0)Dw_PutBitmap_Head(xpos,ypos+2+addY,&note_blue_rect[k],BMPNOTE,p->length);//note
+				else Dw_PutBitmap_Head(xpos,ypos+2+addY,&rc_TCPY[0+t],BMPNOTE,p->length);//note
 			}
 			p = p->to;
 		}
 	}
-	//編集する音符を表示///////////
+	//Show notes to edit///////////
 	if((p = info.tdata[track].note_list) == NULL || TPCY==1){
-		//return;//音符が無ければ中止
+		//return;//Abandon if there is no note
 	}else{
-		while(p != NULL && p->to != NULL){//どこから表示するか
+		while(p != NULL && p->to != NULL){//Where to display from
 			xpos = (p->x - line*dot*scr_h)*16 + KEYWIDTH;
 			if(xpos >= KEYWIDTH)break;
 			p = p->to;
 		}
-		//尻尾を表示する為に、一つ前の音符から・・・。
+		//To display the tail, from the previous note ....
 		if(p == NULL){
 			//return;
 		}else{
 			if(p->from != NULL)p = p->from;
 			while(p->from != NULL && p->y == KEYDUMMY)p = p->from;
-			//音符ががなくなるか、X座標が表示領域を超えるまで表示。
+			//Whether the musical notes are gone,XDisplayed until the coordinates exceed the display area.
 			while(p != NULL){
-				ypos = (95 - p->y - scr_v)*12;//下が0になる95が最大
+				ypos = (95 - p->y - scr_v)*12;//Below is0become95Is the maximum
 				xpos = (p->x - line*dot*scr_h)*NoteWidth + KEYWIDTH;
-				if(xpos > WWidth)break;//表示領域を超えた。
-				if(ypos >= 0 && ypos < WHeight+286-WHNM){//表示範囲YPOS
-					//PutBitmap(xpos,ypos+2,&note_rect[0],BMPNOTE);//音符
-					//Dw_PutBitmap(xpos,ypos+2,&note_blue_rect[track+16],BMPNOTE);//音符	// 2014.05.27 D
-					for(j = 0,i = p->length-1; i > 0; i--,j++){//尻尾
+				if(xpos > WWidth)break;//It exceeds the display area.
+				if(ypos >= 0 && ypos < WHeight+286-WHNM){//Display rangeYPOS
+					//PutBitmap(xpos,ypos+2,&note_rect[0],BMPNOTE);//note
+					//Dw_PutBitmap(xpos,ypos+2,&note_blue_rect[track+16],BMPNOTE);//note	// 2014.05.27 D
+					for(j = 0,i = p->length-1; i > 0; i--,j++){//tail
 						Dw_PutBitmap(xpos+j*NoteWidth+NoteWidth,ypos+3,&note_tail_rect[track-8],BMPNOTE);
 					}
-					Dw_PutBitmap_Head(xpos,ypos+2,&note_blue_rect[track+16],BMPNOTE,p->length);//音符	// 2014.05.27 A
+					Dw_PutBitmap_Head(xpos,ypos+2,&note_blue_rect[track+16],BMPNOTE,p->length);//note	// 2014.05.27 A
 				}
 				if(p->pan != PANDUMMY){
-					ypos = WHeight + 351-WHNM - (p->pan * 5);//パン
+					ypos = WHeight + 351-WHNM - (p->pan * 5);//Bread
 					Dw_PutBitmap_Center(xpos,ypos,&note_rect[4],BMPNOTE);
 				}
 				if(p->volume != VOLDUMMY){
-					ypos = WHeight + 426-WHNM - (p->volume/4);//ボリューム
+					ypos = WHeight + 426-WHNM - (p->volume/4);//volume
 					Dw_PutBitmap_Center(xpos,ypos,&note_rect[4],BMPNOTE);
 				}
 				p = p->to;
@@ -497,7 +497,7 @@ void OrgData::PutNotes2(int TPCY)
 
 	Dw_FinishToDraw();
 }
-//楽譜の表示
+//Show score
 void OrgData::PutMusic(void)
 {
 	int j;
@@ -506,14 +506,14 @@ void OrgData::PutMusic(void)
 	scr_data.GetScrollPosition(&hpos,&vpos);
 	vpos2=vpos;
 	vpos = -(vpos%12)*12;
-	//ここ以降に楽譜表示を記述
-	for(j = 0; j < 8; j++)PutMusicParts(64,j*144 +vpos);//楽譜
-	PutPanParts();//パンライン
+	//Describe score display from here on
+	for(j = 0; j < 8; j++)PutMusicParts(64,j*144 +vpos);//Musical score
+	PutPanParts();//Pan line
 
-	//キーボード鍵盤（譜面背景を光らす部分）
+	//Keyboard keyboard (part that lightens music notation background)
 	for(j = 0; j < 96 ; j++){ // 2010.09.22 A
 		if(iKeyPushDown[j]!=0){
-			PutBitmap(0,  (95 - j - vpos2)*12, &rc_PushKB[j%12],BMPMUSIC);//鍵盤
+			PutBitmap(0,  (95 - j - vpos2)*12, &rc_PushKB[j%12],BMPMUSIC);//keyboard
 		}
 	}
 
@@ -523,25 +523,25 @@ void OrgData::PutMusic(void)
 		else PutNotes2();
 	}else{
 		if(track < MAXMELODY){
-			PutNotes2(1);	//半透明表示
-			PutNotes();		//実体表示
+			PutNotes2(1);	//Translucent display
+			PutNotes();		//Entity display
 		}
 		else{
-			PutNotes(1);	//半透明表示
-			PutNotes2();	//実体表示
+			PutNotes(1);	//Translucent display
+			PutNotes2();	//Entity display
 		}
 		
 	}
-	for(j = 0; j < 8; j++)PutBitmap(0,j*144 +vpos,&msc_rect[0],BMPMUSIC);//鍵盤
+	for(j = 0; j < 8; j++)PutBitmap(0,j*144 +vpos,&msc_rect[0],BMPMUSIC);//keyboard
 
-	//キーボード鍵盤（鍵盤部分）
+	//Keyboard keyboard (keyboard part)
 	for(j = 0; j < 96 ; j++){ // 2010.09.22 A
 		if(iKeyPushDown[j]!=0){
 			//A 2010.09.24
 			for(i = 0; i < 8; i++){
-				PutBitmap(0,  (95 - (j%12)- i*12 - vpos2)*12, &rc_PushKB3[j%12],BMPMUSIC);//オクターブ違い鍵盤
+				PutBitmap(0,  (95 - (j%12)- i*12 - vpos2)*12, &rc_PushKB3[j%12],BMPMUSIC);//Octave different keyboard
 			}
-			PutBitmap(0,  (95 - j - vpos2)*12, &rc_PushKB2[j%12],BMPMUSIC);//鍵盤
+			PutBitmap(0,  (95 - j - vpos2)*12, &rc_PushKB2[j%12],BMPMUSIC);//keyboard
 		}
 	}
 
@@ -549,10 +549,10 @@ void OrgData::PutMusic(void)
 
 	PutNumber();
 	PutRepeat();
-	PutBitmap(0,WHeight+288-WHNM,&msc_rect[0],BMPPAN);//パン
+	PutBitmap(0,WHeight+288-WHNM,&msc_rect[0],BMPPAN);//Bread
 
 	if(sACrnt){ //2014.04.30
-		PutBitmap(0,WHeight+288-WHNM+144,&rc_CurrentSelect,BMPNOTE);//範囲選択は常にｶﾚﾝﾄﾄﾗｯｸのとき
+		PutBitmap(0,WHeight+288-WHNM+144,&rc_CurrentSelect,BMPNOTE);//Range selection is always the current track
 	}
 	if(iActivatePAN){ //2014.05.01
 		PutBitmap(0,WHeight+288-WHNM,&rc_ActivePAN, BMPNOTE);
@@ -562,22 +562,22 @@ void OrgData::PutMusic(void)
 	}
 }
 
-//選択範囲の表示
+//Display selection range
 void OrgData::PutSelectArea()
 {
-	if(tra<0)return; //選択されてへん
+	if(tra<0)return; //It has been selected
 	long ypos;
 	long scr_h,scr_v;
 	unsigned char line,dot;
 	MUSICINFO mi;
-	//必要なデータを取得
+	//Obtain necessary data
 	GetMusicInfo(&mi);line = mi.line;dot = mi.dot;
 	scr_data.GetScrollPosition(&scr_h,&scr_v);
 
 	int xSelS, xSelE,xx,t;
 	t = 0; if(ful==0 && tra!=track)t=3;
-	xSelS = (nc_Select.x1_1 - line*dot*scr_h)*NoteWidth + KEYWIDTH; //選択開始点
-	xSelE = (nc_Select.x1_2 - line*dot*scr_h)*NoteWidth + KEYWIDTH; //選択終了点
+	xSelS = (nc_Select.x1_1 - line*dot*scr_h)*NoteWidth + KEYWIDTH; //Selection starting point
+	xSelE = (nc_Select.x1_2 - line*dot*scr_h)*NoteWidth + KEYWIDTH; //Selection end point
 	ypos = WHeight - 13;
 	for(xx=KEYWIDTH;xx<=WWidth+NoteWidth;xx+=NoteWidth){
 		if(xx==xSelS){
@@ -599,7 +599,7 @@ void OrgData::PutSelectArea()
 
 void OrgData::RedrawSelectArea()
 {
-	PutSelectParts();//パンライン
+	PutSelectParts();//Pan line
 	PutSelectArea();
 
 }

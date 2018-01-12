@@ -10,7 +10,7 @@
 
 extern HWND hDlgPlayer;
 extern HWND hDlgTrack;
-extern NOTECOPY nc_Select; //選択範囲
+extern NOTECOPY nc_Select; //Selection range
 extern int tra, ful ,haba; 
 extern char TrackN[];
 
@@ -19,11 +19,11 @@ BOOL CALLBACK DialogDelete(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lPara
 	char str[128] = {NULL};
 	int v;
 	long a,b,c;
-	RECT rect = {64,0,WWidth,WHeight};//更新する領域
+	RECT rect = {64,0,WWidth,WHeight};//Area to update
 	MUSICINFO mi;
 	PARCHANGE pc;
 	switch(message){
-	case WM_INITDIALOG://ダイアログが呼ばれた
+	case WM_INITDIALOG://A dialog was called
 		EnableWindow(hDlgPlayer,FALSE);
 
 		//itoa(org_data.track,str,10);
@@ -51,11 +51,11 @@ BOOL CALLBACK DialogDelete(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lPara
 			//a = atol(str);
 			a = ReverseTrackCode(str);
 			if(a >= MAXTRACK){
-				//MessageBox(hdwnd,"トラックが異常です","Error(track)",MB_OK);
+				//MessageBox(hdwnd,"The track is abnormal","Error(track)",MB_OK);
 
 				return 1;
 			}
-			//パラメータ生成
+			//Parameter generation
 			pc.track = (char)a;
 			org_data.GetMusicInfo(&mi);
 			GetDlgItemText(hdwnd,IDE_DELFROM,str,4);
@@ -65,34 +65,34 @@ BOOL CALLBACK DialogDelete(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lPara
 			c = atol(str);
 			pc.x2 = c * mi.dot*mi.line-1;
 			if(b >= c){
-				//MessageBox(hdwnd,"範囲が異常です","Error(track)",MB_OK);
+				//MessageBox(hdwnd,"The range is abnormal","Error(track)",MB_OK);
 				msgbox(hdwnd, IDS_WARNING_HANI, IDS_ERROR_TRACK, MB_OK);	// 2014.10.18 
 				return 1;
 			}
 			SetUndo();
-			//消去
+			//Erase
 			org_data.DelateNoteData(&pc);
-			//表示
+			//display
 			org_data.PutMusic();
 			RedrawWindow(hWnd,&rect,NULL,RDW_INVALIDATE|RDW_ERASENOW);
-			//MessageBox(hdwnd,"消去しました","通知",MB_OK);	// 2014.10.18 D
+			//MessageBox(hdwnd,"It deleted.","notification",MB_OK);	// 2014.10.18 D
 			msgbox(hdwnd,IDS_INFO_CLEAR ,IDS_NOTIFY_TITLE ,MB_OK);	// 2014.10.18 A
 			return 1;
 		}
 	}
 	return 0;
 }
-//コピーダイアログ
+//Copy dialog
 BOOL CALLBACK DialogCopy(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	char str[128] = {NULL};
 	long a,b,c;
-	RECT rect = {64,0,WWidth,WHeight};//更新する領域
+	RECT rect = {64,0,WWidth,WHeight};//Area to update
 	MUSICINFO mi;
 //	PARCHANGE pc;
 	NOTECOPY nc;
 	switch(message){
-	case WM_INITDIALOG://ダイアログが呼ばれた
+	case WM_INITDIALOG://A dialog was called
 		//itoa(org_data.track,str,10);
 		//SetDlgItemText(hdwnd,IDE_TRACK1,str);
 		//SetDlgItemText(hdwnd,IDE_TRACK2,str);
@@ -136,56 +136,56 @@ BOOL CALLBACK DialogCopy(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam)
 			EnableWindow(hDlgPlayer,TRUE);
 			return 1;
 		case IDOK:
-			//コピー回数のチェック
+			//Check the number of copies
 			GetDlgItemText(hdwnd,IDE_COPYNUM,str,4);
 			if(atol(str) < 1){
-				//MessageBox(hdwnd,"コピー回数が異常です","Error(Copy)",MB_OK);	// 2014.10.18 D
+				//MessageBox(hdwnd,"Copy count is abnormal","Error(Copy)",MB_OK);	// 2014.10.18 D
 				msgbox(hdwnd,IDS_WARNING_COPY_KAISUU ,IDS_ERROR_COPY, MB_OK);	// 2014.10.18 A
 				return 1;
 			}
-			//トラックのチェック
+			//Track check
 			GetDlgItemText(hdwnd,IDE_TRACK1,str,4);
 			if(ReverseTrackCode(str) >= MAXTRACK){
-				//MessageBox(hdwnd,"From Trackが異常です","Error(Copy)",MB_OK);	// 2014.10.18 D
+				//MessageBox(hdwnd,"From TrackIs abnormal","Error(Copy)",MB_OK);	// 2014.10.18 D
 				msgbox(hdwnd,IDS_WARNING_FROM_TRACK, IDS_ERROR_COPY, MB_OK);	// 2014.10.18 A
 				return 1;
 			}else nc.track1 = (char)ReverseTrackCode(str);
 			GetDlgItemText(hdwnd,IDE_TRACK2,str,4);
 			if(ReverseTrackCode(str) >= MAXTRACK){
-				//MessageBox(hdwnd,"To Trackが異常です","Error(Copy)",MB_OK);	// 2014.10.18 D
+				//MessageBox(hdwnd,"To TrackIs abnormal","Error(Copy)",MB_OK);	// 2014.10.18 D
 				msgbox(hdwnd,IDS_WARNING_TO_TRACK, IDS_ERROR_COPY, MB_OK);	// 2014.10.18 A
 				return 1;
 			}else nc.track2= (char)ReverseTrackCode(str);
-			//コピー範囲のチェック
+			//Check copy range
 			org_data.GetMusicInfo(&mi);
-			GetDlgItemText(hdwnd,IDE_MEAS1_1,str,4);//範囲from
+			GetDlgItemText(hdwnd,IDE_MEAS1_1,str,4);//rangefrom
 			a = atol(str)*mi.dot*mi.line;
 			GetDlgItemText(hdwnd,IDE_BEAT1_1,str,4);
 			if(atol(str) >= mi.dot*mi.line){
-				//MessageBox(hdwnd,"From Beatが異常です","Error(Copy)",MB_OK);	// 2014.10.19 D
+				//MessageBox(hdwnd,"From BeatIs abnormal","Error(Copy)",MB_OK);	// 2014.10.19 D
 				msgbox(hdwnd,IDS_WARNING_FROM_BEAT,IDS_ERROR_COPY,MB_OK);	// 2014.10.19 A
 				return 1;
 			}
 			a += atol(str);
-			GetDlgItemText(hdwnd,IDE_MEAS1_2,str,4);//範囲to
+			GetDlgItemText(hdwnd,IDE_MEAS1_2,str,4);//rangeto
 			b = atol(str)*mi.dot*mi.line;
 			GetDlgItemText(hdwnd,IDE_BEAT1_2,str,4);
 			if(atol(str) >= mi.dot*mi.line){
-				//MessageBox(hdwnd,"From Beatが異常です","Error(Copy)",MB_OK);	// 2014.10.19 D
+				//MessageBox(hdwnd,"From BeatIs abnormal","Error(Copy)",MB_OK);	// 2014.10.19 D
 				msgbox(hdwnd,IDS_WARNING_FROM_BEAT,IDS_ERROR_COPY,MB_OK);	// 2014.10.19 A
 				return 1;
 			}
 			b += atol(str)-1;
-			GetDlgItemText(hdwnd,IDE_MEAS2,str,4);//コピー先to
+			GetDlgItemText(hdwnd,IDE_MEAS2,str,4);//Copy toto
 			c = atol(str)*mi.dot*mi.line;
 			GetDlgItemText(hdwnd,IDE_BEAT2,str,4);
 			if(atol(str) >= mi.dot*mi.line){
-				//MessageBox(hdwnd,"To Beatが異常です","Error(Copy)",MB_OK);	// 2014.10.19 D
+				//MessageBox(hdwnd,"To BeatIs abnormal","Error(Copy)",MB_OK);	// 2014.10.19 D
 				msgbox(hdwnd,IDS_WARNING_TO_BEAT,IDS_ERROR_COPY,MB_OK);	// 2014.10.19 A
 				return 1;
 			}
 			if(a >= b){
-				//MessageBox(hdwnd,"コピー範囲が異常です","Error(Copy)",MB_OK);	// 2014.10.19 D
+				//MessageBox(hdwnd,"The copy range is abnormal","Error(Copy)",MB_OK);	// 2014.10.19 D
 				msgbox(hdwnd,IDS_WARNING_COPY_HANI,IDS_ERROR_COPY,MB_OK);	// 2014.10.19 A
 				return 1;
 			}
@@ -193,19 +193,19 @@ BOOL CALLBACK DialogCopy(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam)
 			nc.x1_1 = a;
 			nc.x1_2 = b;
 			nc.x2 = c;
-			GetDlgItemText(hdwnd,IDE_COPYNUM,str,4);//コピー先to
+			GetDlgItemText(hdwnd,IDE_COPYNUM,str,4);//Copy toto
 			nc.num = atol(str);
 
 			SetUndo();
 			org_data.CopyNoteData(&nc);
 			org_data.CheckNoteTail(nc.track2);
-			//表示
+			//display
 			org_data.PutMusic();
 			RedrawWindow(hWnd,&rect,NULL,RDW_INVALIDATE|RDW_ERASENOW);
-			//試しに表示
-//			sprintf(str,"%dトラックの%dから%dまでを、%dトラックの%dに%d回コピーしました",
+			//Display on trial
+//			sprintf(str,"%dTruck&#39;s%dFrom%d,%dTruck&#39;s%dInto%dCopied times",
 //			nc.track1,nc.x1_1,nc.x1_2,nc.track2,nc.x2,nc.num);
-			//MessageBox(hdwnd,"コピーしました","通知",MB_OK);	// 2014.10.19 D
+			//MessageBox(hdwnd,"Copied","notification",MB_OK);	// 2014.10.19 D
 			msgbox(hdwnd,IDS_COPY,IDS_NOTIFY_TITLE,MB_OK);	// 2014.10.19 A
 			return 1;
 		}
@@ -213,16 +213,16 @@ BOOL CALLBACK DialogCopy(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam)
 	return 0;
 }
 
-//パンチェンジダイアログ
+//Pan change dialog
 BOOL CALLBACK DialogPan(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	char str[128] = {NULL};
 //	long a,b,c,d;
-	RECT rect = {64,0,WWidth,WHeight};//更新する領域
+	RECT rect = {64,0,WWidth,WHeight};//Area to update
 	PARCHANGE pc;
 	MUSICINFO mi;
 	switch(message){
-	case WM_INITDIALOG://ダイアログが呼ばれた
+	case WM_INITDIALOG://A dialog was called
 		SendDlgItemMessage(hdwnd,IDR_ADD,BM_SETCHECK,1,0);
 		//itoa(org_data.track,str,10);
 		//SetDlgItemText(hdwnd,IDE_TRACK,str);
@@ -248,48 +248,48 @@ BOOL CALLBACK DialogPan(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam)
 				pc.mode = MODEPARADD;
 			else if(SendDlgItemMessage(hdwnd,IDR_SUB,BM_GETCHECK,0,0))
 				pc.mode = MODEPARSUB;
-			//トラックのチェック
+			//Track check
 			GetDlgItemText(hdwnd,IDE_TRACK,str,4);
 			if(ReverseTrackCode(str) >= MAXTRACK){
-				//MessageBox(hdwnd,"Trackが異常です","Error(Pan)",MB_OK);	// 2014.10.19 D
+				//MessageBox(hdwnd,"TrackIs abnormal","Error(Pan)",MB_OK);	// 2014.10.19 D
 				msgbox(hdwnd,IDS_WARNING_TRACK,IDS_ERROR_PAN,MB_OK);	// 2014.10.19 A
 				return 1;
 			}else pc.track = (char)ReverseTrackCode(str);
-			//範囲のチェック
+			//Check range
 			org_data.GetMusicInfo(&mi);
-			GetDlgItemText(hdwnd,IDE_MEAS1,str,4);//範囲from
+			GetDlgItemText(hdwnd,IDE_MEAS1,str,4);//rangefrom
 			pc.x1 = atol(str)*mi.dot*mi.line;
-			GetDlgItemText(hdwnd,IDE_MEAS2,str,4);//範囲to
+			GetDlgItemText(hdwnd,IDE_MEAS2,str,4);//rangeto
 			pc.x2 = atol(str)*mi.dot*mi.line - 1;
-			GetDlgItemText(hdwnd,IDE_PAR,str,4);//値
+			GetDlgItemText(hdwnd,IDE_PAR,str,4);//value
 			pc.a = (unsigned char)atol(str);
 			if(pc.x1 >= pc.x2){
-				//MessageBox(hdwnd,"範囲が異常です","Error(Pan)",MB_OK);	// 2014.10.19 D
+				//MessageBox(hdwnd,"The range is abnormal","Error(Pan)",MB_OK);	// 2014.10.19 D
 				msgbox(hdwnd,IDS_WARNING_HANI,IDS_ERROR_PAN,MB_OK);	// 2014.10.19 A
 				return 1;
 			}
 			SetUndo();
 			org_data.ChangePanData(&pc);
-			//表示
+			//display
 			org_data.PutMusic();
 			RedrawWindow(hWnd,&rect,NULL,RDW_INVALIDATE|RDW_ERASENOW);
-			//MessageBox(hdwnd,"指定範囲のパンを変更しました","通知",MB_OK);	// 2014.10.19 D
+			//MessageBox(hdwnd,"We changed the pan of the specified range","notification",MB_OK);	// 2014.10.19 D
 			msgbox(hdwnd,IDS_CHANGE_PAN,IDS_NOTIFY_TITLE,MB_OK);	// 2014.10.19 A
 			return 1;
 		}
 	}
 	return 0;
 }
-//トランスポーズダイアログ
+//Transpose dialog
 BOOL CALLBACK DialogTrans(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	char str[128] = {NULL};
 //	long a,b,c,d;
-	RECT rect = {64,0,WWidth,WHeight};//更新する領域
+	RECT rect = {64,0,WWidth,WHeight};//Area to update
 	PARCHANGE pc;
 	MUSICINFO mi;
 	switch(message){
-	case WM_INITDIALOG://ダイアログが呼ばれた
+	case WM_INITDIALOG://A dialog was called
 		SendDlgItemMessage(hdwnd,IDR_ADD,BM_SETCHECK,1,0);
 		//itoa(org_data.track,str,10);
 		//SetDlgItemText(hdwnd,IDE_TRACK,str);
@@ -316,48 +316,48 @@ BOOL CALLBACK DialogTrans(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam
 			else if(SendDlgItemMessage(hdwnd,IDR_SUB,BM_GETCHECK,0,0))
 				pc.mode = MODEPARSUB;
 			
-			//トラックのチェック
+			//Track check
 			GetDlgItemText(hdwnd,IDE_TRACK,str,4);
 			if(ReverseTrackCode(str) >= MAXTRACK){
-				//MessageBox(hdwnd,"Trackが異常です","Error(Trans)",MB_OK);	// 2014.10.19 D
+				//MessageBox(hdwnd,"TrackIs abnormal","Error(Trans)",MB_OK);	// 2014.10.19 D
 				msgbox(hdwnd,IDS_WARNING_TRACK,IDS_ERROR_TRANS,MB_OK);	// 2014.10.19 A
 				return 1;
 			}else pc.track = (char)ReverseTrackCode(str);
-			//範囲のチェック
+			//Check range
 			org_data.GetMusicInfo(&mi);
-			GetDlgItemText(hdwnd,IDE_MEAS1,str,4);//範囲from
+			GetDlgItemText(hdwnd,IDE_MEAS1,str,4);//rangefrom
 			pc.x1 = atol(str)*mi.dot*mi.line;
-			GetDlgItemText(hdwnd,IDE_MEAS2,str,4);//範囲to
+			GetDlgItemText(hdwnd,IDE_MEAS2,str,4);//rangeto
 			pc.x2 = atol(str)*mi.dot*mi.line - 1;
-			GetDlgItemText(hdwnd,IDE_PAR,str,4);//値
+			GetDlgItemText(hdwnd,IDE_PAR,str,4);//value
 			pc.a = (unsigned char)atol(str);
 			if(pc.x1 >= pc.x2){
-				//MessageBox(hdwnd,"範囲が異常です","Error(Trans)",MB_OK);	// 2014.10.19 D
+				//MessageBox(hdwnd,"The range is abnormal","Error(Trans)",MB_OK);	// 2014.10.19 D
 				msgbox(hdwnd,IDS_WARNING_HANI,IDS_ERROR_TRANS,MB_OK);	// 2014.10.19 A
 				return 1;
 			}
 			SetUndo();
 			org_data.ChangeTransData(&pc);
-			//表示
+			//display
 			org_data.PutMusic();
 			RedrawWindow(hWnd,&rect,NULL,RDW_INVALIDATE|RDW_ERASENOW);
-			//MessageBox(hdwnd,"指定範囲のキーを変更しました","通知",MB_OK);	// 2014.10.19 D
+			//MessageBox(hdwnd,"Changed key in specified range","notification",MB_OK);	// 2014.10.19 D
 			msgbox(hdwnd,IDS_CHANGE_KEY,IDS_NOTIFY_TITLE,MB_OK);	// 2014.10.19 A
 			return 1;
 		}
 	}
 	return 0;
 }
-//ヴォリュームチェンジダイアログ
+//Volume change dialog
 BOOL CALLBACK DialogVolume(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	char str[128] = {NULL};
 //	long a,b,c,d;
-	RECT rect = {64,0,WWidth,WHeight};//更新する領域
+	RECT rect = {64,0,WWidth,WHeight};//Area to update
 	PARCHANGE pc;
 	MUSICINFO mi;
 	switch(message){
-	case WM_INITDIALOG://ダイアログが呼ばれた
+	case WM_INITDIALOG://A dialog was called
 		SendDlgItemMessage(hdwnd,IDR_ADD,BM_SETCHECK,1,0);
 		//itoa(org_data.track,str,10);
 		//SetDlgItemText(hdwnd,IDE_TRACK,str);
@@ -383,39 +383,39 @@ BOOL CALLBACK DialogVolume(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lPara
 				pc.mode = MODEPARADD;
 			else if(SendDlgItemMessage(hdwnd,IDR_SUB,BM_GETCHECK,0,0))
 				pc.mode = MODEPARSUB;
-			//トラックのチェック
+			//Track check
 			GetDlgItemText(hdwnd,IDE_TRACK,str,4);
 			if(ReverseTrackCode(str) >= MAXTRACK){
-				//MessageBox(hdwnd,"Trackが異常です","Error(Volume)",MB_OK);	// 2014.10.19 D
+				//MessageBox(hdwnd,"TrackIs abnormal","Error(Volume)",MB_OK);	// 2014.10.19 D
 				msgbox(hdwnd,IDS_WARNING_TRACK,IDS_ERROR_VOLUME,MB_OK);	// 2014.10.19 A
 				return 1;
 			}else pc.track = (char)ReverseTrackCode(str);
-			//範囲のチェック
+			//Check range
 			org_data.GetMusicInfo(&mi);
-			GetDlgItemText(hdwnd,IDE_MEAS1,str,4);//範囲from
+			GetDlgItemText(hdwnd,IDE_MEAS1,str,4);//rangefrom
 			pc.x1 = atol(str)*mi.dot*mi.line;
-			GetDlgItemText(hdwnd,IDE_MEAS2,str,4);//範囲to
+			GetDlgItemText(hdwnd,IDE_MEAS2,str,4);//rangeto
 			pc.x2 = atol(str)*mi.dot*mi.line - 1;
-			GetDlgItemText(hdwnd,IDE_PAR,str,4);//値
+			GetDlgItemText(hdwnd,IDE_PAR,str,4);//value
 			pc.a = (unsigned char)atol(str);
 			if(pc.x1 >= pc.x2){
-				//MessageBox(hdwnd,"範囲が異常です","Error(Volume)",MB_OK);	// 2014.10.19 D
+				//MessageBox(hdwnd,"The range is abnormal","Error(Volume)",MB_OK);	// 2014.10.19 D
 				msgbox(hdwnd,IDS_WARNING_HANI,IDS_ERROR_VOLUME,MB_OK);	// 2014.10.19 A
 				return 1;
 			}
 			SetUndo();
 			org_data.ChangeVolumeData(&pc);
-			//表示
+			//display
 			org_data.PutMusic();
 			RedrawWindow(hWnd,&rect,NULL,RDW_INVALIDATE|RDW_ERASENOW);
-			//MessageBox(hdwnd,"指定範囲のボリュームを変更しました","通知",MB_OK);	// 2014.10.19 D
+			//MessageBox(hdwnd,"We changed the volume of the specified range","notification",MB_OK);	// 2014.10.19 D
 			msgbox(hdwnd,IDS_CHANGE_VOLUME,IDS_NOTIFY_TITLE,MB_OK);	// 2014.10.19 A
 			return 1;
 		}
 	}
 	return 0;
 }
-//コピーダイアログ2
+//Copy dialog2
 int cbox[MAXTRACK] = {
 	IDC_USE0,
 	IDC_USE1,
@@ -440,12 +440,12 @@ BOOL CALLBACK DialogCopy2(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam
 	int i;
 	char str[128] = {NULL};
 	long a,b,c;
-	RECT rect = {64,0,WWidth,WHeight};//更新する領域
+	RECT rect = {64,0,WWidth,WHeight};//Area to update
 	MUSICINFO mi;
 //	PARCHANGE pc;
 	NOTECOPY nc;
 	switch(message){
-	case WM_INITDIALOG://ダイアログが呼ばれた
+	case WM_INITDIALOG://A dialog was called
 //		itoa(org_data.track,str,10);
 //		SetDlgItemText(hdwnd,IDE_TRACK1,str);
 //		SetDlgItemText(hdwnd,IDE_TRACK2,str);
@@ -488,54 +488,54 @@ BOOL CALLBACK DialogCopy2(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam
 			EnableWindow(hDlgPlayer,TRUE);
 			return 1;
 		case IDOK:
-			//コピー回数のチェック
+			//Check the number of copies
 			GetDlgItemText(hdwnd,IDE_COPYNUM,str,4);
 			if(atol(str) < 1){
-				//MessageBox(hdwnd,"コピー回数が異常です","Error(Copy)",MB_OK);	// 2014.10.19 D
+				//MessageBox(hdwnd,"Copy count is abnormal","Error(Copy)",MB_OK);	// 2014.10.19 D
 				msgbox(hdwnd,IDS_WARNING_COPY_KAISUU,IDS_ERROR_COPY,MB_OK);	// 2014.10.19 A
 				return 1;
 			}
-			//トラックのチェック
+			//Track check
 //			GetDlgItemText(hdwnd,IDE_TRACK1,str,4);
 //			if(atol(str) >= MAXTRACK){
-//				MessageBox(hdwnd,"From Trackが異常です","Error(Copy)",MB_OK);
+//				MessageBox(hdwnd,"From TrackIs abnormal","Error(Copy)",MB_OK);
 //				return 1;
 //			}else nc.track1 = (char)atol(str);
 //			GetDlgItemText(hdwnd,IDE_TRACK2,str,4);
 //			if(atol(str) >= MAXTRACK){
-//				MessageBox(hdwnd,"To Trackが異常です","Error(Copy)",MB_OK);
+//				MessageBox(hdwnd,"To TrackIs abnormal","Error(Copy)",MB_OK);
 //				return 1;
 //			}else nc.track2= (char)atol(str);
-			//コピー範囲のチェック
+			//Check copy range
 			org_data.GetMusicInfo(&mi);
-			GetDlgItemText(hdwnd,IDE_MEAS1_1,str,4);//範囲from
+			GetDlgItemText(hdwnd,IDE_MEAS1_1,str,4);//rangefrom
 			a = atol(str)*mi.dot*mi.line;
 			GetDlgItemText(hdwnd,IDE_BEAT1_1,str,4);
 			if(atol(str) >= mi.dot*mi.line){
-				//MessageBox(hdwnd,"From Beatが異常です","Error(Copy)",MB_OK);	// 2014.10.19 D
+				//MessageBox(hdwnd,"From BeatIs abnormal","Error(Copy)",MB_OK);	// 2014.10.19 D
 				msgbox(hdwnd,IDS_WARNING_FROM_BEAT,IDS_ERROR_COPY,MB_OK);	// 2014.10.19 A
 				return 1;
 			}
 			a += atol(str);
-			GetDlgItemText(hdwnd,IDE_MEAS1_2,str,4);//範囲to
+			GetDlgItemText(hdwnd,IDE_MEAS1_2,str,4);//rangeto
 			b = atol(str)*mi.dot*mi.line;
 			GetDlgItemText(hdwnd,IDE_BEAT1_2,str,4);
 			if(atol(str) >= mi.dot*mi.line){
-				//MessageBox(hdwnd,"From Beatが異常です","Error(Copy)",MB_OK);	// 2014.10.19 D
+				//MessageBox(hdwnd,"From BeatIs abnormal","Error(Copy)",MB_OK);	// 2014.10.19 D
 				msgbox(hdwnd,IDS_WARNING_FROM_BEAT,IDS_ERROR_COPY,MB_OK);	// 2014.10.19 A
 				return 1;
 			}
 			b += atol(str)-1;
-			GetDlgItemText(hdwnd,IDE_MEAS2,str,4);//コピー先to
+			GetDlgItemText(hdwnd,IDE_MEAS2,str,4);//Copy toto
 			c = atol(str)*mi.dot*mi.line;
 			GetDlgItemText(hdwnd,IDE_BEAT2,str,4);
 			if(atol(str) >= mi.dot*mi.line){
-				//MessageBox(hdwnd,"To Beatが異常です","Error(Copy)",MB_OK);	// 2014.10.19 D
+				//MessageBox(hdwnd,"To BeatIs abnormal","Error(Copy)",MB_OK);	// 2014.10.19 D
 				msgbox(hdwnd,IDS_WARNING_TO_BEAT,IDS_ERROR_COPY,MB_OK);	// 2014.10.19 A
 				return 1;
 			}
 			if(a >= b){
-				//MessageBox(hdwnd,"コピー範囲が異常です","Error(Copy)",MB_OK);	// 2014.10.19 D
+				//MessageBox(hdwnd,"The copy range is abnormal","Error(Copy)",MB_OK);	// 2014.10.19 D
 				msgbox(hdwnd,IDS_WARNING_COPY_HANI,IDS_ERROR_COPY,MB_OK);	// 2014.10.19 A
 				return 1;
 			}
@@ -543,7 +543,7 @@ BOOL CALLBACK DialogCopy2(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam
 			nc.x1_1 = a;
 			nc.x1_2 = b;
 			nc.x2 = c;
-			GetDlgItemText(hdwnd,IDE_COPYNUM,str,4);//コピー先to
+			GetDlgItemText(hdwnd,IDE_COPYNUM,str,4);//Copy toto
 			nc.num = atol(str);
 			SetUndo();
 			for(i = 0; i < MAXTRACK; i++){
@@ -553,10 +553,10 @@ BOOL CALLBACK DialogCopy2(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam
 					org_data.CheckNoteTail(nc.track2);
 				}
 			}
-			//表示
+			//display
 			org_data.PutMusic();
 			RedrawWindow(hWnd,&rect,NULL,RDW_INVALIDATE|RDW_ERASENOW);
-			//MessageBox(hdwnd,"コピーしました","通知",MB_OK);	// 2014.10.19 D
+			//MessageBox(hdwnd,"Copied","notification",MB_OK);	// 2014.10.19 D
 			msgbox(hdwnd,IDS_COPY,IDS_NOTIFY_TITLE,MB_OK);	// 2014.10.19 A
 			return 1;
 		}
@@ -568,10 +568,10 @@ BOOL CALLBACK DialogSwap(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	char str[128] = {NULL};
 //	long a,b,c,d;
-	RECT rect = {64,0,WWidth,WHeight};//更新する領域
+	RECT rect = {64,0,WWidth,WHeight};//Area to update
 	NOTECOPY nc;
 	switch(message){
-	case WM_INITDIALOG://ダイアログが呼ばれた
+	case WM_INITDIALOG://A dialog was called
 		if(tra<0){
 			SetDlgItemText(hdwnd,IDE_TRACK1,TrackCode[org_data.track]);
 			SetDlgItemText(hdwnd,IDE_TRACK2,TrackCode[org_data.track]);
@@ -588,26 +588,26 @@ BOOL CALLBACK DialogSwap(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam)
 			EnableWindow(hDlgPlayer,TRUE);
 			return 1;
 		case IDOK:
-			//トラックのチェック
+			//Track check
 			GetDlgItemText(hdwnd,IDE_TRACK1,str,4);
 			if(ReverseTrackCode(str) >= MAXTRACK){
-				//MessageBox(hdwnd,"左 Trackが異常です","Error(Swap)",MB_OK);	// 2014.10.19 D
+				//MessageBox(hdwnd,"left TrackIs abnormal","Error(Swap)",MB_OK);	// 2014.10.19 D
 				msgbox(hdwnd,IDS_ERROR_L_TRACK,IDS_ERROR_SWAP,MB_OK);	// 2014.10.19 A
 				return 1;
 			}else nc.track1 = (char)ReverseTrackCode(str);
 			GetDlgItemText(hdwnd,IDE_TRACK2,str,4);
 			if(ReverseTrackCode(str) >= MAXTRACK){
-				//MessageBox(hdwnd,"右 Trackが異常です","Error(Swap)",MB_OK);	// 2014.10.19 D
+				//MessageBox(hdwnd,"right TrackIs abnormal","Error(Swap)",MB_OK);	// 2014.10.19 D
 				msgbox(hdwnd,IDS_ERROR_R_TRACK,IDS_ERROR_SWAP,MB_OK);	// 2014.10.19 A
 				return 1;
 			}else nc.track2= (char)ReverseTrackCode(str);
 
 			SetUndo();
 			org_data.SwapTrack(&nc);
-			//表示
+			//display
 			org_data.PutMusic();
 			RedrawWindow(hWnd,&rect,NULL,RDW_INVALIDATE|RDW_ERASENOW);
-			//MessageBox(hdwnd,"指定Trackを入れ替えました。","通知",MB_OK);	// 2014.10.19 D
+			//MessageBox(hdwnd,"DesignationTrackI replaced it.","notification",MB_OK);	// 2014.10.19 D
 			msgbox(hdwnd,IDS_SWAP_TRACK,IDS_NOTIFY_TITLE,MB_OK);	// 2014.10.19 A
 			return 1;
 		}

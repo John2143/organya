@@ -7,19 +7,19 @@
 #include "Gdi.h"
 #include "Timer.h"
 #include "Sound.h"
-#include <string.h>//sprintfテスト用
+#include <string.h>//sprintffor test
 
 #include "rxoFunction.h"
 
 extern HWND hDlgTrack;	//A 2008/05/13
-extern HINSTANCE hInst;//インスタンスハンドル 2010.09.23 A
+extern HINSTANCE hInst;//Instance handle 2010.09.23 A
 extern HWND hDlgPlayer;
 extern HWND hDlgTrack;
 extern BOOL CALLBACK DialogSetting(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam);
 extern BOOL CALLBACK DialogWave(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 //char timer_sw = 0;
-//簡単なダイアログ関数
+//Simple dialog functions
 short track_name[16] = {
 	IDC_TRACK0,
 	IDC_TRACK1,
@@ -43,7 +43,7 @@ extern int mute_name[];
 
 extern char timer_sw;
 extern HWND hWnd;
-extern int sACrnt;	//範囲選択は常にｶﾚﾝﾄﾄﾗｯｸ
+extern int sACrnt;	//Range selection is always the current track
 extern int tra, ful ,haba; 
 extern void SetEZCWindowMessage(char *Mess);
 extern char TrackN[];
@@ -51,7 +51,7 @@ extern char TrackN[];
 void ChangeTrackPlus(HWND hdwnd, int iValue){
 	char str[8];
 
-	RECT rect = {64,0,WWidth,WHeight};//更新する領域(トラック変更)
+	RECT rect = {64,0,WWidth,WHeight};//Area to update(Track change)
 
 
 	org_data.track += iValue;
@@ -59,7 +59,7 @@ void ChangeTrackPlus(HWND hdwnd, int iValue){
 	setRecentTrack(org_data.track); //A 2010.09.23 
 
 	if(timer_sw == 0) PlayOrganKey(36,org_data.track,1000,80);
-	//選択トラック表示
+	//Select track display
 	itoa(org_data.track,str,10);
 	
 	if(sACrnt){
@@ -93,7 +93,7 @@ void ChangeTrackPlus(HWND hdwnd, int iValue){
 void ChangeTrack(HWND hdwnd, int iTrack){
 	char str[8];
 	int i;
-	RECT rect = {64,0,WWidth,WHeight};//更新する領域(トラック変更)
+	RECT rect = {64,0,WWidth,WHeight};//Area to update(Track change)
 
 	i = iTrack;
 	org_data.track = i;
@@ -105,7 +105,7 @@ void ChangeTrack(HWND hdwnd, int iTrack){
 			tra = org_data.track;
 		}
 	}
-	//選択トラック表示
+	//Select track display
 	itoa(org_data.track,str,10);
 	if(sACrnt){
 		if(tra>=0){
@@ -135,13 +135,13 @@ void ChangeTrack(HWND hdwnd, int iTrack){
 }
 
 BOOL CALLBACK DialogTrack(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam){
-	RECT rect = {64,0,WWidth,WHeight};//更新する領域(トラック変更)
+	RECT rect = {64,0,WWidth,WHeight};//Area to update(Track change)
 	int i, j;
 	char str[8];
 	MUSICINFO mi;
 	
 	switch(message){
-	case WM_INITDIALOG://ダイアログが呼ばれた
+	case WM_INITDIALOG://A dialog was called
 		org_data.GetMusicInfo(&mi);
 		itoa(mi.wait,str,10);
 		SetDlgItemText(hdwnd,IDE_VIEWWAIT,str);
@@ -221,7 +221,7 @@ BOOL CALLBACK DialogTrack(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam
 					/*
 					org_data.track = i;
 					PlayOrganKey(36,i,1000);
-					//選択トラック表示
+					//Select track display
 					itoa(org_data.track,str,10);
 					SetDlgItemText(hdwnd,IDE_VIEWTRACK,str);
 					org_data.PutMusic();
@@ -242,7 +242,7 @@ BOOL CALLBACK DialogTrack(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam
 			//SetFocus(hWnd);
 		}
 		switch(LOWORD(wParam)){
-		case IDC_BTN_SOLO:	//ソロ
+		case IDC_BTN_SOLO:	//solo
 			j = 1;
 			for(i = 0; i < MAXTRACK; i++){
 				if(org_data.track == i){
@@ -251,16 +251,16 @@ BOOL CALLBACK DialogTrack(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam
 					if(org_data.mute[i] != 1){j = 0; break;}
 				}
 			}
-			//j=1のとき、現在Trでミュート済み
+			//j=1WhenTrMuted on
 
-			if(j == 1){ //全ミュート解除
+			if(j == 1){ //Unmute all
 				for(i = 0; i < MAXTRACK; i++){
 					if(IsDlgButtonChecked(hdwnd,mute_name[i])){
 						SendMessage(GetDlgItem(hdwnd, mute_name[i]), BM_SETCHECK, (WPARAM)0, 0L);
 						org_data.mute[i] = 0;
 					}
 				}	
-			}else{ //現在Tr以外をミュート
+			}else{ //CurrentTrMute except
 				for(i = 0; i < MAXTRACK; i++){
 					if(org_data.track == i){
 						if(IsDlgButtonChecked(hdwnd,mute_name[i])){
@@ -286,7 +286,7 @@ BOOL CALLBACK DialogTrack(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam
 			SendMessage(hWnd, WM_COMMAND, (WPARAM)IDM_LOUPE_MINUS, 0L);
 			SetFocus(hWnd);		// 2010.11.30 A
 			break;
-		case IDC_BTN_FULL:	//フル
+		case IDC_BTN_FULL:	//full
 			{
 				int ib = 0;
 				for(i = 0; i < MAXTRACK; i++){
@@ -294,14 +294,14 @@ BOOL CALLBACK DialogTrack(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam
 						ib = 1;
 					}
 				}
-				if(ib!=0){ //全ミュート解除
+				if(ib!=0){ //Unmute all
 					for(i = 0; i < MAXTRACK; i++){
 						if(IsDlgButtonChecked(hdwnd,mute_name[i])){
 							SendMessage(GetDlgItem(hdwnd, mute_name[i]), BM_SETCHECK, (WPARAM)0, 0L);
 							org_data.mute[i] = 0;
 						}
 					}	
-				}else{ //全ミュート
+				}else{ //All mutes
 					for(i = 0; i < MAXTRACK; i++){
 						if(IsDlgButtonChecked(hdwnd,mute_name[i])==0){
 							SendMessage(GetDlgItem(hdwnd, mute_name[i]), BM_SETCHECK, (WPARAM)1, 0L);
@@ -314,7 +314,7 @@ BOOL CALLBACK DialogTrack(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam
 			SetFocus(hWnd);		// 2010.11.30 A
 			break;
 		//A2008/05/13
-		case IDC_BTN_MELO:	//メロディのみをON-OFF
+		case IDC_BTN_MELO:	//Only melodyON-OFF
 			{
 				int ib = 0;
 				for(i = 0; i < MAXMELODY; i++){
@@ -322,14 +322,14 @@ BOOL CALLBACK DialogTrack(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam
 						ib = 1;
 					}
 				}
-				if(ib!=0){ //全ミュート解除
+				if(ib!=0){ //Unmute all
 					for(i = 0; i < MAXMELODY; i++){
 						if(IsDlgButtonChecked(hdwnd,mute_name[i])){
 							SendMessage(GetDlgItem(hdwnd, mute_name[i]), BM_SETCHECK, (WPARAM)0, 0L);
 							org_data.mute[i] = 0;
 						}
 					}	
-				}else{ //全ミュート
+				}else{ //All mutes
 					for(i = 0; i < MAXMELODY; i++){
 						if(IsDlgButtonChecked(hdwnd,mute_name[i])==0){
 							SendMessage(GetDlgItem(hdwnd, mute_name[i]), BM_SETCHECK, (WPARAM)1, 0L);
@@ -340,7 +340,7 @@ BOOL CALLBACK DialogTrack(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam
 			}
 			SetFocus(hWnd);		// 2010.11.30 A
 			break;
-		case IDC_BTN_DRUM:	//ドラムのみをON-OFF
+		case IDC_BTN_DRUM:	//Only drumsON-OFF
 			{
 				int ib = 0;
 				for(i = MAXMELODY; i < MAXTRACK; i++){
@@ -348,14 +348,14 @@ BOOL CALLBACK DialogTrack(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam
 						ib = 1;
 					}
 				}
-				if(ib!=0){ //全ミュート解除
+				if(ib!=0){ //Unmute all
 					for(i = MAXMELODY; i < MAXTRACK; i++){
 						if(IsDlgButtonChecked(hdwnd,mute_name[i])){
 							SendMessage(GetDlgItem(hdwnd, mute_name[i]), BM_SETCHECK, (WPARAM)0, 0L);
 							org_data.mute[i] = 0;
 						}
 					}	
-				}else{ //全ミュート
+				}else{ //All mutes
 					for(i = MAXMELODY; i < MAXTRACK; i++){
 						if(IsDlgButtonChecked(hdwnd,mute_name[i])==0){
 							SendMessage(GetDlgItem(hdwnd, mute_name[i]), BM_SETCHECK, (WPARAM)1, 0L);
@@ -370,7 +370,7 @@ BOOL CALLBACK DialogTrack(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam
 			DialogBox(hInst,"DLGSETTING",hdwnd,DialogSetting);
 			SetFocus(hWnd);		// 2010.11.30 A
 			break;
-		case IDC_TR_TRACK: //トラックのTRボタン
+		case IDC_TR_TRACK: //Truck&#39;sTRbutton
 			DialogBox(hInst,"DLGWAVE",hdwnd,DialogWave);
 			SetFocus(hWnd);		// 2010.11.30 A
 			break;

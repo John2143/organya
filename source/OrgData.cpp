@@ -9,17 +9,17 @@
 #include "Sound.h"
 #include "rxoFunction.h"
 
-#define DEFVOLUME	200//255はVOLDUMMY。MAXは254
+#define DEFVOLUME	200//255IsVOLDUMMY.MAXIs254
 #define DEFPAN		6
 extern HWND hDlgTrack;
 extern char *dram_name[];
-//指定の数だけNoteDataの領域を確保(初期化)
+//As many as specifiedNoteDataSecure an area of(Initialization)
 BOOL OrgData::NoteAlloc(unsigned short alloc)
 {
 	int i,j;
 	for(j = 0; j < MAXTRACK; j++){
 		info.tdata[j].wave_no = 0;
-		info.tdata[j].note_list = NULL;//コンストラクタにやらせたい
+		info.tdata[j].note_list = NULL;//I want to make the constructor
 		info.tdata[j].note_p = new NOTELIST[alloc];
 		if(info.tdata[j].note_p == NULL)return FALSE;
 		//	info.alloc_note = alloc;
@@ -37,17 +37,17 @@ BOOL OrgData::NoteAlloc(unsigned short alloc)
 	for(j = 0; j < MAXDRAM; j++)
 		InitDramObject("Bass01",j);
 
-	track = 0;//////////今はここに書いておく
+	track = 0;//////////I will write it here now
 	return TRUE;
 }
-//NoteDataを開放
+//NoteDataOpen
 void OrgData::ReleaseNote(void)
 {
 	for(int i = 0; i < MAXTRACK; i++){
 		if(info.tdata[i].note_p != NULL)delete info.tdata[i].note_p;
 	}
 }
-//曲情報を取得
+//Acquire song information
 void OrgData::GetMusicInfo(MUSICINFO *mi){
 	mi->dot = info.dot;
 	mi->line = info.line;
@@ -63,36 +63,36 @@ void OrgData::GetMusicInfo(MUSICINFO *mi){
 }
 bool OrgData::PutBackGround(void)
 {
-	if(!MakeMusicParts(info.line,info.dot))return false;//パーツを生成
+	if(!MakeMusicParts(info.line,info.dot))return false;//Generate parts
 	MakePanParts(info.line,info.dot);
-	//MessageBox(hWnd,"グリッド","",MB_OK);
+	//MessageBox(hWnd,"grid","",MB_OK);
 	return true;
 }
 
-//曲情報を設定。flagはアイテムを指定
+//Set song information.flagSpecify item
 BOOL OrgData::SetMusicInfo(MUSICINFO *mi,unsigned long flag)
 {
 	char str[32];
 	int i;
-	if(flag & SETGRID){//グリッドを有効に
+	if(flag & SETGRID){//Enable grid
 		info.dot = mi->dot;
 		info.line = mi->line;
-		MakeMusicParts(info.line,info.dot);//パーツを生成
+		MakeMusicParts(info.line,info.dot);//Generate parts
 		MakePanParts(info.line,info.dot);
-//		MessageBox(hWnd,"グリッド","",MB_OK);
+//		MessageBox(hWnd,"grid","",MB_OK);
 
 	}
-	if(flag & SETALLOC){//領域確保
+	if(flag & SETALLOC){//Secure space
 		info.alloc_note = mi->alloc_note;
 		ReleaseNote();
 		NoteAlloc(info.alloc_note);
-//		MessageBox(hWnd,"唖ロック","",MB_OK);
+//		MessageBox(hWnd,"Muro lock","",MB_OK);
 	}
 	if(flag & SETWAIT){
 		info.wait = mi->wait;
 		itoa(mi->wait,str,10);
 		SetDlgItemText(hDlgTrack,IDE_VIEWWAIT,str);
-//		MessageBox(hWnd,"うえいと","",MB_OK);
+//		MessageBox(hWnd,"A story","",MB_OK);
 	}
 	if(flag & SETREPEAT){
 		info.repeat_x = mi->repeat_x;
@@ -115,7 +115,7 @@ BOOL OrgData::SetMusicInfo(MUSICINFO *mi,unsigned long flag)
 
 	return TRUE;
 }
-//未使用音符を検索
+//Search for unused notes
 NOTELIST *OrgData::SearchNote(NOTELIST *np)
 {
 	int i;
@@ -127,21 +127,21 @@ NOTELIST *OrgData::SearchNote(NOTELIST *np)
 	return NULL;
 }
 //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
-//以下は音符（キー）の配置、削除
+//Below are the placement and deletion of notes (keys)
 //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
-//音符を配置(左クリックの処理)
+//Place notes(Left click processing)
 void OrgData::TouchKeyboard(unsigned char y)
 {
 	PlayOrganKey(y,track,info.tdata[track].freq,320);//■
 }
 BOOL OrgData::SetNote(long x,unsigned char y, int DragMode)
 {
-	NOTELIST *note;//生成NOTE
-	NOTELIST *p;//リストを指すポインター
-	NOTELIST *cut_p;//それを置く事によってカットすべき音符
-	//未使用NOTEを検索
+	NOTELIST *note;//GenerationNOTE
+	NOTELIST *p;//Pointer to list
+	NOTELIST *cut_p;//A note to be cut by placing it
+	//unusedNOTEsearch for
 	if((note = SearchNote(info.tdata[track].note_p)) == NULL)return FALSE;
-	//初音符ならリストに登録
+	//Register in list if first notes
 	if(info.tdata[track].note_list == NULL){
 		PlayOrganKey(y,track,info.tdata[track].freq,100);//■
 		info.tdata[track].note_list = note;
@@ -154,48 +154,48 @@ BOOL OrgData::SetNote(long x,unsigned char y, int DragMode)
 		note->y = y;
 		return TRUE;
 	}
-	//頭から検索
+	//Search from the head
 	p = info.tdata[track].note_list;
 	while(p->x < x && p->to != NULL){
 		p = p->to;
 	}
-	//挿入
+	//Insert
 	if(p->x > x){
 		PlayOrganKey(y,track,info.tdata[track].freq,100);//■
 		note->to = p;
 		note->from = p->from;
 		if(p->from == NULL){
-			info.tdata[track].note_list = note;//先頭
+			info.tdata[track].note_list = note;//lead
 		}
-		else p->from->to = note;//じゃなければ前のやつの次に
+		else p->from->to = note;//If it is not, next to the former guy
 		p->from = note;
 		note->length = 1;
 		note->pan = def_pan[track];
 		note->volume = def_volume[track];
 		note->x = x;
 		note->y = y;
-		//カットすべき音符を検索
+		//Search notes to cut
 		cut_p = note->from;
 		while(cut_p != NULL && cut_p->y == KEYDUMMY)cut_p = cut_p->from;
 		if(cut_p == NULL)return TRUE;
-		if(note->x < cut_p->x + cut_p->length)//カット
+		if(note->x < cut_p->x + cut_p->length)//cut
 			cut_p->length = (unsigned char)(note->x - cut_p->x);
 	}
-	//パラメータ変更
+	//Parameter change
 	else if(p->x == x){
 		if(p->y == y){
 			if(p->length == MAXNOTELENGTH)return FALSE;
 			//if(DragMode==0)
-			if(iPushStratch)p->length++;//長く
-			else p->length = iLastEditNoteLength; //頭を...オプションだったら伸ばすのではなく最後の長さを使う
-			//カットすべき音符を検索
+			if(iPushStratch)p->length++;//long
+			else p->length = iLastEditNoteLength; //Head...If it is optional use the last length instead of stretching
+			//Search notes to cut
 			cut_p = p->to;
 			while(cut_p != NULL && cut_p->y == KEYDUMMY){
 				cut_p = cut_p->to;
 			}
-			if(cut_p != NULL && p->length + p->x > cut_p->x){//伸ばしすぎると次のを飲み込む
-				if(cut_p->to == NULL){//そいつが最後尾なら
-					cut_p->from->to = NULL;//一つ前の人に最後尾を任せる。
+			if(cut_p != NULL && p->length + p->x > cut_p->x){//If you stretch too much you swallow the next
+				if(cut_p->to == NULL){//If it is the last tail
+					cut_p->from->to = NULL;//Leave the last person to the previous person.
 				}
 				else{
 					cut_p->from->to = cut_p->to;
@@ -206,16 +206,16 @@ BOOL OrgData::SetNote(long x,unsigned char y, int DragMode)
 			}
 		}else{
 			PlayOrganKey(y,track,info.tdata[track].freq,100);//■
-			p->y = y;//Ｙ変更
-			//カットすべき音符を検索
+			p->y = y;//Y change
+			//Search notes to cut
 			cut_p = p->from;
 			while(cut_p != NULL && cut_p->y == KEYDUMMY)cut_p = cut_p->from;
 			if(cut_p == NULL)return TRUE;
-			if(p->x < cut_p->x + cut_p->length)//カット
+			if(p->x < cut_p->x + cut_p->length)//cut
 				cut_p->length = (unsigned char)(p->x - cut_p->x);
 		}
 	}
-	//最後尾追加
+	//Add at the end
 	else if(p->to == NULL){
 		PlayOrganKey(y,track,info.tdata[track].freq,100);//■
 		note->from = p;
@@ -226,28 +226,28 @@ BOOL OrgData::SetNote(long x,unsigned char y, int DragMode)
 		note->volume = def_volume[track];
 		note->x = x;
 		note->y = y;
-		//カットすべき音符を検索
+		//Search notes to cut
 		cut_p = note->from;
 		while(cut_p != NULL && cut_p->y == KEYDUMMY)cut_p = cut_p->from;
 		if(cut_p == NULL)return TRUE;
-		if(note->x < cut_p->x + cut_p->length)//カット
+		if(note->x < cut_p->x + cut_p->length)//cut
 			cut_p->length = (unsigned char)(note->x - cut_p->x);
 	}
 	return TRUE;
 }
-//音符のカット(右クリックの処理)
+//Cut the note(Right click processing)
 BOOL OrgData::CutNote(long x,unsigned char y)
 {
-	NOTELIST *p;//リストを指すポインター
-	//頭から検索
+	NOTELIST *p;//Pointer to list
+	//Search from the head
 	if(info.tdata[track].note_list == NULL)return FALSE;
 	p = info.tdata[track].note_list;
 	while(p != NULL && p->x < x)p = p->to;
 	if(p == NULL)return FALSE;
-	//パラメータ変更
+	//Parameter change
 	if(p->x == x && p->y == y){
-		if(iPushStratch)p->length--;//短く
-		else p->length = 0; //頭を...オプションだったら短くするのではなく消す。
+		if(iPushStratch)p->length--;//Short
+		else p->length = 0; //Head...If it is optional, turn it off instead of shortening it.
 		if(p->length == 0){
 			if(p->from == NULL)info.tdata[track].note_list = p->to;
 			else p->from->to = p->to;
@@ -258,11 +258,11 @@ BOOL OrgData::CutNote(long x,unsigned char y)
 	}
 	return FALSE;
 }
-//どのトラックにある音符か？の検索(返り血はトラック)
+//Which note is on a track? Search(Returning blood to the track)
 int OrgData::SearchNote(long x, unsigned char y, int YuusenTrack)
 {
-	NOTELIST *p;//リストを指すポインター
-	//頭から検索
+	NOTELIST *p;//Pointer to list
+	//Search from the head
 	int i;
 	int is,ie;
 
@@ -295,13 +295,13 @@ int OrgData::SearchNote(long x, unsigned char y, int YuusenTrack)
 	}
 	return -1;
 }
-//どのトラックにある音符か？の検索(返り血はトラック)
-//上と同じだが、該当する音符の最初と最後をポインタで返す。↓  と       ↓
-//YuusenTrack>=0のとき、そのトラックを優先して検索する。
+//Which note is on a track? Search(Returning blood to the track)
+//Same as above, but return the beginning and end of the corresponding note as a pointer.↓  When       ↓
+//YuusenTrack>=0, The track is searched with priority.
 int OrgData::SearchNoteB(long x,unsigned char y, long *lStartx, long *lLastx, int YuusenTrack)
 {
-	NOTELIST *p;//リストを指すポインター
-	//頭から検索
+	NOTELIST *p;//Pointer to list
+	//Search from the head
 	int i;
 	int is,ie;
 	if(YuusenTrack>=0){
@@ -339,11 +339,11 @@ int OrgData::SearchNoteB(long x,unsigned char y, long *lStartx, long *lLastx, in
 	return -1;
 }
 
-//縮小表示時の検索。
+//Search in reduced display.
 int OrgData::SearchNoteC(long x,unsigned char y, long xWidth, long xMod)
 {
-	NOTELIST *p;//リストを指すポインター
-	//頭から検索
+	NOTELIST *p;//Pointer to list
+	//Search from the head
 	int i;
 
 	for(p = info.tdata[track].note_list; p != NULL ; p = p->to){
@@ -362,16 +362,16 @@ int OrgData::SearchNoteC(long x,unsigned char y, long xWidth, long xMod)
 }
 
 //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
-//以下は音符（パン）の配置、削除
+//Below are the placement and deletion of notes (pan)
 //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
-//音符を配置(左クリックの処理)
+//Place notes(Left click processing)
 BOOL OrgData::SetPan(long x,unsigned char y)
 {
-	NOTELIST *note;//生成NOTE
-	NOTELIST *p;//リストを指すポインター
-	//未使用NOTEを検索
+	NOTELIST *note;//GenerationNOTE
+	NOTELIST *p;//Pointer to list
+	//unusedNOTEsearch for
 	if((note = SearchNote(info.tdata[track].note_p)) == NULL)return FALSE;
-	//初音符ならリストに登録
+	//Register in list if first notes
 	if(info.tdata[track].note_list == NULL){
 		info.tdata[track].note_list = note;
 		note->from = NULL;
@@ -383,19 +383,19 @@ BOOL OrgData::SetPan(long x,unsigned char y)
 		note->y = KEYDUMMY;
 		return TRUE;
 	}
-	//頭から検索
+	//Search from the head
 	p = info.tdata[track].note_list;
 	while(p->x < x && p->to != NULL){
 		p = p->to;
 	}
-	//挿入
+	//Insert
 	if(p->x > x){
 		note->to = p;
 		note->from = p->from;
 		if(p->from == NULL){
-			info.tdata[track].note_list = note;//先頭
+			info.tdata[track].note_list = note;//lead
 		}
-		else p->from->to = note;//じゃなければ前のやつの次に
+		else p->from->to = note;//If it is not, next to the former guy
 		p->from = note;
 		note->length = 1;
 		note->pan = y;
@@ -403,11 +403,11 @@ BOOL OrgData::SetPan(long x,unsigned char y)
 		note->x = x;
 		note->y = KEYDUMMY;
 	}
-	//パラメータ変更
+	//Parameter change
 	else if(p->x == x){
-		p->pan = y;//Ｙ変更
+		p->pan = y;//Y change
 	}
-	//最後尾追加
+	//Add at the end
 	else if(p->to == NULL){
 		note->from = p;
 		p->to = note;
@@ -422,39 +422,39 @@ BOOL OrgData::SetPan(long x,unsigned char y)
 }
 BOOL OrgData::SetPan2(long x,unsigned char y)
 {
-	NOTELIST *note;//生成NOTE
-	NOTELIST *p;//リストを指すポインター
-	//未使用NOTEを検索
+	NOTELIST *note;//GenerationNOTE
+	NOTELIST *p;//Pointer to list
+	//unusedNOTEsearch for
 	if((note = SearchNote(info.tdata[track].note_p)) == NULL)return FALSE;
-	//初音符ならリストに登録
+	//Register in list if first notes
 	if(info.tdata[track].note_list == NULL){
 		return FALSE;
 	}
-	//頭から検索
+	//Search from the head
 	p = info.tdata[track].note_list;
 	while(p->x < x && p->to != NULL){
 		p = p->to;
 	}
-	//挿入
+	//Insert
 	if(p->x == x){
 		if(p->pan != y){ // 2010.08.14 A
-			p->pan = y;//Ｙ変更
+			p->pan = y;//Y change
 		}else{
 			return FALSE;	// 2010.08.14 A
 		}
 	}
 	return TRUE;
 }
-//音符のカット(右クリックの処理)
+//Cut the note(Right click processing)
 BOOL OrgData::CutPan(long x,unsigned char y)
 {
-	NOTELIST *p;//リストを指すポインター
-	//頭から検索
+	NOTELIST *p;//Pointer to list
+	//Search from the head
 	if(info.tdata[track].note_list == NULL)return FALSE;
 	p = info.tdata[track].note_list;
 	while(p != NULL && p->x < x)p = p->to;
 	if(p == NULL)return FALSE;
-	//パラメータ変更
+	//Parameter change
 	if(p->x == x){
 		p->length = 0;
 		if(p->from == NULL)info.tdata[track].note_list = p->to;
@@ -465,16 +465,16 @@ BOOL OrgData::CutPan(long x,unsigned char y)
 	return TRUE;
 }
 //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
-//以下は音符（ボリューム）の配置、削除
+//The following are placement and deletion of notes (volume)
 //■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■
-//音符を配置(左クリックの処理)
+//Place notes(Left click processing)
 BOOL OrgData::SetVolume(long x,unsigned char y)
 {
-	NOTELIST *note;//生成NOTE
-	NOTELIST *p;//リストを指すポインター
-	//未使用NOTEを検索
+	NOTELIST *note;//GenerationNOTE
+	NOTELIST *p;//Pointer to list
+	//unusedNOTEsearch for
 	if((note = SearchNote(info.tdata[track].note_p)) == NULL)return FALSE;
-	//初音符ならリストに登録
+	//Register in list if first notes
 	if(info.tdata[track].note_list == NULL){
 		info.tdata[track].note_list = note;
 		note->from = NULL;
@@ -486,19 +486,19 @@ BOOL OrgData::SetVolume(long x,unsigned char y)
 		note->y = KEYDUMMY;
 		return TRUE;
 	}
-	//頭から検索
+	//Search from the head
 	p = info.tdata[track].note_list;
 	while(p->x < x && p->to != NULL){
 		p = p->to;
 	}
-	//挿入
+	//Insert
 	if(p->x > x){
 		note->to = p;
 		note->from = p->from;
 		if(p->from == NULL){
-			info.tdata[track].note_list = note;//先頭
+			info.tdata[track].note_list = note;//lead
 		}
-		else p->from->to = note;//じゃなければ前のやつの次に
+		else p->from->to = note;//If it is not, next to the former guy
 		p->from = note;
 		note->length = 1;
 		note->pan = PANDUMMY;
@@ -508,15 +508,15 @@ BOOL OrgData::SetVolume(long x,unsigned char y)
 //		if(note->from != NULL && note->x < note->from->x + note->from->length)
 //			note->length = (unsigned char)(note->from->length - (note->x - note->from->x));
 	}
-	//パラメータ変更
+	//Parameter change
 	else if(p->x == x){
 		if(p->volume != y){	// 2010.08.14 A
-			p->volume = y;//Ｙ変更
+			p->volume = y;//Y change
 		}else{
 			return FALSE;
 		}
 	}
-	//最後尾追加
+	//Add at the end
 	else if(p->to == NULL){
 		note->from = p;
 		p->to = note;
@@ -534,16 +534,16 @@ BOOL OrgData::SetVolume(long x,unsigned char y)
 //
 BOOL OrgData::SetVolume2(long x,unsigned char y,long fade)
 {
-	NOTELIST *note;//生成NOTE
-	NOTELIST *p;//リストを指すポインター
+	NOTELIST *note;//GenerationNOTE
+	NOTELIST *p;//Pointer to list
 	unsigned char lastlength = 1;
 	unsigned char vv;
 	double dv;
 	long lastx = 0;
 	int i;
-	//未使用NOTEを検索
+	//unusedNOTEsearch for
 	if((note = SearchNote(info.tdata[track].note_p)) == NULL)return FALSE;
-	//初音符ならリストに登録
+	//Register in list if first notes
 	if(info.tdata[track].note_list == NULL){
 		info.tdata[track].note_list = note;
 		note->from = NULL;
@@ -555,7 +555,7 @@ BOOL OrgData::SetVolume2(long x,unsigned char y,long fade)
 		note->y = KEYDUMMY;
 		return TRUE;
 	}
-	//頭から検索
+	//Search from the head
 	p = info.tdata[track].note_list;
 	while(p->x < x && p->to != NULL){
 		if(p->y != KEYDUMMY){
@@ -564,25 +564,25 @@ BOOL OrgData::SetVolume2(long x,unsigned char y,long fade)
 		}
 		p = p->to;
 	}
-	//挿入
+	//Insert
 	if(p->x > x){
 		note->to = p;
 		note->from = p->from;
 		if(p->from == NULL){
-			info.tdata[track].note_list = note;//先頭
+			info.tdata[track].note_list = note;//lead
 		}
-		else p->from->to = note;//じゃなければ前のやつの次に
+		else p->from->to = note;//If it is not, next to the former guy
 		p->from = note;
 		note->length = 1;
 		note->pan = PANDUMMY;
 		switch(fade){
-		case 0: //直線的減衰
+		case 0: //Linear attenuation
 			dv = (double)(p->x - lastx)/(double)lastlength;
 			dv = 200 - dv * 200;
 			if(dv < 0)dv = 0; else if(dv > 255)dv = 255;
 			vv = (unsigned char)dv;
 			break;
-		case 1: //すぐに減衰
+		case 1: //Immediate attenuation
 			dv = 200.0f;
 			for(i=0;i<(p->x - lastx);i++){
 				dv = dv / 2.0f;
@@ -590,8 +590,8 @@ BOOL OrgData::SetVolume2(long x,unsigned char y,long fade)
 			if(dv < 0)dv = 0; else if(dv > 255)dv = 255;
 			vv = (unsigned char)dv;
 			break;
-		case 2: //ゆっくりと減衰
-		case 3: //ゆっくりと減衰(ビブラート）
+		case 2: //Slowly decay
+		case 3: //Slowly decay(vibrato)
 			dv = sqrt(sqrt(sqrt(((double)lastlength-(double)p->x)/(double)lastlength))) * 200;
 			i = (p->x - lastx) % 2;
 			if(i==1 && fade==3)dv = dv - 10.0;
@@ -605,15 +605,15 @@ BOOL OrgData::SetVolume2(long x,unsigned char y,long fade)
 //		if(note->from != NULL && note->x < note->from->x + note->from->length)
 //			note->length = (unsigned char)(note->from->length - (note->x - note->from->x));
 	}
-	//パラメータ変更
+	//Parameter change
 	else if(p->x == x){
 		if(p->volume != y){	// 2010.08.14 A
-			p->volume = y;//Ｙ変更
+			p->volume = y;//Y change
 		}else{
 			return FALSE;
 		}
 	}
-	//最後尾追加
+	//Add at the end
 	else if(p->to == NULL){
 		note->from = p;
 		p->to = note;
@@ -628,16 +628,16 @@ BOOL OrgData::SetVolume2(long x,unsigned char y,long fade)
 	}
 	return TRUE;
 }
-//音符のカット(右クリックの処理)
+//Cut the note(Right click processing)
 BOOL OrgData::CutVolume(long x,unsigned char y)
 {
-	NOTELIST *p;//リストを指すポインター
-	//頭から検索
+	NOTELIST *p;//Pointer to list
+	//Search from the head
 	if(info.tdata[track].note_list == NULL)return FALSE;
 	p = info.tdata[track].note_list;
 	while(p != NULL && p->x < x)p = p->to;
 	if(p == NULL)return FALSE;
-	//パラメータ変更
+	//Parameter change
 	if(p->x == x){
 		p->length = 0;
 		if(p->from == NULL)info.tdata[track].note_list = p->to;
@@ -654,7 +654,7 @@ void OrgData::InitOrgData(void)
 {
 //	MUSICINFO mi;
 	track = 0;
-	info.alloc_note = ALLOCNOTE;//とりあえず10000個確保
+	info.alloc_note = ALLOCNOTE;//Tentatively10000Secure
 	info.dot = 4;
 	info.line = 4;
 	info.wait = 128;
@@ -670,7 +670,7 @@ void OrgData::InitOrgData(void)
 	}
 	SetMusicInfo(&info,SETALL);
 
-	// 以下 2014.05.07 追加
+	// Less than 2014.05.07 add to
 	for(i=0; i<MAXMELODY; i++){
 		info.tdata[i].wave_no = i*11;
 		MakeOrganyaWave(i, info.tdata[i].wave_no, info.tdata[i].pipi);
@@ -717,7 +717,7 @@ OrgData::OrgData()
 	UndoEnable = false;
 	//noteon = new unsigned char[65536];
 }
-OrgData::‾OrgData() //デストラクタ
+OrgData::‾OrgData() //Destructor
 {
 	//delete [] noteon;
 }
@@ -756,7 +756,7 @@ void OrgData::ClearUndoData()
 	UndoEnable = false;
 }
 
-//アンドゥから復帰
+//Return from Undo
 int OrgData::ReplaceFromUndoData()
 {
 	if(!UndoEnable)return 1;
@@ -770,7 +770,7 @@ int OrgData::ReplaceFromUndoData()
 	RedoEnable = true;
 	if(CurrentUndoCursor <= MinimumUndoCursor){
 		CurrentUndoCursor = MinimumUndoCursor;
-		r=2; //もうこれ以上元に戻せないぞ。
+		r=2; //I can not return it anymore.
 		UndoEnable = false;
 	}
 	cc = (CurrentUndoCursor % 32);
@@ -781,7 +781,7 @@ int OrgData::ReplaceFromUndoData()
 	return r;
 }
 
-//リドゥ
+//Redo
 int OrgData::ReplaceFromRedoData()
 {
 	if(!RedoEnable)return 1;
@@ -791,7 +791,7 @@ int OrgData::ReplaceFromRedoData()
 	UndoEnable = true;
 	if(CurrentUndoCursor >= MaximumUndoCursor-1){
 		CurrentUndoCursor = MaximumUndoCursor-1;
-		r=2; //もうこれ以上元に戻せないぞ。
+		r=2; //I can not return it anymore.
 		RedoEnable = false;
 	}
 	cc = (CurrentUndoCursor % 32);
@@ -811,19 +811,19 @@ int OrgData::ResetLastUndo()
 	MaximumUndoCursor = CurrentUndoCursor;
 	if(CurrentUndoCursor <= MinimumUndoCursor){
 		CurrentUndoCursor = MinimumUndoCursor;
-		r=2; //もうこれ以上元に戻せないぞ。
+		r=2; //I can not return it anymore.
 		UndoEnable = false;
 	}
 	return r;
 
 }
 
-//最後の判定をしない
+//Do not make final judgment
 BOOL OrgData::SetNote_onlyLength(long x, long Length)
 {
-	NOTELIST *note;//生成NOTE
-	NOTELIST *p;//リストを指すポインター
-	//未使用NOTEを検索
+	NOTELIST *note;//GenerationNOTE
+	NOTELIST *p;//Pointer to list
+	//unusedNOTEsearch for
 	if((note = SearchNote(info.tdata[track].note_p)) == NULL)return FALSE;
 	if(info.tdata[track].note_list == NULL)return FALSE;
 	p = info.tdata[track].note_list;
@@ -844,10 +844,10 @@ BOOL OrgData::SetNote_onlyLength(long x, long Length)
 
 BOOL OrgData::SetNote_afterSetLength(long x)
 {
-	NOTELIST *note;//生成NOTE
-	NOTELIST *p;//リストを指すポインター
-	NOTELIST *cut_p;//それを置く事によってカットすべき音符
-	//未使用NOTEを検索
+	NOTELIST *note;//GenerationNOTE
+	NOTELIST *p;//Pointer to list
+	NOTELIST *cut_p;//A note to be cut by placing it
+	//unusedNOTEsearch for
 	if((note = SearchNote(info.tdata[track].note_p)) == NULL)return FALSE;
 	if(info.tdata[track].note_list == NULL)return FALSE;
 	p = info.tdata[track].note_list;
@@ -859,9 +859,9 @@ BOOL OrgData::SetNote_afterSetLength(long x)
 		while(cut_p != NULL && cut_p->y == KEYDUMMY){
 			cut_p = cut_p->to;
 		}
-		if(cut_p != NULL && p->length + p->x > cut_p->x){//伸ばしすぎると次のを飲み込む
-			if(cut_p->to == NULL){//そいつが最後尾なら
-				cut_p->from->to = NULL;//一つ前の人に最後尾を任せる。
+		if(cut_p != NULL && p->length + p->x > cut_p->x){//If you stretch too much you swallow the next
+			if(cut_p->to == NULL){//If it is the last tail
+				cut_p->from->to = NULL;//Leave the last person to the previous person.
 			}
 			else{
 				cut_p->from->to = cut_p->to;

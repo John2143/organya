@@ -9,7 +9,7 @@
 
 RECT CmnDialogWnd;
 int count_of_INIT_DONE;
-int iDlgRepeat; //ダイアログから取得した繰り返し回数
+int iDlgRepeat; //Repeat count obtained from dialog
 extern char strMIDI_TITLE[256];
 extern char strMIDI_AUTHOR[256];
 LPCTSTR  MIDIPC[]={
@@ -34,17 +34,17 @@ LPCTSTR  MIDIPC[]={
 extern unsigned char ucMIDIProgramChangeValue[MAXTRACK];
 
 char GetFileNameSave(HWND hwnd,char *title)
-{//ファイル名を取得(セーブ)
+{//Get file name(save)
 	OPENFILENAME ofn;
 	FILE *fp;
-//	char res;//ファイルオープンの結果
+//	char res;//Result of file open
 
 	memset(&ofn,0,sizeof(OPENFILENAME));
 //	strcpy(GetName,"*.pmd");
 	ofn.lStructSize = sizeof(OPENFILENAME);
 	ofn.hwndOwner   = hwnd;
 	ofn.hInstance   = hInst;
-	//ofn.lpstrFilter = "OrganyaData[*.org]¥0*.org¥0全ての形式 [*.*]¥0*.*¥0¥0";	// 2014.10.19 D
+	//ofn.lpstrFilter = "OrganyaData[*.org]¥0*.org¥0All formats [*.*]¥0*.*¥0¥0";	// 2014.10.19 D
 	ofn.lpstrFilter = MessageString[IDS_STRING109];	// 2014.10.19 A
 	ofn.lpstrFile   = music_file;
 	ofn.nMaxFile    = MAX_PATH;
@@ -52,20 +52,20 @@ char GetFileNameSave(HWND hwnd,char *title)
 	ofn.Flags       = OFN_NOREADONLYRETURN | OFN_OVERWRITEPROMPT | OFN_CREATEPROMPT | OFN_HIDEREADONLY;
 	ofn.lpstrDefExt = "org";
 
-	//ファイル名取得を試みる。
+	//Attempt to acquire the file name.
 	if(GetSaveFileName(&ofn));//InvalidateRect(hwnd,NULL,TRUE);
-	else return MSGCANCEL;//キャンセルで0が返る
+	else return MSGCANCEL;//Cancel0Will return
 	fp = fopen(music_file,"rb");
-	//既存ファイルが存在する？ OFN_OVERWRITEPROMPT 指定で不要とした。
+	//Existing file exists? OFN_OVERWRITEPROMPT It made unnecessary by designation.
 	//if(fp != NULL){
 	//	fclose(fp);
-	//	return MSGEXISFILE;//既存ファイル
+	//	return MSGEXISFILE;//Existing file
 	//}
 	return MSGSAVEOK;
 }
-// グラフィックス描画 
+// Graphics drawing 
 int DrawGr(HWND hWnd, HDC hdc) {
-	return 0; //もう何もしないよ。
+	return 0; //I will not do anything anymore.
 	HPEN hPen, hOldPen;
 	RECT rt;
 	GetClientRect(hWnd, &rt);
@@ -83,7 +83,7 @@ int DrawGr(HWND hWnd, HDC hdc) {
 	DeleteObject(hPen);
 	return 0;
 } 
-//フックプロシージャ
+//Hook Procedure
 UINT CALLBACK OFNHookProcMID(HWND hdlg, UINT msg, WPARAM wParam, LPARAM lParam)
 {
 	//RECT  rcWindow;
@@ -103,19 +103,19 @@ UINT CALLBACK OFNHookProcMID(HWND hdlg, UINT msg, WPARAM wParam, LPARAM lParam)
 			SetDlgItemText(hdlg, IDC_AUTHOR, strMIDI_AUTHOR);
 			SetDlgItemText(hdlg, IDC_TITLE,  strMIDI_TITLE);
  			for(j=0;j<8;j++){
-				SendDlgItemMessage(hdlg,IDC_MIDIPC1+j,CB_RESETCONTENT,0,0);//初期化
+				SendDlgItemMessage(hdlg,IDC_MIDIPC1+j,CB_RESETCONTENT,0,0);//Initialization
 				for(i=0;i<128;i++){
 					SendDlgItemMessage(hdlg,IDC_MIDIPC1+j,CB_ADDSTRING,0,(LPARAM)MIDIPC[i]);
 				}
 				if(ucMIDIProgramChangeValue[j] == 255){
-					ucMIDIProgramChangeValue[j] = mi.tdata[j].wave_no; //こんなところで初期化
+					ucMIDIProgramChangeValue[j] = mi.tdata[j].wave_no; //Initialized in this place
 				}
 				SendDlgItemMessage(hdlg,IDC_MIDIPC1+j,CB_SETCURSEL,ucMIDIProgramChangeValue[j],0);
 			}
            return TRUE;
 
 		case WM_SIZE:
-			DlgWidth  = LOWORD(lParam);	//クライアント領域のサイズ
+			DlgWidth  = LOWORD(lParam);	//Size of client area
 			DlgHeight = HIWORD(lParam);
 			haDlg = GetDlgItem(hdlg, IDC_TITLE);
 			SetWindowPos(haDlg, HWND_TOP, 1, 1, DlgWidth-150, 18, SWP_NOMOVE | SWP_NOACTIVATE | SWP_NOZORDER );
@@ -162,16 +162,16 @@ UINT CALLBACK OFNHookProcMID(HWND hdlg, UINT msg, WPARAM wParam, LPARAM lParam)
 
 				//MessageBox(NULL,ctmp,"Message",MB_OK);
 			}
-			//MessageBox(NULL,"初期化しました","Message",MB_OK);
+			//MessageBox(NULL,"Initialized","Message",MB_OK);
 			return TRUE;
     }
     return FALSE;
 }
 char GetFileNameMIDI(HWND hwnd,char *title, char *filename)
-{//ファイル名を取得(MIDI)
+{//Get file name(MIDI)
 	OPENFILENAME ofn;
 	FILE *fp;
-//	char res;//ファイルオープンの結果
+//	char res;//Result of file open
 
 	memset(&ofn,0,sizeof(OPENFILENAME));
 	strcpy(filename, music_file);
@@ -184,7 +184,7 @@ char GetFileNameMIDI(HWND hwnd,char *title, char *filename)
 	ofn.lStructSize = sizeof(OPENFILENAME);
 	ofn.hwndOwner   = hwnd;
 	ofn.hInstance   = hInst;
-	//ofn.lpstrFilter = "標準MIDIファイル[*.mid]¥0*.mid¥0全ての形式 [*.*]¥0*.*¥0¥0";	// 2014.10.19 D
+	//ofn.lpstrFilter = "standardMIDIFile[*.mid]¥0*.mid¥0All formats [*.*]¥0*.*¥0¥0";	// 2014.10.19 D
 	ofn.lpstrFilter = MessageString[IDS_STRING110];	// 2014.10.19 A
 	ofn.lpstrFile   = filename;
 	ofn.nMaxFile    = MAX_PATH;
@@ -194,7 +194,7 @@ char GetFileNameMIDI(HWND hwnd,char *title, char *filename)
                       OFN_CREATEPROMPT |
                       OFN_HIDEREADONLY |
                       OFN_ENABLESIZING |
-                      OFN_ENABLEHOOK |     //フックプロシージャを使う
+                      OFN_ENABLEHOOK |     //Use hook procedure
                       OFN_ENABLETEMPLATE;
 	ofn.lpfnHook = OFNHookProcMID;
 	ofn.lpTemplateName = MAKEINTRESOURCE(IDD_MIDI);
@@ -202,20 +202,20 @@ char GetFileNameMIDI(HWND hwnd,char *title, char *filename)
 
 	ofn.lpstrDefExt = "mid";
 
-	//ファイル名取得を試みる。
+	//Attempt to acquire the file name.
 	if(GetSaveFileName(&ofn));//InvalidateRect(hwnd,NULL,TRUE);
-	else return MSGCANCEL;//キャンセルで0が返る
+	else return MSGCANCEL;//Cancel0Will return
 	fp = fopen(filename,"rb");
 
-	//既存ファイルが存在する？  OFN_OVERWRITEPROMPT 指定で不要とした。
+	//Existing file exists?  OFN_OVERWRITEPROMPT It made unnecessary by designation.
 	//if(fp != NULL){
 	//	fclose(fp);
-	//	return MSGEXISFILE;//既存ファイル
+	//	return MSGEXISFILE;//Existing file
 	//}
 	return MSGSAVEOK;
 }
 
-//フックプロシージャ
+//Hook Procedure
 UINT CALLBACK OFNHookProc(HWND hdlg, UINT msg, WPARAM wParam,LPARAM lParam)
 {
 	RECT  rcWindow;
@@ -238,7 +238,7 @@ UINT CALLBACK OFNHookProc(HWND hdlg, UINT msg, WPARAM wParam,LPARAM lParam)
 						CmnDialogWnd.right,CmnDialogWnd.bottom, SWP_NOZORDER ); 
 					count_of_INIT_DONE = -9999999;
 				}
-			//MessageBox(NULL,"初期化しました","Message",MB_OK);
+			//MessageBox(NULL,"Initialized","Message",MB_OK);
 			return TRUE;
         case WM_COMMAND:
             switch(LOWORD(wParam)){
@@ -257,17 +257,17 @@ UINT CALLBACK OFNHookProc(HWND hdlg, UINT msg, WPARAM wParam,LPARAM lParam)
 }
 
 char GetFileNameLoad(HWND hwnd,char *title, int OpenType)
-{//ファイル名を取得(ロード)
+{//Get file name(Load)
 	OPENFILENAME ofn;
 	FILE *fp;
-//	char res;//ファイルオープンの結果
+//	char res;//Result of file open
 
 	memset(&ofn,0,sizeof(OPENFILENAME));
 //	strcpy(GetName,"*.pmd");
 	ofn.lStructSize = sizeof(OPENFILENAME);
 	ofn.hwndOwner   = hwnd;
 	ofn.hInstance   = hInst;
-	//ofn.lpstrFilter = "OrganyaData[*.org]¥0*.org¥0全ての形式 [*.*]¥0*.*¥0¥0";	// 2014.10.19 D
+	//ofn.lpstrFilter = "OrganyaData[*.org]¥0*.org¥0All formats [*.*]¥0*.*¥0¥0";	// 2014.10.19 D
 	ofn.lpstrFilter = MessageString[IDS_STRING111];	// 2014.10.19 A
 	ofn.lpstrFile   = music_file;
 	ofn.nMaxFile    = MAX_PATH;
@@ -275,7 +275,7 @@ char GetFileNameLoad(HWND hwnd,char *title, int OpenType)
 	ofn.Flags       = OFN_CREATEPROMPT | OFN_HIDEREADONLY ;
 	if(OpenType==1){
 		ofn.Flags       = OFN_CREATEPROMPT | OFN_HIDEREADONLY |OFN_EXPLORER | 
-						OFN_ENABLESIZING | OFN_ENABLEHOOK |     //フックプロシージャを使う
+						OFN_ENABLESIZING | OFN_ENABLEHOOK |     //Use hook procedure
 							OFN_ENABLETEMPLATE; 
 		ofn.lpfnHook = OFNHookProc;
 		ofn.lpTemplateName = MAKEINTRESOURCE(IDD_DIALOGOPEN);
@@ -284,14 +284,14 @@ char GetFileNameLoad(HWND hwnd,char *title, int OpenType)
 	ofn.lpstrDefExt = "org";
 	
 	count_of_INIT_DONE = 0;
-	//ファイル名取得を試みる。
+	//Attempt to acquire the file name.
 	if(GetOpenFileName(&ofn));//InvalidateRect(hwnd,NULL,TRUE);
-	else return MSGCANCEL;//キャンセルで0が返る
+	else return MSGCANCEL;//Cancel0Will return
 	fp = fopen(music_file,"rb");
 	if(fp == NULL){
-		//MessageBox(hwnd,"ファイルにアクセスできません","",MB_OK);	// 2014.10.19 D
+		//MessageBox(hwnd,"File can not be accessed","",MB_OK);	// 2014.10.19 D
 		msgbox(hwnd,IDS_WARNING_ACCESS_FILE,IDS_ERROR,MB_OK);	// 2014.10.19 A
-		return MSGCANCEL;//指定ファイルが存在しない
+		return MSGCANCEL;//Specified file does not exist
 	}
 	fclose(fp);
 

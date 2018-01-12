@@ -1,20 +1,20 @@
-＜＜オルガーニャ＞＞
+&lt;&lt; Orgagna &gt;&gt;
 −−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−
-●表現能力
-◇曲が持つデータ
-　・テンポ（次回までのウエイト）
-　・ボリューム（マスターボリューム）
-　・タイトル
-◇トラックが持つデータ
-　・パンポット
-　・ボリューム
+●Ability to express
+◇Data that the song has
+· Tempo (Weight to next time)
+· Volume (master volume)
+·title
+◇Data held by the track
+· Pan Pot
+·volume
 −−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−
-●Ａ（４４０Ｈｚ）から見るDirectSoundで可能な波形の細かさ
-＞（細かさ×周波数）が100,000より小さくなければならない。
-＞その為にオクターブ毎に波形の精度を変える必要がある
+●View from A (440 Hz)DirectSoundPossible fineness of the waveform
+&gt; (Fineness×Frequency)100,000It must be smaller.
+&gt; To that end, we need to change the accuracy of the waveform every octave
 
-波形を構成するデータ −  周波数(440) − オクターブ 
-バイト
+Data constituting the waveform −  frequency(440) − octave 
+Part-Time Job
 　　　　 256 　　　　− 440/8 =   55 −　　　　　0
 　　　　 256 　　　　− 440/4 =  110 −　　　　　1
 　　　　 128 　　　　− 440/2 =  220 −　　　　　2
@@ -24,29 +24,29 @@
 　　　　  16 　　　　− 440*8 = 3520 −　　　　　6
 　　　　   8 　　　　− 440*f = 7040 −　　　　　7
 −−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−
-●１レコード（ノート）が持つデータ
+●Data held by one record (note)
 typedef struct{
-    unsigned char type;      //属性(音を出す・ボリューム変更・パンポット変更・キー変更)
-    unsigbed char parameter; //typeによって扱いが変る（下で説明）
-    unsigned short length;   //音の長さ(最長：256*256)
-    unsigned long pos;       //音が出るタイミング
+    unsigned char type;      //attribute(Sound sound · volume change · pan pot change · key change)
+    unsigbed char parameter; //typeHandling changes according to (explained below)
+    unsigned short length;   //Sound length(Longest:256*256)
+    unsigned long pos;       //When the sound comes out
 }NOTE;
 
-◇parameterについて
+◇parameterabout
 type　　　　　−parameter
 
-音を出す　　　−音の高さ(０Ａ〜７Ｇ＃)
-ボリューム変更−ボリューム
-パンポット変更−パン
-キー変更　　　−音の高さ(０Ａ〜７Ｇ＃)
+make a sound−Sound height(0A to 7G #)
+Volume change−volume
+Pan Pot change−Bread
+Key change−Sound height(0A to 7G #)
 −−−−−−−−−−−−−−−−−−−−−−−−−−−−−−−
-●１トラックが持つ音データ
+●Sound data of one track
 typedef struct{
-	char wave[256];//波形データ
+	char wave[256];//Waveform data
 }TRACK;
 
 −−−−−−
-●音の周波数（Hz）
+●Frequency of sound (Hz)
 C  : 261  6.060→256=1551
 C# : 278  6.454=1652
 D  : 294  6.826=1747
@@ -61,9 +61,9 @@ A# : 466 ○
 B  : 494 11.477=2938
 
 −−−−−−
-バグの数々。
-・スネアの音だけ４４Khzになってた。
-・最後の音譜の尻尾が途切れる。
-・コピー後たまに、やたら長い音が出現する（未解決）
-・まぁ、コピー関係では色々バグが出たね。リストいじってる訳だし・・・。Octover29/1999
-・ロードした時の音譜を初期化し忘れ。Octover29/1999
+Numerous bugs.
+· Only the snare sound 44KhzIt turned out.
+· The tail of the last note breaks.
+· After copying occasionally a long sound appears (unresolved)
+Well, there were various bugs in the copy relationship. It is a translation that I am listing ....Octover29/1999
+· Forgot to initialize the note when loading.Octover29/1999

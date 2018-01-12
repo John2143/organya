@@ -1,14 +1,14 @@
 
-#define MAXNOTELENGTH	255//音符の最大長
+#define MAXNOTELENGTH	255//Maximum note length
 #define MAXMELODY		8
 #define MAXDRAM			8
 #define MAXTRACK		16
 
-#define KEYDUMMY		255//キーの変更は加えない音符
-#define PANDUMMY		255//パンの変更は加えない音符
-#define VOLDUMMY		255//ボリュームの変更は加えない音符
-//曲情報をセットする時のフラグ
-#define SETALL		0xffffffff//全てをセット
+#define KEYDUMMY		255//Musical notes that do not change the key
+#define PANDUMMY		255//Do not change the bread note
+#define VOLDUMMY		255//Musical notes that do not change the volume
+//Flag when setting song information
+#define SETALL		0xffffffff//Set all
 #define SETWAIT		0x00000001
 #define SETGRID		0x00000002
 #define SETALLOC	0x00000004
@@ -25,6 +25,6 @@
 #define MODEDECAY   64  //2014.05.01 A
 
 
-//#define NUMDRAMITEM		39	//１２＋５＋９＋１(猫)＋１１	// 2011.10.17 D
-#define NUMDRAMITEM		42	//１２＋５＋９＋１(猫)＋１１＋３	// 2011.10.17 A
+//#define NUMDRAMITEM		39	//12 + 5 + 9 + 1(Cat)+11	// 2011.10.17 D
+#define NUMDRAMITEM		42	//12 + 5 + 9 + 1(Cat)+ 11 + 3	// 2011.10.17 A
 

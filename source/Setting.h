@@ -1,5 +1,5 @@
 #include <windows.h>
-//ウインドウの広さ(枠は省く)
+//Window size(I omit the frame)
 #define WINDOWWIDTH		1180
 #define WDWHEIGHTPLUS	0
 #define WINDOWHEIGHT	(432+WDWHEIGHTPLUS)
@@ -7,7 +7,7 @@
 
 #define KEYWIDTH		64
 
-//ビットマップNO
+//bitmapNO
 #define BMPMUSIC		0
 #define BMPNOTE			1
 #define BMPNUMBER		2
@@ -15,13 +15,13 @@
 
 
 #define MSGCANCEL		1
-#define MSGEXISFILE		2	//既存ファイルあり
-#define MSGSAVEOK		3	//保存完了
-#define MSGLOADOK		3	//読み込み完了
+#define MSGEXISFILE		2	//Existing file exists
+#define MSGSAVEOK		3	//Save completed
+#define MSGLOADOK		3	//Load completed
 
 extern char music_file[];
-extern HINSTANCE hInst;//インスタンスハンドル
-extern HWND hWnd;//メインウィンドウハンドル
-extern BOOL actApp;//ウインドウのアクティブ
+extern HINSTANCE hInst;//Instance handle
+extern HWND hWnd;//Main window handle
+extern BOOL actApp;//Window active
 
-extern int  WWidth, WHeight;	//ウィンドウのサイズ
+extern int  WWidth, WHeight;	//Window size

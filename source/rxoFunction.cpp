@@ -1,4 +1,4 @@
-//#include <wchar.h> charをwchar_tに直すのは根気が要る。
+//#include <wchar.h> charTowchar_tIt needs patience to fix it.
 #include "Setting.h"
 #include "DefOrg.h"
 #include "resource.h"
@@ -24,12 +24,12 @@
 #define MESSAGE_STRING_BUFFER_SIZE (1024*1024)
 #define MESSAGE_STRING_MAX 1024
 
-/* //↓この一行を追加する★
+/* //↓Add this one line★
 
 #include "rxoFunction.h"
 
   */
-/* //EditNoteでのトラック指定
+/* //EditNoteTrack designation in
 	-1 : 0 ‾ 8
 	-2 : 8 ‾ 16
 	-3 : 0 ‾ 16 
@@ -44,11 +44,11 @@ extern void ResetTitlebarChange(void);
 extern HWND hDlgTrack;
 extern int mute_name[MAXTRACK];
 extern char timer_sw;
-extern NOTECOPY nc_Select; //選択範囲
+extern NOTECOPY nc_Select; //Selection range
 extern int tra, ful ,haba; 
-extern int sGrid;	//範囲選択はグリッド単位で
-extern int sACrnt;	//範囲選択は常にｶﾚﾝﾄﾄﾗｯｸ
-extern int gDrawDouble;	//両方のトラックグループを描画する
+extern int sGrid;	//Range selection is on a grid level
+extern int sACrnt;	//Range selection is always the current track
+extern int gDrawDouble;	//Draw both track groups
 extern CHAR app_path[];
 extern int iDragMode;
 extern SaveWithInitVolFile;
@@ -64,7 +64,7 @@ int iChangeFinish; //2010.09.23 A
 int iActivatePAN = 0; //2014.05.01 A
 int iActivateVOL = 0; //2014.05.01 A
 
-int iSlideOverlapNotes = 0; //重なり合う音符の表示を若干ずらす 2014.05.06 A
+int iSlideOverlapNotes = 0; //Slightly shift the display of overlapping notes 2014.05.06 A
 
 int Menu_Recent[]={
 	IDM_RECENT1, IDM_RECENT2, IDM_RECENT3, IDM_RECENT4, IDM_RECENT5, IDM_RECENT6, IDM_RECENT7, IDM_RECENT8, IDM_RECENT9, IDM_RECENT0
@@ -73,25 +73,25 @@ char *FileAcc[]={
 	"File1", "File2", "File3", "File4", "File5", "File6", "File7", "File8", "File9", "File0"
 };
 
-char RecentFileName[10][MAX_PATH];	//最近使ったファイル名
+char RecentFileName[10][MAX_PATH];	//Recent file name
 void SetMenuRecent(int iMenuNumber, char *strText, int iDisable);
 void CreateMenuRecent();
 
 void ShowStatusMessage(void);
 
-int iRecentTrackM[]={ // 2010.09.23 A 最近使ったトラック番号
+int iRecentTrackM[]={ // 2010.09.23 A Recently used track number
 	0,1,2,3,4,5,6,7
 };
-int iRecentTrackD[]={ // 2010.09.23 A 最近使ったトラック番号
+int iRecentTrackD[]={ // 2010.09.23 A Recently used track number
 	8,9,10,11,12,13,14,15
 };
 
-int NoteWidth; //音符の幅
-int NoteEnlarge_Until_16px; //表示の際、NOTEの頭を最大16ピクセルまで伸ばす。
+int NoteWidth; //Musical note width
+int NoteEnlarge_Until_16px; //When displaying,NOTEMaximum head of16Stretch to the pixel.
 int iPushStratch = 0; //2014.05.31
 int iLastEditNoteLength = 1;
 
-void setRecentTrack(int iNewTrack){ //最近使ったトラック番号を更新する
+void setRecentTrack(int iNewTrack){ //Update the track number you used recently
 	int iRT[MAXMELODY];
 	int i,j;
 	if(iNewTrack<MAXMELODY){
@@ -122,9 +122,9 @@ void setRecentTrack(int iNewTrack){ //最近使ったトラック番号を更新
 	return;
 }
 
-//iOrder:0〜7
-//isDrumTrack:0 メロディ  ,   isDrumTrack:1 ドラム
-int getRecentTrack(int iOrder, int isDrumTrack){ //最近使ったトラックを返す
+//iOrder:0~7
+//isDrumTrack:0 Melody  ,   isDrumTrack:1 drum
+int getRecentTrack(int iOrder, int isDrumTrack){ //Return the track you used recently
 	int i,j;
 	j=0;
  	if(isDrumTrack==0){
@@ -138,16 +138,16 @@ int getRecentTrack(int iOrder, int isDrumTrack){ //最近使ったトラック�
 			j++;
 		}
 	}
-	return iOrder; //本来、この値で返されることはないはず...
+	return iOrder; //Originally, this value should never be returned....
 }
 
-//最近使ったファイル群にプット
+//Put into the recently used file group
 void PutRecentFile(char *FileName)
 {
 	int i,j;
 	j=9;
 	for(i=0;i<10;i++){
-		if(strcmp(RecentFileName[i],FileName)==0){ //等しいとき
+		if(strcmp(RecentFileName[i],FileName)==0){ //When it is equal
 			j=i; i=999;
 		}
 	}
@@ -200,7 +200,7 @@ void SetMenuRecent(int iMenuNumber, char *strText, int iDisable)
 void ClearRecentFile()
 {
 	int a;
-	//a = MessageBox(hWnd,"履歴を抹ッ消しますか？","「最近使ったファイル」のクリア",MB_OKCANCEL|MB_ICONQUESTION|MB_DEFBUTTON2);	// 2014.10.19 D
+	//a = MessageBox(hWnd,"Would you like to delete the history?","Clear of &quot;Recent Files&quot;",MB_OKCANCEL|MB_ICONQUESTION|MB_DEFBUTTON2);	// 2014.10.19 D
 	a = msgbox(hWnd,IDS_NOTIFY_RECENT_INITIALIZE,IDS_CLEAR_RECENT,MB_OKCANCEL|MB_ICONQUESTION|MB_DEFBUTTON2);	// 2014.10.19 A
 	if(a == IDOK){
 		int i;
@@ -209,11 +209,11 @@ void ClearRecentFile()
 			RecentFileName[i][1]='¥0';
 		}
 		CreateMenuRecent();
-		//MessageBox(hWnd,"真っ白になったぜ。","通知",MB_OK);	// 2014.10.19 D
+		//MessageBox(hWnd,"I got pure white.","notification",MB_OK);	// 2014.10.19 D
 		msgbox(hWnd,IDS_INFO_INITIALIZE,IDS_NOTIFY_TITLE,MB_OK);	// 2014.10.19 A
 
 	}else{
-		//MessageBox(hWnd,"キャンセルしました。","通知",MB_OK);	// 2014.10.19 D
+		//MessageBox(hWnd,"I canceled.","notification",MB_OK);	// 2014.10.19 D
 		msgbox(hWnd,IDS_CANCEL,IDS_NOTIFY_TITLE,MB_OK);	// 2014.10.19 A
 	}
 
@@ -227,7 +227,7 @@ void CreateMenuRecent()
 		if(RecentFileName[i][0]!='@'){
 			SetMenuRecent(i,RecentFileName[i],0);
 		}else{
-			//SetMenuRecent(i,"未使用",1);	// 2014.10.19 D
+			//SetMenuRecent(i,"unused",1);	// 2014.10.19 D
 			SetMenuRecent(i,MessageString[IDS_STRING76],1);	// 2014.10.19 A
 		}
 	}
@@ -252,7 +252,7 @@ void SetLoadRecentFile(int iNum)
 int GetSelectMeasBeat(int GetToValue, int addValue)
 {
 	if (tra<0)return 0;
-	int r,g;	//line 何泊か  // dot １泊の分割数
+	int r,g;	//line How many nights?  // dot Number of divisions per night
 	unsigned char line,dot;
 	MUSICINFO mi;	org_data.GetMusicInfo(&mi);
 	dot = mi.dot; line = mi.line;
@@ -276,7 +276,7 @@ int GetSelectMeasBeat(int GetToValue, int addValue)
 }
 char *TrackCode[]={"1","2","3","4","5","6","7","8","Q","W","E","R","T","Y","U","I" };
 
-//大文字小文字に注意した↑の逆函数
+//I took note of upper case letters and lower case letters↑Reverse function of
 int ReverseTrackCode(char *strTrack)
 {
 	int i;
@@ -325,8 +325,8 @@ int ReverseTrackCode(char *strTrack)
 		case 'I':
 			return 15;
 		}
-	}while(strTrack[i]==' '); //先頭の空白は無視
-	return 99; //異常なトラック
+	}while(strTrack[i]==' '); //Ignore leading whitespace
+	return 99; //Unusual track
 }
 
 void MuteTrack(int Track)
@@ -341,7 +341,7 @@ void EditNote(int AddNotes , int Track , int Function)
 	if(AddNotes==0)return;
 	int j,jmin,jmax,Trc;
 	Trc = Track;
-	RECT rect = {64,0,WWidth,WHeight};//更新する領域
+	RECT rect = {64,0,WWidth,WHeight};//Area to update
 	PARCHANGE pc;
 	MUSICINFO mi;
 	org_data.GetMusicInfo(&mi);
@@ -356,7 +356,7 @@ void EditNote(int AddNotes , int Track , int Function)
 		pc.a = AddNotes;
 	}
 
-	if(tra>=0){ //選択範囲があれば。
+	if(tra>=0){ //If there is a selection range.
 		if(ful == 1 || tra == org_data.track){
 			pc.x1 = nc_Select.x1_1;
 			pc.x2 = nc_Select.x1_2;
@@ -378,7 +378,7 @@ void EditNote(int AddNotes , int Track , int Function)
 			jmax = MAXTRACK;
 		}else if(Trc==-3){
 			jmax = MAXTRACK;
-		}else if(Trc==-4){ //カレントトラック
+		}else if(Trc==-4){ //Current Track
 			jmin = (int)org_data.track;
 			jmax = jmin + 1;
 		}
@@ -401,13 +401,13 @@ void EditNote(int AddNotes , int Track , int Function)
 			org_data.EnsureEmptyArea(&pc, Function - MODEDECAY - 20);
 		}
 	}
-	org_data.PutMusic();	//表示
+	org_data.PutMusic();	//display
 	RedrawWindow(hWnd,&rect,NULL,RDW_INVALIDATE|RDW_ERASENOW);
-	//MessageBox(hdwnd,"指定範囲のキーを変更しました","通知",MB_OK);
+	//MessageBox(hdwnd,"Changed key in specified range","notification",MB_OK);
 	return;
 }
 
-//音の高さを上げる Track=-1ですべて(ドラムはのぞく)
+//Increase the pitch of the sound Track=-1All in(People peeping at the drum)
 void TransportNote(int AddNotes , int Track )
 {
 	EditNote(AddNotes , Track , 0);
@@ -432,7 +432,7 @@ void PanEdit(int AddNotes , int Track )
 	EditNote(AddNotes , Track , 2);
 }
 
-void ShowMemoryState(){ //デバッグ用
+void ShowMemoryState(){ //For debugging
 	char cc[32]; int y;
 	GlobalMemoryStatus( &rMem ) ;
 	y=rMem.dwAvailPhys/1000;
@@ -440,24 +440,24 @@ void ShowMemoryState(){ //デバッグ用
 	MessageBox(NULL,cc,"Mem",MB_OK);
 }
 
-//音符の整理
+//Organizing notes
 void SortMusicNote(void)
 {
 	int a;
-	//a = MessageBox(hWnd,"長時間の使用により、ノート（音符）がメモリ上に¥n散乱してしまいます。（譜面順とメモリ順は異なっている）¥nこの関数はノートを譜面の順番に¥n並べ換えます。¥n尚、データをロードし直しても同じ効果が得られます。¥n実行しますか？","使い方と目的",MB_OKCANCEL|MB_ICONQUESTION|MB_DEFBUTTON2);	// 2014.10.19 D
+	//a = MessageBox(hWnd,"By using it for a long time, note (note) on memory¥nIt will be scattered. (Score order and memory order are different)¥nThis function places notes in order of music¥nI will rearrange them.¥nThe same effect can be obtained even by reloading the data.¥nDo you want to do it?","Usage and purpose",MB_OKCANCEL|MB_ICONQUESTION|MB_DEFBUTTON2);	// 2014.10.19 D
 	a = msgbox(hWnd,IDS_INFO_MEMORY,IDS_USAGE,MB_OKCANCEL|MB_ICONQUESTION|MB_DEFBUTTON2);	// 2014.10.19 A
 	if(a == IDOK){
 		org_data.SortNotes();
-		//MessageBox(hWnd,"並べ替え・再構築しました。","通知",MB_OK);	// 2014.10.19 D
+		//MessageBox(hWnd,"We sorted and rebuilt.","notification",MB_OK);	// 2014.10.19 D
 		msgbox(hWnd,IDS_INFO_NARABEKAE,IDS_NOTIFY_TITLE,MB_OK);	// 2014.10.19 A
 
 	}else{
-		//MessageBox(hWnd,"キャンセルしました。","通知",MB_OK);	// 2014.10.19 D
+		//MessageBox(hWnd,"I canceled.","notification",MB_OK);	// 2014.10.19 D
 		msgbox(hWnd,IDS_CANCEL,IDS_NOTIFY_TITLE,MB_OK);	// 2014.10.19 A
 	}
 }
 
-//仮想的にクリップボードを用意して、データのやり取りはこいつを介して行う。
+//Virtually prepare a clipboard, and exchange data via this.
 char VirtualCB[VIRTUAL_CB_SIZE];
 char *readVCB;
 
@@ -480,7 +480,7 @@ void AddTrackSeparater(void)
 	strcat(VirtualCB,"@");
 }
 
-//セパレータを発見したらtrue
+//After finding a separatortrue
 bool ReadTrackSeparater(void)
 {
 	if(*readVCB!='@')return false;
@@ -492,14 +492,14 @@ void AddStartToVirtualCB(void)
 	strcpy(VirtualCB,"OrgCBData|");
 }
 
-//読み出し開始させると同時に、正規のデータかチェック
+//At the same time as starting reading, check whether it is valid data
 bool ReadStartFromVirtualCB(void)
 {
-	readVCB = &VirtualCB[10]; //先頭の形式？
+	readVCB = &VirtualCB[10]; //First format?
 	if(VirtualCB[0]=='O' && VirtualCB[1]=='r' && VirtualCB[2]=='g' && 
 		VirtualCB[3]=='C' && VirtualCB[4]=='B' && VirtualCB[5]=='D' && 
 		VirtualCB[6]=='a' && VirtualCB[7]=='t' && VirtualCB[8]=='a')return true;
-	VirtualCB[10]='¥0'; //データ破棄
+	VirtualCB[10]='¥0'; //Discard data
 	return false;
 
 }
@@ -521,7 +521,7 @@ int ReadIntegerFromVirtualCB(void)
 	return i;
 }
 
-//本物のCBにコピー
+//RealCBCopy to
 void SetClipBoardFromVCB(void)
 {
 	//MessageBox(NULL,VirtualCB,"Error(Copy)",MB_OK);
@@ -541,7 +541,7 @@ void SetClipBoardFromVCB(void)
 
 }
 
-//VCBへ代入
+//VCBAssign to
 void GetClipBoardToVCB(void)
 {
 	HANDLE hText;
@@ -551,13 +551,13 @@ void GetClipBoardToVCB(void)
 
 	hText = GetClipboardData(CF_TEXT);
 	if(hText == NULL) {
-		//printf("クリップボードにテキストデータはない。¥n");
+		//printf("There is no text data on the clipboard.¥n");
 	} else {
 		pText = (char*)GlobalLock(hText);
 		int i;
 		for(i=0;i<640000;i++){
 			VirtualCB[i]=pText[i];
-			if(pText[i]=='¥0')i=640000+1; //強引にループ終了
+			if(pText[i]=='¥0')i=640000+1; //Forcibly end loop
 		}
 
 		GlobalUnlock(hText);
@@ -567,21 +567,21 @@ void GetClipBoardToVCB(void)
 	ReadStartFromVirtualCB();
 }
 
-RECT rect1 = {0,0,WWidth,WHeight};//更新する領域
+RECT rect1 = {0,0,WWidth,WHeight};//Area to update
 
 void ReplaseUndo()
 {
 	HMENU hMenu;
 	hMenu=GetMenu(hWnd);
-	if(org_data.ReplaceFromUndoData()>0){ //これ以上UNDO出来ない
+	if(org_data.ReplaceFromUndoData()>0){ //more than thisUNDOI can not
 		EnableMenuItem(hMenu,IDM_UNDO,MF_BYCOMMAND|MF_GRAYED);
 	}
 	org_data.PutBackGround();
-	org_data.PutMusic();	//表示
+	org_data.PutMusic();	//display
 	//RedrawWindow(hWnd,&rect,NULL,RDW_INVALIDATE|RDW_ERASENOW);
-	//通常の状態に戻すには
+	//To return to normal state
 	EnableMenuItem(hMenu,IDM_REDO,MF_BYCOMMAND|MF_ENABLED);
-	DrawMenuBar(hWnd);//メニューを再描画
+	DrawMenuBar(hWnd);//Redraw menu
 	if(org_data.MinimumUndoCursor==0 && org_data.CurrentUndoCursor==0){
 		ResetTitlebarChange();
 	}else{
@@ -591,26 +591,26 @@ void ReplaseUndo()
 
 void SetUndo()
 {
-	if(org_data.SetUndoData()>0){ //セットし、もし、メニューが灰色表示なら濃くする
+	if(org_data.SetUndoData()>0){ //Set, if the menu is grayed out, make it darker
 		HMENU hMenu;
 		hMenu=GetMenu(hWnd);
-		//通常の状態に戻すには
+		//To return to normal state
 		EnableMenuItem(hMenu,IDM_UNDO,MF_BYCOMMAND|MF_ENABLED);
 		EnableMenuItem(hMenu,IDM_REDO,MF_BYCOMMAND|MF_GRAYED);
-		DrawMenuBar(hWnd);//メニューを再描画
+		DrawMenuBar(hWnd);//Redraw menu
 	}
 	SetTitlebarChange();
 }
 
-void ResetLastUndo() //取りけし
+void ResetLastUndo() //Take
 {
-	if(org_data.ResetLastUndo()>0){ //セットし、もし、メニューが灰色表示なら濃くする
+	if(org_data.ResetLastUndo()>0){ //Set, if the menu is grayed out, make it darker
 		HMENU hMenu;
 		hMenu=GetMenu(hWnd);
-		//通常の状態に戻すには
+		//To return to normal state
 		EnableMenuItem(hMenu,IDM_UNDO,MF_BYCOMMAND|MF_GRAYED);
 		EnableMenuItem(hMenu,IDM_REDO,MF_BYCOMMAND|MF_GRAYED);
-		DrawMenuBar(hWnd);//メニューを再描画
+		DrawMenuBar(hWnd);//Redraw menu
 	}
 
 }
@@ -622,9 +622,9 @@ void ClearUndo()
 	hMenu=GetMenu(hWnd);
 	EnableMenuItem(hMenu,IDM_UNDO,MF_BYCOMMAND|MF_GRAYED);
 	EnableMenuItem(hMenu,IDM_REDO,MF_BYCOMMAND|MF_GRAYED);
-	//通常の状態に戻すには
+	//To return to normal state
 	//EnableMenuItem(hMenu,IDM_UNDO,MF_BYCOMMAND|MF_ENABLED);
-	DrawMenuBar(hWnd);//メニューを再描画
+	DrawMenuBar(hWnd);//Redraw menu
 
 }
 
@@ -633,13 +633,13 @@ void ReplaceRedo()
 	HMENU hMenu;
 	hMenu=GetMenu(hWnd);
 	if(org_data.ReplaceFromRedoData()>0){
-		//通常の状態に戻すには
+		//To return to normal state
 		EnableMenuItem(hMenu,IDM_REDO,MF_BYCOMMAND|MF_GRAYED);
 	}
 	EnableMenuItem(hMenu,IDM_UNDO,MF_BYCOMMAND|MF_ENABLED);
-	DrawMenuBar(hWnd);//メニューを再描画
+	DrawMenuBar(hWnd);//Redraw menu
 	org_data.PutBackGround();
-	org_data.PutMusic();	//表示
+	org_data.PutMusic();	//display
 	//RedrawWindow(hWnd,&rect1,NULL,RDW_INVALIDATE|RDW_ERASENOW);
 
 }
@@ -705,7 +705,7 @@ void ChangeNoteEnlarge(int iValue){
 
 int MinimumGrid(int x)
 {
-	int r;	//line 何泊か  // dot １泊の分割数
+	int r;	//line How many nights?  // dot Number of divisions per night
 	unsigned char dot;
 	MUSICINFO mi;	org_data.GetMusicInfo(&mi);
 	dot = mi.dot;
@@ -715,7 +715,7 @@ int MinimumGrid(int x)
 }
 int MaximumGrid(int x)
 {
-	int r;	//line 何泊か  // dot １泊の分割数
+	int r;	//line How many nights?  // dot Number of divisions per night
 	unsigned char dot;
 	MUSICINFO mi;	org_data.GetMusicInfo(&mi);
 	dot = mi.dot;
@@ -725,7 +725,7 @@ int MaximumGrid(int x)
 
 int MinimumGridLine(int x)
 {
-	int r;	//line 何泊か  // dot １泊の分割数
+	int r;	//line How many nights?  // dot Number of divisions per night
 	unsigned char dot;
 	MUSICINFO mi;	org_data.GetMusicInfo(&mi);
 	dot = mi.dot * mi.line;
@@ -735,7 +735,7 @@ int MinimumGridLine(int x)
 }
 int MaximumGridLine(int x)
 {
-	int r;	//line 何泊か  // dot １泊の分割数
+	int r;	//line How many nights?  // dot Number of divisions per night
 	unsigned char dot;
 	MUSICINFO mi;	org_data.GetMusicInfo(&mi);
 	dot = mi.dot * mi.line;
@@ -772,7 +772,7 @@ void ChangeDrawDouble(int iValue)
 		CheckMenuItem(hMenu,IDM_DRAWDOUBLE,(MF_BYCOMMAND|MFS_UNCHECKED));
 	else
 		CheckMenuItem(hMenu,IDM_DRAWDOUBLE,(MF_BYCOMMAND|MFS_CHECKED));
-		//ModifyMenu(hMenu, IDM_DRAWDOUBLE, MF_BYCOMMAND|MF_STRING, IDM_DRAWDOUBLE, "おえ");
+		//ModifyMenu(hMenu, IDM_DRAWDOUBLE, MF_BYCOMMAND|MF_STRING, IDM_DRAWDOUBLE, "Intractable");
 	org_data.PutMusic();
 
 	ShowStatusMessage();
@@ -911,7 +911,7 @@ void ChangeAutoLoadMode(int iValue)
 	ShowStatusMessage();
 }
 
-// StringTableを参照するメッセージボックス //2014.10.18 
+// StringTableMessage box referencing //2014.10.18 
 int msgbox(HWND hWnd , int MessageID, int TitleID, UINT uType)
 {
 	TCHAR strMesssage[2048];
@@ -939,25 +939,25 @@ int AllocMessageStringBuffer(void)
 	ptr = MessageStringBuffer;
 	for(i = 1; i < MESSAGE_STRING_MAX; i++){
 		MessageString[i] = ptr;
-		r = LoadString(GetModuleHandle(NULL), i, ptr, 1024); //1024は適当です。正確にはMESSAGE_STRING_BUFFER_SIZEから計算する必要があります。
+		r = LoadString(GetModuleHandle(NULL), i, ptr, 1024); //1024It is appropriate. To be exactMESSAGE_STRING_BUFFER_SIZEIt is necessary to calculate from.
 		if(r > 0){
-			//末尾の!!を検出する
+			//The last!!Detect
 			for(p = ptr + r - 3, flg = 0; *p != 0 ; p++){
 				if(*p == '!')flg++; else flg = 0;
 				if(flg >= 2)break;
 			}
-			//!!のとき、頭から!を¥0に置換
+			//!!When, from the head!To¥0Replace with
 			if(flg == 2){
 				for(p = ptr ; *p != 0 ; p++)if(*p == '!')*p = 0;
 			}
-			//ポインタ移動
-			ptr += (r + 1 + 1); //+ 1はNULLの分、もう+1は予備。
-		}else{ //ｴﾗｰの場合(存在しないとか)
-			break; //抜ける
+			//Move pointer
+			ptr += (r + 1 + 1); //+ 1IsNULLMinutes already+1It is spare.
+		}else{ //In case of error(It does not exist)
+			break; //To exit
 		}
 	}
 
-	//lpstrFilterについては"!"を¥0に変換する必要アリ。
+	//lpstrFilterabout"!"To¥0Ali need to convert.
 	//for(ptr = MessageString[108]; *ptr != 0; ptr++)if(*ptr == '!')*ptr = 0;
 	//for(ptr = MessageString[109]; *ptr != 0; ptr++)if(*ptr == '!')*ptr = 0;
 	//for(ptr = MessageString[110]; *ptr != 0; ptr++)if(*ptr == '!')*ptr = 0;

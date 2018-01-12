@@ -8,70 +8,70 @@
 #include "rxoFunction.h"
 #define PI 3.14159265358979323846
 /*
-//編集用構造体///////////////
-typedef struct{//●コピー構造体
-	char track1;//このトラックの
-	long x1_1;//ここから
-	long x1_2;//ここまでを
-	char track2;//このトラックの
-	long x2;//ここに
-	long num;//何回
+//Structure for editing///////////////
+typedef struct{//●Copy structure
+	char track1;//Of this track
+	long x1_1;//from here
+	long x1_2;//So far
+	char track2;//Of this track
+	long x2;//here
+	long num;//How many times
 }NOTECOPY;
 
-typedef struct{//●トランスポートやパンポット
-	char track;//このトラックの
-	long x1;//ここから
-	long x2;//ここまでを
-	unsigned char a;//これだけ 
-	unsigned char mode;//たす（ひく）
+typedef struct{//●Transport and pan pot
+	char track;//Of this track
+	long x1;//from here
+	long x2;//So far
+	unsigned char a;//only this 
+	unsigned char mode;//Takesu
 }PARCHANGE;
 */
 BOOL OrgData::DelateNoteData(PARCHANGE *pc)
 {
 	NOTELIST *np;
-	NOTELIST *np_from;//こいつと
-	NOTELIST *np_to;//こいつを繋ぐ
-	NOTELIST *np_clear;//尻尾削除用
-	long note_x1,note_x2;//曲の範囲を保存
+	NOTELIST *np_from;//With this
+	NOTELIST *np_to;//Join this guy
+	NOTELIST *np_clear;//For tail removal
+	long note_x1,note_x2;//Save range of songs
 	np = info.tdata[pc->track].note_list;
-	if(np == NULL)return FALSE;//音符が無ければ終了
+	if(np == NULL)return FALSE;//If there is no note, it ends
 
 	np = info.tdata[pc->track].note_list;
-	note_x1 = np->x;//最初のｘを記録
-	while(np->to != NULL)np = np->to;//おわりを検索
-	note_x2 = np->x;//おわりを保存
-	if(note_x1 > pc->x2 || pc->x1 > note_x2){//範囲が楽譜から離れている
+	note_x1 = np->x;//Record first x
+	while(np->to != NULL)np = np->to;//Search for the End
+	note_x2 = np->x;//Save the End
+	if(note_x1 > pc->x2 || pc->x1 > note_x2){//The range is far from the score
 		return FALSE;
-	}else if(note_x1 < pc->x1 && pc->x2 < note_x2){//範囲が楽譜に内包されている。
+	}else if(note_x1 < pc->x1 && pc->x2 < note_x2){//The range is enclosed in the score.
 		np = info.tdata[pc->track].note_list;
-		while(np->x < pc->x1)np = np->to;//範囲の頭を検索
-		np_from = np->from;//左端を保存(接続用)
+		while(np->x < pc->x1)np = np->to;//Search head of range
+		np_from = np->from;//Save left end(For connection)
 		while(np->x <= pc->x2){
 			np->length = 0;
 			np->y=KEYDUMMY; np->pan=PANDUMMY; np->volume=VOLDUMMY;
-			np = np->to;//範囲の尻を検索
+			np = np->to;//Search range&#39;s butt
 		}
-		np_to = np;//右端を保存(接続用)
-		//両端を接続
+		np_to = np;//Save right end(For connection)
+		//Connect both ends
 		np_from->to = np_to;
 		np_to->from = np_from;
 		return TRUE;
 
-	}else if(pc->x1 <= note_x1 && pc->x2 < note_x2){//消す範囲の頭に音が存在しない。
+	}else if(pc->x1 <= note_x1 && pc->x2 < note_x2){//There is no sound at the head of the range to be erased.
 		np = info.tdata[pc->track].note_list;
 		while(np->x <= pc->x2){
 			np->length = 0;
 			np->y=KEYDUMMY; np->pan=PANDUMMY; np->volume=VOLDUMMY;
-			np = np->to;//範囲の尻を検索
+			np = np->to;//Search range&#39;s butt
 		}
-		np_to = np;//右端を保存(接続用)
-		np->from = NULL;//こいつを頭にする
-		info.tdata[pc->track].note_list = np;//リストに登録
+		np_to = np;//Save right end(For connection)
+		np->from = NULL;//Take this on your head
+		info.tdata[pc->track].note_list = np;//Register on the list
 		return TRUE;
-	}else if(note_x1 < pc->x1 && note_x2 <= pc->x2 ){//消す範囲の尻に音が存在しない。
+	}else if(note_x1 < pc->x1 && note_x2 <= pc->x2 ){//There is no sound in the butt of the range to be erased.
 		np = info.tdata[pc->track].note_list;
-		while(np->to->x < pc->x1)np = np->to;//範囲の頭を検索
-		np_clear = np;//最後になる音譜のアドレス
+		while(np->to->x < pc->x1)np = np->to;//Search head of range
+		np_clear = np;//Address of the last note
 		np = np->to;
 		while(np != NULL){
 			np->length = 0;
@@ -80,7 +80,7 @@ BOOL OrgData::DelateNoteData(PARCHANGE *pc)
 		}
 		np_clear->to = NULL;
 		return TRUE;
-	}else if(note_x1 >= pc->x1 && note_x2 <= pc->x2 ){//完全消去
+	}else if(note_x1 >= pc->x1 && note_x2 <= pc->x2 ){//Complete erase
 		np = info.tdata[pc->track].note_list;
 		while(np != NULL){
 			np->length = 0;
@@ -96,79 +96,79 @@ BOOL OrgData::DelateNoteData(PARCHANGE *pc)
 BOOL OrgData::CopyNoteData(NOTECOPY *nc)
 {
 	int i,j;
-	PARCHANGE pc;//ペースト領域クリア用
+	PARCHANGE pc;//For paste area clearing
 	NOTELIST *np;
-//	NOTELIST *p_in1,*p_in2;//挿入すべき場所
-	NOTELIST *p_list1,*p_list2;//挿入すべきリスト
-	NOTELIST *work;//ワークエリア
-	NOTELIST *wp;//ワークポインタ
-	long ind_x;//インデックス値（x)
-	long copy_num;//コピーする音譜の数
-	if(nc->num == 0)return FALSE;//コピー回数０
+//	NOTELIST *p_in1,*p_in2;//Place to insert
+	NOTELIST *p_list1,*p_list2;//List to insert
+	NOTELIST *work;//Work area
+	NOTELIST *wp;//Work pointer
+	long ind_x;//Index value (x)
+	long copy_num;//Number of notes to be copied
+	if(nc->num == 0)return FALSE;//Number of copies 0
 	copy_num = GetNoteNumber(nc->track1,nc);
 	if(copy_num == 0)return FALSE;
-	wp = work = (NOTELIST *)malloc(sizeof(NOTELIST)*copy_num);//ワーク用に領域を確保
+	wp = work = (NOTELIST *)malloc(sizeof(NOTELIST)*copy_num);//Secure space for work
 	ind_x = nc->x1_1;
 	
-	//ワーク領域にコピー
+	//Copy to work area
 	np = info.tdata[nc->track1].note_list;
 	while(np != NULL && np->x < nc->x1_1)np = np->to;
 	if(np == NULL){
 		free( work );
-		return TRUE;//コピー元に音譜無し(頭を検索中にOUT)
+		return TRUE;//No note in the copy source(While head searchingOUT)
 	}
-	for(i = 0; i < copy_num; i++){//１ペースト
+	for(i = 0; i < copy_num; i++){//1 Paste
 		wp->length = np->length;
 		wp->pan    = np->pan;
 		wp->volume = np->volume;
 		wp->y      = np->y;
-		//インデックス値は差し引く
+		//Deduct the index value
 		wp->x      = np->x - ind_x;
-		//次へ
+		//next
 		np = np->to;
 		wp++;
 	}
 
-	//ペースト先をクリア
-	pc.track = nc->track2;//このトラックの
-	pc.x1 = nc->x2;//ここから
-	pc.x2 = nc->x2 + (nc->x1_2+1 - nc->x1_1)*nc->num-1;//ここまでをx1_1+1(x1_2は−１した値)
-	DelateNoteData(&pc);//消す
+	//Clear paste destination
+	pc.track = nc->track2;//Of this track
+	pc.x1 = nc->x2;//from here
+	pc.x2 = nc->x2 + (nc->x1_2+1 - nc->x1_1)*nc->num-1;//So farx1_1+1(x1_2Is−1 value)
+	DelateNoteData(&pc);//To erase
 
-	//ペーストリストの生成
+	//Generate a paste list
 	np = p_list1 = p_list2= SearchNote(info.tdata[nc->track2].note_p);
-	np->length = 1;//仮生成
-	if(np == NULL){//未使用音譜が不足
+	np->length = 1;//Provisional generation
+	if(np == NULL){//Lack of unused score
 		free( work );
 		return FALSE;
 	}
 	for(i = 1; i < copy_num*nc->num; i++){
 		np = SearchNote(info.tdata[nc->track2].note_p);
-		if(np == NULL){//未使用音譜が不足
+		if(np == NULL){//Lack of unused score
 			free( work );
 			return FALSE;
 		}
-		np->length = 1;//仮生成
+		np->length = 1;//Provisional generation
 		p_list2->to = np;
 		np->from = p_list2;
 		p_list2 = np;
 	}
 
 	long index;
-	//ペーストリストにペースト
+	//Paste in paste list
 	np = p_list1;
-	for(j = 0; j < nc->num;j++){//ペースト回数
+	for(j = 0; j < nc->num;j++){//Number of paste
 		wp = work;
 		index = nc->x2+ (nc->x1_2 - nc->x1_1 +1)*j;
-		for(i = 0; i < copy_num; i++){//１ペースト
+		for(i = 0; i < copy_num; i++){//1 Paste
 			np->length    = wp->length;
 			np->pan       = wp->pan;
 			np->volume    = wp->volume; 
 			np->y         = wp->y; 
-			//インデックス値を加える
+			//Add index value
 			np->x         = wp->x + index;
 
-			//次へ
+			//next
 			np = np->to;
 			wp++;
 		}
@@ -177,14 +177,14 @@ BOOL OrgData::CopyNoteData(NOTECOPY *nc)
 
 
 	np = info.tdata[nc->track2].note_list;
-	if(np == NULL){//完全新規
+	if(np == NULL){//Completely new
 		info.tdata[nc->track2].note_list = p_list1;
 		p_list1->from = NULL;
 		p_list2->to = NULL;
 	}else{
-		//挿入すべき場所を検出
+		//Detect place to insert
 //		np = info.tdata[nc->track2].note_list;
-		if(np->x > p_list2->x){//頭に追加
+		if(np->x > p_list2->x){//Add to head
 			np->from = p_list2;
 			p_list2->to = np;
 			p_list1->from = NULL;
@@ -193,13 +193,13 @@ BOOL OrgData::CopyNoteData(NOTECOPY *nc)
 			return TRUE;
 		}
 		while(np->to != NULL && np->to->x < nc->x2)np = np->to;
-		if(np->to == NULL){//尻に追加
+		if(np->to == NULL){//Add to the buttocks
 			np->to = p_list1;
 			p_list1->from = np;
 			p_list2->to = NULL;
 			free( work );
 			return TRUE;
-		}else{//挿入
+		}else{//Insert
 			np->to->from = p_list2;
 			p_list2->to = np->to;
 			np->to = p_list1;
@@ -212,14 +212,14 @@ BOOL OrgData::CopyNoteData(NOTECOPY *nc)
 	free( work );
 	return TRUE;
 }
-//パンは最小で０最大が１２となる
+//Pan is minimum 0 and maximum is 12
 BOOL OrgData::ChangePanData(PARCHANGE *pc)
 {
 	int i;
 	long num = 0;
 	NOTECOPY nc;
 	NOTELIST *np;
-	//音譜の数を検出
+	//Detect number of notes
 	nc.x1_1 = pc->x1;
 	nc.x1_2 = pc->x2;
 	num = GetNoteNumber(pc->track,&nc);
@@ -227,7 +227,7 @@ BOOL OrgData::ChangePanData(PARCHANGE *pc)
 	np = info.tdata[pc->track].note_list;
 	if(np == NULL || num == 0)return FALSE;
 	while(np != NULL && np->x < pc->x1)np = np->to;
-	if(pc->a == 254){ //2014.05.03 逆転
+	if(pc->a == 254){ //2014.05.03 Reversal
 		for(i = 0; i < num; i++){
 			if(np->pan == PANDUMMY);
 			else np->pan = 12 - np->pan;
@@ -235,14 +235,14 @@ BOOL OrgData::ChangePanData(PARCHANGE *pc)
 		}
 		
 	}else{
-		if(pc->mode == MODEPARADD){//加算モード
+		if(pc->mode == MODEPARADD){//Addition mode
 			for(i = 0; i < num; i++){
 				if(np->pan == PANDUMMY);
 				else if(np->pan + pc->a > 12)np->pan = 12;
 				else np->pan += pc->a;
 				np = np->to;
 			}
-		}else{//減算モード
+		}else{//Subtraction mode
 			for(i = 0; i < num; i++){
 				if(np->pan == PANDUMMY);
 				else if(np->pan - pc->a < 0)np->pan = 0;
@@ -254,14 +254,14 @@ BOOL OrgData::ChangePanData(PARCHANGE *pc)
 	return TRUE;
 }
 
-//キーは95がMAX
+//The key is95ButMAX
 BOOL OrgData::ChangeTransData(PARCHANGE *pc)
 {
 	int i;
 	long num = 0;
 	NOTECOPY nc;
 	NOTELIST *np;
-	//音譜の数を検出
+	//Detect number of notes
 	nc.x1_1 = pc->x1;
 	nc.x1_2 = pc->x2;
 	num = GetNoteNumber(pc->track,&nc);
@@ -269,14 +269,14 @@ BOOL OrgData::ChangeTransData(PARCHANGE *pc)
 	np = info.tdata[pc->track].note_list;
 	if(np == NULL || num == 0)return FALSE;
 	while(np != NULL && np->x < pc->x1)np = np->to;
-	if(pc->mode == MODEPARADD){//加算モード
+	if(pc->mode == MODEPARADD){//Addition mode
 		for(i = 0; i < num; i++){
 			if(np->y == KEYDUMMY);
 			else if(np->y + pc->a > 95)np->y = 95;
 			else np->y += pc->a;
 			np = np->to;
 		}
-	}else{//減算モード
+	}else{//Subtraction mode
 		for(i = 0; i < num; i++){
 			if(np->y == KEYDUMMY);
 			else if(np->y - pc->a < 0)np->y = 0;
@@ -286,7 +286,7 @@ BOOL OrgData::ChangeTransData(PARCHANGE *pc)
 	}
 	return TRUE;
 }
-//ヴォリュームは254がMAX
+//Volume is254ButMAX
 BOOL OrgData::ChangeVolumeData(PARCHANGE *pc)
 {
 	int i,j;
@@ -295,7 +295,7 @@ BOOL OrgData::ChangeVolumeData(PARCHANGE *pc)
 	NOTELIST *np;
 	unsigned char uc, ucMax = 0, ucMin = 254, ucFirstFlg = 255, ucFirst, ucLast;
 	double d, dnum, di, dnorm = 0, dnormnum = 0, dt;
-	//音譜の数を検出
+	//Detect number of notes
 	nc.x1_1 = pc->x1;
 	nc.x1_2 = pc->x2;
 	num = GetNoteNumber(pc->track,&nc);
@@ -304,9 +304,9 @@ BOOL OrgData::ChangeVolumeData(PARCHANGE *pc)
 	np = info.tdata[pc->track].note_list;
 	if(np == NULL || num == 0)return FALSE;
 	
-	//頭だし
+	//Headache
 	while(np != NULL && np->x < pc->x1)np = np->to;
-	//ucMax, ucMinを調べる
+	//ucMax, ucMinTo investigate
 	for(i = 0; i < num; i++){
 		if(np->volume != VOLDUMMY){
 			if(ucFirstFlg == 255){ucFirst = np->volume; lFirstx = np->x; ucFirstFlg = 0;}
@@ -318,29 +318,29 @@ BOOL OrgData::ChangeVolumeData(PARCHANGE *pc)
 		}
 		np = np->to;
 	}
-	if(dnormnum > 0)dnorm = dnorm / dnormnum; //平均値
+	if(dnormnum > 0)dnorm = dnorm / dnormnum; //Average value
 
-	//巻き戻し と 頭だし
+	//Rewind When Headache
 	np = info.tdata[pc->track].note_list;
 	while(np != NULL && np->x < pc->x1)np = np->to;
 
 
-	if(pc->mode == MODEPARADD){//加算モード
+	if(pc->mode == MODEPARADD){//Addition mode
 		for(i = 0; i < num; i++){
 			if(np->volume == VOLDUMMY);
 			else if(np->volume + pc->a > 254)np->volume = 254;
 			else np->volume += pc->a;
 			np = np->to;
 		}
-	}else if(pc->mode == MODEPARSUB){//減算モード
+	}else if(pc->mode == MODEPARSUB){//Subtraction mode
 		for(i = 0; i < num; i++){
 			if(np->volume == VOLDUMMY);
 			else if(np->volume - pc->a < 0)np->volume = 0;
 			else np->volume -= pc->a;
 			np = np->to;
 		}
-	}else if(pc->mode == MODEMULTIPLY){//乗算モード
-		// 既存のvolumeを a / 128倍 する
+	}else if(pc->mode == MODEMULTIPLY){//Multiplication mode
+		// ExistingvolumeTo a / 128Double To
 		for(i = 0; i < num; i++){
 			d = (double)np->volume * (double) pc->a / (double)128.0;
 			if(d>254.0)d=254.0; else if(d<0)d=0;
@@ -351,7 +351,7 @@ BOOL OrgData::ChangeVolumeData(PARCHANGE *pc)
 			else np->volume = uc;
 			np = np->to;
 		}
-	}else if(pc->mode == (MODEDECAY + 3)){ //線形減衰 2014.05.01
+	}else if(pc->mode == (MODEDECAY + 3)){ //Linear attenuation 2014.05.01
 		for(i = 0; i < num; i++){
 			if(np->volume != VOLDUMMY){
 				d = ((double)ucMax - (double)0) / (double)(num - 0) * (double)(num - 0 - i); if(d>254.0)d=254.0; else if(d<0)d=0;
@@ -359,7 +359,7 @@ BOOL OrgData::ChangeVolumeData(PARCHANGE *pc)
 			}
 			np = np->to;
 		}
-	}else if(pc->mode == (MODEDECAY + 12)){ //２乗上昇 2014.05.17
+	}else if(pc->mode == (MODEDECAY + 12)){ //Raised to the second power 2014.05.17
 		for(i = 0; i < num; i++){
 			if(np->volume != VOLDUMMY){
 				if(num > 1){
@@ -371,7 +371,7 @@ BOOL OrgData::ChangeVolumeData(PARCHANGE *pc)
 			}
 			np = np->to;
 		}
-	}else if(pc->mode == (MODEDECAY + 13)){ //線形上昇 2014.05.17
+	}else if(pc->mode == (MODEDECAY + 13)){ //Linear rise 2014.05.17
 		for(i = 0; i < num; i++){
 			if(np->volume != VOLDUMMY){
 				if(num > 1){
@@ -383,7 +383,7 @@ BOOL OrgData::ChangeVolumeData(PARCHANGE *pc)
 			}
 			np = np->to;
 		}
-	}else if(pc->mode == (MODEDECAY + 2)){ //上に凸減衰 2014.05.01
+	}else if(pc->mode == (MODEDECAY + 2)){ //Upward convex damping 2014.05.01
 		if(num < 4)dnum = (double)num;
 		else if(num == 4)dnum = (double)num-0.5f;
 		for(i = 0; i < num; i++){
@@ -397,7 +397,7 @@ BOOL OrgData::ChangeVolumeData(PARCHANGE *pc)
 			}
 			np = np->to;
 		}
-	}else if(pc->mode == (MODEDECAY + 1)){ //上に凸減衰 2014.05.01
+	}else if(pc->mode == (MODEDECAY + 1)){ //Upward convex damping 2014.05.01
 		if(num < 4)dnum = (double)num-0.4f;
 		else if(num == 4)dnum = (double)num-0.5f;
 		else dnum = num - 0.8f;
@@ -412,7 +412,7 @@ BOOL OrgData::ChangeVolumeData(PARCHANGE *pc)
 			}
 			np = np->to;
 		}
-	}else if(pc->mode == (MODEDECAY + 4)){ //下に凸減衰 2014.05.01
+	}else if(pc->mode == (MODEDECAY + 4)){ //Convex damping downward 2014.05.01
 		for(i = 0; i < num; i++){
 			di = (double)i; dnum = (double)num;
 			if(np->volume != VOLDUMMY){
@@ -424,7 +424,7 @@ BOOL OrgData::ChangeVolumeData(PARCHANGE *pc)
 			}
 			np = np->to;
 		}
-	}else if(pc->mode == (MODEDECAY + 5)){ //下に凸減衰 2014.05.01
+	}else if(pc->mode == (MODEDECAY + 5)){ //Convex damping downward 2014.05.01
 		for(i = 0; i < num; i++){
 			di = (double)i; dnum = (double)num;
 			if(np->volume != VOLDUMMY){
@@ -436,16 +436,16 @@ BOOL OrgData::ChangeVolumeData(PARCHANGE *pc)
 			}
 			np = np->to;
 		}
-	}else if(pc->mode == (MODEDECAY + 6)){ //ノーマライズ 2014.05.01
+	}else if(pc->mode == (MODEDECAY + 6)){ //Normalize 2014.05.01
 		for(i = 0; i < num; i++){
 			//di = (double)i; dnum = (double)num;
 			if(np->volume != VOLDUMMY){
 				//np->volume = (unsigned char)dnorm;
-				np->volume = org_data.def_volume[pc->track];//初期化
+				np->volume = org_data.def_volume[pc->track];//Initialization
 			}
 			np = np->to;
 		}
-	}else if(pc->mode == (MODEDECAY + 11)){ //グラデーション 2014.05.01
+	}else if(pc->mode == (MODEDECAY + 11)){ //Gradation 2014.05.01
 		for(i = 0; i < num; i++){
 			di = (double)i; dnum = (double)num;
 			if(np->volume != VOLDUMMY && num > 1){
@@ -455,7 +455,7 @@ BOOL OrgData::ChangeVolumeData(PARCHANGE *pc)
 			}
 			np = np->to;
 		}
-	}else if(pc->mode == (MODEDECAY + 8)){ //最後で減衰
+	}else if(pc->mode == (MODEDECAY + 8)){ //At the end and decay
 		dt = (double)np->volume;
 		j = lLastx - lFirstx; 
 		for(i = 0; i < num; i++){
@@ -497,7 +497,7 @@ BOOL OrgData::ChangeVolumeData(PARCHANGE *pc)
 			}
 			np = np->to;
 		}
-	}else if(pc->mode == (MODEDECAY + 9)){ //ビブラート(ベースは上に凸減衰パターン) 2014.05.01
+	}else if(pc->mode == (MODEDECAY + 9)){ //vibrato(Base convex damping pattern on top) 2014.05.01
 		dt = 1.02;
 		for(i = 0; i < num; i++){
 			di = (double)i; dnum = (double)num - 0.8f;
@@ -514,22 +514,22 @@ BOOL OrgData::ChangeVolumeData(PARCHANGE *pc)
 			}
 			np = np->to;
 		}
-	}else if(pc->mode == (MODEDECAY + 10)){ //ランダム 2014.05.15
+	}else if(pc->mode == (MODEDECAY + 10)){ //random 2014.05.15
 		for(i = 0; i < num; i++){
 			double x, y;
 			double s, t;
 			double r1, r2;
 			di = (double)i; dnum = (double)num;
 			if(np->volume != VOLDUMMY){
-				// 一様分布に従う擬似乱数 x, y を作る
-				do { x = (double)rand()/(double)RAND_MAX; } while (x == 0.0); // x が 0 になるのを避ける
+				// Pseudorandom number following uniform distribution x, y make
+				do { x = (double)rand()/(double)RAND_MAX; } while (x == 0.0); // x But 0 Avoid becoming
 				y = (double)rand()/(double)RAND_MAX;
     
-				// s, t の計算
-				s = sqrt(-2.0 * log(x)); // C, Java では log が自然対数
+				// s, t Calculation
+				s = sqrt(-2.0 * log(x)); // C, Java Then. log Is natural logarithm
 				t = 2.0 * PI * y;
     
-				// 標準正規分布に従う擬似乱数 r1, r2
+				// Pseudorandom number following standard normal distribution r1, r2
 				r1 = s * cos(t);  r2 = s * sin(t);
 				double dval = (double)np->volume + (i%2==1 ? r1 : r2) * 12.0;
 				if(dval < 0)dval = 0; else if(dval > 250)dval = 250.0f;
@@ -539,13 +539,13 @@ BOOL OrgData::ChangeVolumeData(PARCHANGE *pc)
 			}
 			np = np->to;
 		}
-	}else if(pc->mode == (MODEDECAY + 7)){ //χのようなＳ字曲線 2014.05.15
+	}else if(pc->mode == (MODEDECAY + 7)){ //χS curve like 2014.05.15
 		//if(num < 4)dnum = (double)num;
 		//else if(num == 4)dnum = (double)num-0.5f;
 		dnum = (double)num / 2.0;
 		long halfnum = (num+1) / 2; if (halfnum <= 0) halfnum = 1;
 
-		for(i = 0; i < halfnum; i++){ //上に凸
+		for(i = 0; i < halfnum; i++){ //Convex upward
 			di = (double)i;
 			if(np->volume != VOLDUMMY){
 				if(dnum > 0){
@@ -557,7 +557,7 @@ BOOL OrgData::ChangeVolumeData(PARCHANGE *pc)
 			np = np->to;
 		}
 
-		for(i = halfnum; i < num; i++){ //下に凸
+		for(i = halfnum; i < num; i++){ //Convex downward
 			di = (double)(i - halfnum); dnum = (double)num / 2.0;
 			if(np->volume != VOLDUMMY){
 				if(dnum > 0){
@@ -590,7 +590,7 @@ char *test[16]={
 	"14",
 	"15",
 };
-//音譜の尻尾を総チェック
+//Total check of musical score tail
 BOOL OrgData::CheckNoteTail(char tr)
 {
 	NOTELIST *np;
@@ -598,7 +598,7 @@ BOOL OrgData::CheckNoteTail(char tr)
 	np = info.tdata[tr].note_list;
 //	MessageBox(hWnd,test[track],test[track],MB_OK);
 	while(np != NULL){
-		if(np->y != KEYDUMMY){//長さのある音譜なら
+		if(np->y != KEYDUMMY){//If you have a lengthy note
 			tail = np;
 			head = np->to;
 			while(head != NULL && head->y == KEYDUMMY){
@@ -610,7 +610,7 @@ BOOL OrgData::CheckNoteTail(char tr)
 				if(tail->x + tail->length > head->x){
 					tail->length = (unsigned char)(head->x - tail->x);
 				}
-//				np = head->from;// =to を見越して
+//				np = head->from;// =to Anticipating
 			}
 		}
 		np = np->to;
@@ -618,18 +618,18 @@ BOOL OrgData::CheckNoteTail(char tr)
 	return TRUE;	
 }
 
-//[新]音符をPower倍に引き伸ばす
+//[new]Musical notePowerStretch to double
 BOOL OrgData::EnlargeAllNotes(int Power)
 {
 	if(Power<=0)return FALSE;
 	int i,j;
 	NOTELIST *np;
 	for(i=0;i<16;i++){
-		np = info.tdata[i].note_list; //初めの音符
+		np = info.tdata[i].note_list; //The first note
 		if(np != NULL){
 			while(np != NULL){
 				j = np->x * Power;
-				np->x = j; //倍しマース
+				np->x = j; //Doubled Mace
 				j = np->length * Power;
 				if(j>255)j=255;
 				if(info.tdata[i].pipi != 0)j = np->length;
@@ -639,7 +639,7 @@ BOOL OrgData::EnlargeAllNotes(int Power)
 		}
 		
 	}
-	for(i=0;i<16;i++){ //念のため尻尾を見とくか。
+	for(i=0;i<16;i++){ //Want to see the tail just in case?
 		CheckNoteTail(i);
 	}
 	info.wait = info.wait / Power; if(info.wait <=0) info.wait = 1;
@@ -647,31 +647,31 @@ BOOL OrgData::EnlargeAllNotes(int Power)
 	info.end_x = info.end_x * Power;
 	j = info.dot * Power;
 	if(j<=255)info.dot = (unsigned char)j;
-	MakeMusicParts(info.line,info.dot);//パーツを生成
+	MakeMusicParts(info.line,info.dot);//Generate parts
 	MakePanParts(info.line,info.dot);
 
 	return TRUE;
 }
-//[新]音符を1/Power倍に縮こめる
+//[new]Musical note1/PowerShrink to double
 BOOL OrgData::ShortenAllNotes(int Power)
 {
 	if(Power<=1)return FALSE;
 	int i,j,k;
 	NOTELIST *np, *np2;
 	for(i=0;i<16;i++){
-		np = info.tdata[i].note_list; //初めの音符
+		np = info.tdata[i].note_list; //The first note
 		if(np != NULL){
 			while(np != NULL){
 				np2 = np->to;
-				k = np->x % Power; //これが0でないときは無条件で消すよ。
+				k = np->x % Power; //This is0When it is not, I will erase it unconditionally.
 				if(k==0){
 					j = np->x / Power;			
-					np->x = j; //倍しマース
+					np->x = j; //Doubled Mace
 					j = np->length / Power;
-					//長さ１の音符はかわいそうだ残してやろう。
+					//I will be sorry for the note of length 1.
 					if(np->length != 1) np->length = (unsigned char)j;
 				}else{
-					//音符を消すよ。
+					//I will erase the notes.
 					PARCHANGE p;
 					p.track = i;
 					p.x1 = np->x;
@@ -683,7 +683,7 @@ BOOL OrgData::ShortenAllNotes(int Power)
 		}
 		
 	}
-	for(i=0;i<16;i++){ //念のため尻尾を見とくか。
+	for(i=0;i<16;i++){ //Want to see the tail just in case?
 		CheckNoteTail(i);
 	}
 
@@ -694,14 +694,14 @@ BOOL OrgData::ShortenAllNotes(int Power)
 
 	j = info.dot / Power;
 	if(j>=1)info.dot = (unsigned char)j;
-	MakeMusicParts(info.line,info.dot);//パーツを生成
+	MakeMusicParts(info.line,info.dot);//Generate parts
 	MakePanParts(info.line,info.dot);
 
 	return TRUE;
 	
 }
 
-//[新]空白を埋める 2014.05.01
+//[new]Fill in the blank 2014.05.01
 BOOL OrgData::EnsureEmptyArea(PARCHANGE *pc, int Function)
 {
 	int j, iLength, iFlg;
@@ -733,7 +733,7 @@ BOOL OrgData::EnsureEmptyArea(PARCHANGE *pc, int Function)
 						break;
 					}
 				}
-				if(Function == 8 && iFlg == 1 && tmpx < np->x + iLength - 3)iFlg = 0; //最後でなければわざわざ追加しなくてもいいでしょう。
+				if(Function == 8 && iFlg == 1 && tmpx < np->x + iLength - 3)iFlg = 0; //I do not have to bother adding it unless it&#39;s the last one.
 				if(Function < 20){
 					if(iFlg == 1){
 						if(FALSE == SetVolume(tmpx, np->volume)){
@@ -742,7 +742,7 @@ BOOL OrgData::EnsureEmptyArea(PARCHANGE *pc, int Function)
 					}
 				}else if(Function == 20){
 					if(iFlg == 0){
-						if(FALSE == CutVolume(tmpx, 0)){ //第二引数は意味ないと思う。
+						if(FALSE == CutVolume(tmpx, 0)){ //I think the second argument is meaningless.
 							return FALSE;
 						}
 					}
@@ -754,65 +754,65 @@ BOOL OrgData::EnsureEmptyArea(PARCHANGE *pc, int Function)
 			tmpc.track = pc->track;  tmpc.x1 = np->x;  tmpc.x2 = np->x + np->length - 1;  tmpc.a = 1;  
 			tmpc.mode = (unsigned char)(MODEDECAY + Function);
 			if(np->y!=KEYDUMMY)ChangeVolumeData(&tmpc);
-		}else if(Function == 20){ //ｸﾘｱ
-			//何もしない
+		}else if(Function == 20){ //Clear
+			//do nothing
 		}
 	}
 	return TRUE;
 }
 
-//iFullTrack==1のときはiTrackは無視。
+//iFullTrack==1WheniTrackIgnore.
 bool OrgData::CopyNoteDataToCB(NOTECOPY *nc, int iTrack, int iFullTrack )
 {
 	/*
 	int i,j,t,n;
-	PARCHANGE pc;//ペースト領域クリア用
+	PARCHANGE pc;//For paste area clearing
 	NOTELIST *np;
-//	NOTELIST *p_in1,*p_in2;//挿入すべき場所
-	NOTELIST *p_list1,*p_list2;//挿入すべきリスト
-	NOTELIST *work;//ワークエリア
-	NOTELIST *wp;//ワークポインタ
-	long ind_x;//インデックス値（x)
-	long copy_num;//コピーする音譜の数
+//	NOTELIST *p_in1,*p_in2;//Place to insert
+	NOTELIST *p_list1,*p_list2;//List to insert
+	NOTELIST *work;//Work area
+	NOTELIST *wp;//Work pointer
+	long ind_x;//Index value (x)
+	long copy_num;//Number of notes to be copied
 
 	ClearVirtualCB();
-	AddStartToVirtualCB(); //クリップボードに代入開始
+	AddStartToVirtualCB(); //Start assigning to clipboard
 	AddIntegerToVirtualCB(iFullTrack);
 	AddIntegerToVirtualCB(iTrack);
-	AddIntegerToVirtualCB(nc->x1_1); //ここから
-	AddIntegerToVirtualCB(nc->x1_2); //ここまで
+	AddIntegerToVirtualCB(nc->x1_1); //from here
+	AddIntegerToVirtualCB(nc->x1_2); //So far
 
-	//あとはとにかく、クリップボードに内容を移す
+	//Anyway, transfer contents to clipboard
 
 	ind_x = nc->x1_1;
 
 	for(t=0;t<MAXTRACK;t++){
 		if(iFullTrack==1 || iTrack==t){
-			copy_num = GetNoteNumber(t,nc);//その範囲に使われている音符の数を検出
-			AddIntegerToVirtualCB(copy_num); //音符は何個？
+			copy_num = GetNoteNumber(t,nc);//Detects the number of notes used in that range
+			AddIntegerToVirtualCB(copy_num); //How many notes?
 
 			if(copy_num == 0){
-				AddTrackSeparater(); //＠を挿入
+				AddTrackSeparater(); //Insert @
 				continue;
 			}
 
-			//wp = work = (NOTELIST *)malloc(sizeof(NOTELIST)*copy_num);//ワーク用に領域を確保
-			//ワーク領域にコピー
+			//wp = work = (NOTELIST *)malloc(sizeof(NOTELIST)*copy_num);//Secure space for work
+			//Copy to work area
 			np = info.tdata[nc->track1].note_list;
 			while(np != NULL && np->x < nc->x1_1)np = np->to;
 			if(np == NULL){
 				//free( work );
-				AddTrackSeparater(); //＠を挿入
-				continue;//コピー元に音譜無し(頭を検索中にOUT)...そんな状況あるのか？
+				AddTrackSeparater(); //Insert @
+				continue;//No note in the copy source(While head searchingOUT)...Is there such a situation?
 			}
-			for(i = 0; i < copy_num; i++){//１ペースト
+			for(i = 0; i < copy_num; i++){//1 Paste
 				//wp->length = np->length;
 				//wp->pan    = np->pan;
 				//wp->volume = np->volume;
 				//wp->y      = np->y;
-				//インデックス値は差し引く
+				//Deduct the index value
 				//wp->x      = np->x - ind_x;
-				//次へ
+				//next
 				AddIntegerToVirtualCB((int)np->length);
 				AddIntegerToVirtualCB((int)np->pan);
 				AddIntegerToVirtualCB((int)np->volume);
@@ -823,10 +823,10 @@ bool OrgData::CopyNoteDataToCB(NOTECOPY *nc, int iTrack, int iFullTrack )
 				//wp++;
 			}
 			//free( work );
-			AddTrackSeparater(); //＠を挿入
+			AddTrackSeparater(); //Insert @
 		}
 	}
-	SetClipBoardFromVCB(); //真のクリップボードに
+	SetClipBoardFromVCB(); //On a true clipboard
 */
 	return true;
 }

@@ -1,22 +1,22 @@
 # Microsoft Developer Studio Generated NMAKE File, Based on Org13.dsp
 !IF "$(CFG)" == ""
 CFG=Org13 - Win32 Debug
-!MESSAGE 構成が指定されていません。ﾃﾞﾌｫﾙﾄの Org13 - Win32 Debug を設定します。
+!MESSAGE Configuration not specified. Default Org13 - Win32 Debug .
 !ENDIF 
 
 !IF "$(CFG)" != "Org13 - Win32 Release" && "$(CFG)" != "Org13 - Win32 Debug"
-!MESSAGE 指定された ﾋﾞﾙﾄﾞ ﾓｰﾄﾞ "$(CFG)" は正しくありません。
-!MESSAGE NMAKE の実行時に構成を指定できます
-!MESSAGE ｺﾏﾝﾄﾞ ﾗｲﾝ上でﾏｸﾛの設定を定義します。例:
+!MESSAGE Designated Build Mode "$(CFG)" It is not correct.
+!MESSAGE NMAKE You can specify the configuration at run time
+!MESSAGE Command Define macro settings on the line. An example:
 !MESSAGE 
 !MESSAGE NMAKE /f "Org13.mak" CFG="Org13 - Win32 Debug"
 !MESSAGE 
-!MESSAGE 選択可能なﾋﾞﾙﾄﾞ ﾓｰﾄﾞ:
+!MESSAGE Selectable builds Mode:
 !MESSAGE 
-!MESSAGE "Org13 - Win32 Release" ("Win32 (x86) Application" 用)
-!MESSAGE "Org13 - Win32 Debug" ("Win32 (x86) Application" 用)
+!MESSAGE "Org13 - Win32 Release" ("Win32 (x86) Application" for)
+!MESSAGE "Org13 - Win32 Debug" ("Win32 (x86) Application" for)
 !MESSAGE 
-!ERROR 無効な構成が指定されています。
+!ERROR An invalid configuration is specified.
 !ENDIF 
 
 !IF "$(OS)" == "Windows_NT"

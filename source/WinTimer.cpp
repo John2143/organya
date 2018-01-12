@@ -2,7 +2,7 @@
 //include  : mmsystem.h
 //Import   : WinMM.lib
 //
-//Contents : 「マルチメディアタイマーの使用方法」
+//Contents : &quot;How to use the multimedia timer&quot;
 //
 
 #include <windows.h>  //Win32n API's
@@ -10,11 +10,11 @@
 #include "DefOrg.h"
 #include "OrgData.h"
 
-//エラーチェックマクロ
+//Error check macro
 //#define MMInspect(ret)  if((ret) != TIMERR_NOERROR) return FALSE;
 
 /*■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■*/
-//プロトタイプ宣言
+//prototype declaration
 /*■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■*/
 
 BOOL InitMMTimer();
@@ -23,67 +23,67 @@ VOID CALLBACK TimerProc(UINT uTID,UINT uMsg,DWORD dwUser,DWORD dwParam1,DWORD dw
 BOOL QuitMMTimer();
 
 /*■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■*/
-//グローバル変数
+//Global variables
 /*■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■*/
-static UINT ExactTime   = 13;//最小精度
+static UINT ExactTime   = 13;//Minimum precision
 static UINT TimerID     = NULL;
 
 /*■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■*/
-//タイマー精度を設定する。
-//この関数はアプリケーション初期化時に一度呼び出す。
+//Set the timer accuracy.
+//This function is called once at application initialization.
 /*■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■*/
 BOOL InitMMTimer()
 {
 	TIMECAPS tc;
 	MMRESULT ret;
 
-	//タイマーの精度情報を取得する
+	//Acquire timer accuracy information
 	ret = timeGetDevCaps(&tc,sizeof(TIMECAPS));
 	if(ret != TIMERR_NOERROR) return FALSE;
 	if(ExactTime < tc.wPeriodMin)ExactTime = tc.wPeriodMin;
-	//この精度で初期化する
+	//Initialize with this accuracy
 	ret = timeBeginPeriod(ExactTime);
 	if(ret != TIMERR_NOERROR) return FALSE;
 	return TRUE;
 }
 
 /*■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■*/
-//タイマーを起動する。
-//dwTimer   設定するタイマー間隔
+//Start the timer.
+//dwTimer   Timer interval to set
 /*■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■*/
 BOOL StartTimer(DWORD dwTimer)
 {
 	MMRESULT ret = NULL;
 	ExactTime = dwTimer;
-	//タイマーを生成する
+	//Generate a timer
 	TimerID = timeSetEvent
 	(
-		dwTimer,       //タイマー時間
-		10,             //許容できるタイマー精度
-		(LPTIMECALLBACK)TimerProc, //コールバックプロシージャ
-		NULL,          //ユーザーがコールバック関数のdwUserに送る情報値
-		TIME_PERIODIC //タイマー時間毎にイベントを発生させる
+		dwTimer,       //Timer time
+		10,             //Acceptable timer accuracy
+		(LPTIMECALLBACK)TimerProc, //Callback procedure
+		NULL,          //The user callback functiondwUserInformation value to send to
+		TIME_PERIODIC //Generate an event at every timer time
 	);
 	if(ret != TIMERR_NOERROR) return FALSE;
 	return TRUE;
 }
 /*■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■*/
-//タイマーのコールバック関数
+//Timer&#39;s callback function
 /*■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■*/
 VOID CALLBACK TimerProc(UINT uTID,UINT uMsg,DWORD dwUser,DWORD dwParam1,DWORD dwParam2)
 {
 	DWORD dwNowTime;
 	dwNowTime = timeGetTime();
 	//===================================================================================
-	//ここにユーザー定義のソースを書く。
-	//基本的に関数を呼び出すだけで処理は他の関数でするべきだろう。
+	//Write a user-defined source here.
+	//Basically, you only need to call the function and you should do the other function.
 	//===================================================================================
 	org_data.PlayData();
 }
 
 /*■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■*/
-//タイマーリソースを開放する。
-//アプリケーション終了時に一度呼び出す。
+//Release the timer resource.
+//Call it once at the end of the application.
 /*■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■*/
 BOOL QuitMMTimer()
 {
@@ -91,11 +91,11 @@ BOOL QuitMMTimer()
 
 	if(TimerID != TIMERR_NOERROR)
 	{
-		//タイマーを使用中なら終了させる
+		//Terminate the timer if it is in use
 		ret = timeKillEvent(TimerID);
 		if((ret) != TIMERR_NOERROR) return FALSE;
 	}
-	//タイマーリソースを開放する
+	//Free timer resources
 	ret = timeEndPeriod(ExactTime);
 	if((ret) != TIMERR_NOERROR) return FALSE;
 	return TRUE;

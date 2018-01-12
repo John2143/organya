@@ -31,19 +31,19 @@ typedef struct{
 	char dot;
 }GRID;
 GRID grid[NUMGRIDA] = {
-	{"☆自由設定",0,0},
-	{"４拍：４分割",4,4},
-	{"４拍：３分割",4,3},
-	{"３拍：４分割",3,4},
-	{"３拍：３分割",3,3},
-	{"４拍：６分割",4,6},
-	{"３拍：６分割",3,6},
-	{"４拍：２分割",4,2},
-	{"４拍：８分割",4,8},
-	{"４拍：12分割",4,12},
-	{"５拍：４分割",5,4},
+	{"☆Free setting",0,0},
+	{"4 beats: 4 divided",4,4},
+	{"4 beats: divided into 3",4,3},
+	{"3 beats: divided into 4",3,4},
+	{"3 beats: divided into 3",3,3},
+	{"4 beats: divided into 6",4,6},
+	{"3 beats: 6 divided",3,6},
+	{"4 beats: divided into 2",4,2},
+	{"4 beats: 8 divided",4,8},
+	{"4 beats:12Split",4,12},
+	{"5 beats: divided into 4",5,4},
 };
-//IDS_GRID_STRINGに!区切りで追加すること。ここの文字列はﾀﾞﾐｰです。
+//IDS_GRID_STRINGInto!Add at the end. The string here is a dummy.
 
 int check_pipi[NUMGRID] ={
 	IDC_CHECK_PIPI0,
@@ -76,32 +76,32 @@ int Preset1_Vol[]={
 };
 
 
-//char *strTrack[] ={"１", "２", "３", "４", "５", "６", "７", "８",  "Ｑ", "Ｗ", "Ｅ", "Ｒ", "Ｔ", "Ｙ", "Ｕ", "Ｉ"};	// 2014.10.19 D
+//char *strTrack[] ={"1", "2", "3", "4", "5", "6", "7", "8",  "Q", "W", "E", "R", "T", "Y", "U", "I"};	// 2014.10.19 D
 char *strTrack[MAXTRACK];	// 2014.10.19 A
-//char *strNNNTrack[] ={"[１]", "[２]", "[３]", "[４]", "[５]", "[６]", "[７]", "[８]",  "[Ｑ]", "[Ｗ]", "[Ｅ]", "[Ｒ]", "[Ｔ]", "[Ｙ]", "[Ｕ]", "[Ｉ]"};	// 2014.10.19 D
+//char *strNNNTrack[] ={"[1]", "[2]", "[3]", "[4]", "[5]", "[6]", "[7]", "[8]",  "[Q]", "[W]", "[E]", "[R]", "[T]", "[Y]", "[U]", "[I]"};	// 2014.10.19 D
 char *strNNNTrack[MAXTRACK];	// 2014.10.19 A
 
-int SamplePlayHeight = 36; //サンプル音を鳴らす高さ
+int SamplePlayHeight = 36; //Height that sounds the sample sound
 
-int SaveWithInitVolFile;	//曲データと…セーブするか。
+int SaveWithInitVolFile;	//Song data and…Do you want to save?
 
-extern HINSTANCE hInst;//インスタンスハンドル
-extern void ClearEZC_Message(); //EZメッセージと範囲を消す
+extern HINSTANCE hInst;//Instance handle
+extern void ClearEZC_Message(); //EZErase messages and ranges
 
 double GetNormDistRand(){
 	double x, y;
 	double s, t;
 	double r1, r2;
 
-	// 一様分布に従う擬似乱数 x, y を作る
-	do { x = (double)rand()/(double)RAND_MAX; } while (x == 0.0); // x が 0 になるのを避ける
+	// Pseudorandom number following uniform distribution x, y make
+	do { x = (double)rand()/(double)RAND_MAX; } while (x == 0.0); // x But 0 Avoid becoming
 	y = (double)rand()/(double)RAND_MAX;
 
-	// s, t の計算
-	s = sqrt(-2.0 * log(x)); // C, Java では log が自然対数
+	// s, t Calculation
+	s = sqrt(-2.0 * log(x)); // C, Java Then. log Is natural logarithm
 	t = 2.0 * PI * y;
 
-	// 標準正規分布に従う擬似乱数 r1, r2
+	// Pseudorandom number following standard normal distribution r1, r2
 	r1 = s * cos(t);  r2 = s * sin(t);
 	return r2;
 }
@@ -136,35 +136,35 @@ void EnableDialogWindow(int iValue = TRUE)
 }
 
 
-//ダイアログ内容の初期化
+//Initialize dialog contents
 void InitSettingDialog(HWND hdwnd)
 {
 	char str[128] = {NULL};
 	long i,a;
 	MUSICINFO mi;
 	org_data.GetMusicInfo(&mi);
-//	//編集トラック情報の初期化//////////////////
+//	//Initialization of edit track information//////////////////
 //	itoa(org_data.track,str,10);
 //	SetDlgItemText(hdwnd,IDD_SETTRACK,str);
-	//再生ウエイトの初期化//////////////////
+	//Initialize playback weight//////////////////
 	itoa(mi.wait,str,10);
 	SetDlgItemText(hdwnd,IDD_SETWAIT,str);
 	itoa((60000 / (mi.wait * mi.dot)),str,10);
 	SetDlgItemText(hdwnd, IDC_BPM, str);
-	//ｸﾞﾘｯﾄﾞの初期化
+	//Initialize the grid
 	TCHAR *q, *p;
 	p = MessageString[IDS_GRID_STRING];
 	for(i = 0; i < NUMGRIDA; i++){
-		for(q = grid[i].name; *p != 0; p++, q++)*q = *p; //実質strcpy
-		*q = 0; p++; //ポインタを'¥0'の次に
+		for(q = grid[i].name; *p != 0; p++, q++)*q = *p; //Realstrcpy
+		*q = 0; p++; //Pointer'¥0'Next
 	}
 
-	//表示グリッドの初期化//////////////////
-	for(i = 0; i < NUMGRIDA; i++)//リストボックスの初期化
+	//Initialize display grid//////////////////
+	for(i = 0; i < NUMGRIDA; i++)//Initialize list box
 		SendDlgItemMessage(hdwnd,IDD_LB1,LB_ADDSTRING,0,(LPARAM)grid[i].name);
-	for(i = 0; i < NUMGRIDA; i++)//現在使用中のグリッドを検索
+	for(i = 0; i < NUMGRIDA; i++)//Search grid currently in use
 		if(mi.line == grid[i].line && mi.dot == grid[i].dot)break;
-	if(i == NUMGRIDA)i = 0;//無ければ０を設定
+	if(i == NUMGRIDA)i = 0;//Set to 0 if not
 	
 	if(i > 0){
 		a = grid[i].line;
@@ -173,10 +173,10 @@ void InitSettingDialog(HWND hdwnd)
 		a = grid[i].dot;
 		itoa(a,str,10);
 		SetDlgItemText(hdwnd,IDD_GRIDEDIT2,str);
-		EnableWindow(GetDlgItem(hdwnd, IDD_GRIDEDIT1), FALSE); //自由設定テキスト無効化
+		EnableWindow(GetDlgItem(hdwnd, IDD_GRIDEDIT1), FALSE); //Free setting text invalidation
 		EnableWindow(GetDlgItem(hdwnd, IDD_GRIDEDIT2), FALSE);
 	}else{
-		EnableWindow(GetDlgItem(hdwnd, IDD_GRIDEDIT1), TRUE); //自由設定テキスト有効化
+		EnableWindow(GetDlgItem(hdwnd, IDD_GRIDEDIT1), TRUE); //Free setting text activation
 		EnableWindow(GetDlgItem(hdwnd, IDD_GRIDEDIT2), TRUE);
 		a = mi.line;
 		itoa(a,str,10);
@@ -187,14 +187,14 @@ void InitSettingDialog(HWND hdwnd)
 	}
 
 	SendDlgItemMessage(hdwnd,IDD_LB1,LB_SETCURSEL,i,0);
-	//リピート範囲の初期化//////////////////
+	//Initialization of repeat range//////////////////
 	a = mi.repeat_x / (mi.dot * mi.line);
 	itoa(a,str,10);
 	SetDlgItemText(hdwnd,IDD_REP_MEAS,str);
 	a = mi.end_x / (mi.dot * mi.line);
 	itoa(a,str,10);
 	SetDlgItemText(hdwnd,IDD_END_MEAS,str);
-	//の初期化//////////////////
+	//Initialize//////////////////
 	a = mi.tdata[0].freq;
 	itoa(a,str,10);
 	SetDlgItemText(hdwnd,IDD_SETFREQ0,str);
@@ -220,14 +220,14 @@ void InitSettingDialog(HWND hdwnd)
 	itoa(a,str,10);
 	SetDlgItemText(hdwnd,IDD_SETFREQ7,str);
 
-	for(i = 0; i < NUMGRID; i++){//pipiの初期化
+	for(i = 0; i < NUMGRID; i++){//pipiInitialize
 		if( mi.tdata[i].pipi )
 			CheckDlgButton( hdwnd, check_pipi[i], 1 );
 	}
-	//MessageBox(NULL, "メッセージループを抜けました", "OK", MB_OK);
+	//MessageBox(NULL, "I left the message loop", "OK", MB_OK);
 }
 
-//ウエイトの設定
+//Setting weight
 BOOL SetWait(HWND hdwnd, MUSICINFO *mi)
 {
 	char str[128] = {NULL};
@@ -235,7 +235,7 @@ BOOL SetWait(HWND hdwnd, MUSICINFO *mi)
 	GetDlgItemText(hdwnd,IDD_SETWAIT,str,7);
 	a = atol(str);
 	if(a > 2000 || a < 1){
-		//MessageBox(hdwnd,"1〜2000にしてください","ERROR(ウエイト)",MB_OK);	// 2014.10.19 D
+		//MessageBox(hdwnd,"1~2000Please","ERROR(weight)",MB_OK);	// 2014.10.19 D
 		msgbox(hdwnd,IDS_VALUESET12000,IDS_ERROR_WAIT,MB_OK);	// 2014.10.19 A
 		return FALSE;
 	}
@@ -243,12 +243,12 @@ BOOL SetWait(HWND hdwnd, MUSICINFO *mi)
 	return TRUE;
 }
 
-//表示グリッドの設定
+//Setting display grid
 BOOL SetGrid(HWND hdwnd,MUSICINFO *mi)
 {
 	int i;
-	//選択グリッドの設定///////////////////////
-	i = SendDlgItemMessage(hdwnd, IDD_LB1,LB_GETCURSEL,0,0);//インデックスを得る
+	//Setting Selection Grid///////////////////////
+	i = SendDlgItemMessage(hdwnd, IDD_LB1,LB_GETCURSEL,0,0);//Get Index
 //	EndDialog(hdwnd,0);
 	if(i>0){
 		mi->dot = grid[i].dot;
@@ -259,14 +259,14 @@ BOOL SetGrid(HWND hdwnd,MUSICINFO *mi)
 		GetDlgItemText(hdwnd,IDD_GRIDEDIT1,str,3);
 		a = atol(str);
 		if(a<=0 || a>=128){
-			//MessageBox(hdwnd,"拍子の数値がおかしいです。","ERROR(拍子)",MB_OK);	// 2014.10.19 D
+			//MessageBox(hdwnd,"The numerical value of the beat is wrong.","ERROR(Beat)",MB_OK);	// 2014.10.19 D
 			msgbox(hdwnd,IDS_WARNING_HYOUSHI,IDS_ERROR_HYOUSHI,MB_OK);	// 2014.10.19 A
 			return FALSE;
 		}
 		GetDlgItemText(hdwnd,IDD_GRIDEDIT2,str,3);
 		b = atol(str);
 		if(b<=0 || b>=128){
-			//MessageBox(hdwnd,"分割の数値がおかしいです。","ERROR(分割)",MB_OK);	// 2014.10.19 D
+			//MessageBox(hdwnd,"The division number is wrong.","ERROR(Split)",MB_OK);	// 2014.10.19 D
 			msgbox(hdwnd,IDS_WARNING_BUNKATSU,IDS_ERROR_BUNKATSU,MB_OK);	// 2014.10.19 A
 			return FALSE;
 		}
@@ -277,7 +277,7 @@ BOOL SetGrid(HWND hdwnd,MUSICINFO *mi)
 	}
 	return TRUE;
 }
-//リピート範囲の設定
+//Setting repeat range
 BOOL SetRepeat(HWND hdwnd, MUSICINFO *mi)
 {
 	char str[128] = {NULL};
@@ -289,13 +289,13 @@ BOOL SetRepeat(HWND hdwnd, MUSICINFO *mi)
 	b = atol(str);
 	mi->end_x = (unsigned short)b*mi->line*mi->dot;
 	if(mi->end_x <= mi->repeat_x){
-		//MessageBox(hdwnd,"あたま＜おわり に設定してください","ERROR(リピート範囲)",MB_OK);	// 2014.10.19 D
+		//MessageBox(hdwnd,"Headache &lt;end Please set","ERROR(Repeat range)",MB_OK);	// 2014.10.19 D
 		msgbox(hdwnd,IDS_WARNING_FROM_TO,IDS_ERROR_REPERT,MB_OK);	// 2014.10.19 A
 		return FALSE;
 	}
 	return TRUE;
 }
-//追加周波数の設定
+//Setting Additional Frequency
 int freqbox[MAXTRACK] = {
 	IDD_SETFREQ0,
 	IDD_SETFREQ1,
@@ -322,13 +322,13 @@ BOOL SetTrackFreq(HWND hdwnd, MUSICINFO *mi)
 	for(int i = 0; i < MAXMELODY; i++){
 		GetDlgItemText(hdwnd,freqbox[i],str,7);
 		a = (unsigned short)atol(str);
-//削除 2014.05.02
+//Delete 2014.05.02
 //		if(a < 100 || a > 1900){
-//			MessageBox(hdwnd,"100〜1900に設定","ERROR(周波数)",MB_OK);
+//			MessageBox(hdwnd,"100~1900Set to","ERROR(frequency)",MB_OK);
 //			return FALSE;
 //		}
 		if(a < 100 || a > 1900){
-			//MessageBox(hdwnd,"100〜1900に設定したほうがいいですよ。","お知らせ(周波数)",MB_OK);	// 2014.10.19 D
+			//MessageBox(hdwnd,"100~1900It&#39;s better to set it to.","Notice(frequency)",MB_OK);	// 2014.10.19 D
 			msgbox(hdwnd,IDS_VALUESET1001900,IDS_INFO_TITLE_FREQ,MB_OK);	// 2014.10.19 A
 //			return FALSE;
 		}
@@ -347,20 +347,20 @@ BOOL SetPipiCheck(HWND hdwnd, MUSICINFO *mi)
 	return TRUE;
 }
 
-//曲の設定
+//Song setting
 BOOL CALLBACK DialogSetting(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	int i, j;
 	int iBPM, iWAIT;
 	char str[128] = {NULL};
-	RECT rect = {64,0,WWidth,WHeight};//更新する領域
+	RECT rect = {64,0,WWidth,WHeight};//Area to update
 	MUSICINFO mi,mg;
 	switch(message){
-	case WM_INITDIALOG://ダイアログが呼ばれた
+	case WM_INITDIALOG://A dialog was called
 		InitSettingDialog(hdwnd);
 		EnableDialogWindow(FALSE);
 		return 1;
-	case WM_CTLCOLOREDIT: //テキストが編集された。
+	case WM_CTLCOLOREDIT: //Text was edited.
 		
 		break;
 	case WM_COMMAND:
@@ -386,8 +386,8 @@ BOOL CALLBACK DialogSetting(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lPar
 			}
 			return 1;
 		case IDD_LB1:
-			if(HIWORD(wParam) == LBN_SELCHANGE){ //ﾘｽﾄﾎﾞｯｸｽでの選択変更
-				i = SendDlgItemMessage(hdwnd, IDD_LB1,LB_GETCURSEL,0,0);//インデックスを得る
+			if(HIWORD(wParam) == LBN_SELCHANGE){ //Change selection in list box
+				i = SendDlgItemMessage(hdwnd, IDD_LB1,LB_GETCURSEL,0,0);//Get Index
 				if(i == 0){
 					EnableWindow(GetDlgItem(hdwnd, IDD_GRIDEDIT1), TRUE);
 					EnableWindow(GetDlgItem(hdwnd, IDD_GRIDEDIT2), TRUE);
@@ -400,7 +400,7 @@ BOOL CALLBACK DialogSetting(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lPar
 		case IDD_REP_MEAS: case IDD_END_MEAS: case IDD_SETWAIT: case IDC_BPM:
 		case IDD_GRIDEDIT1: case IDD_GRIDEDIT2:
 		case IDD_SETFREQ0: case IDD_SETFREQ1: case IDD_SETFREQ2: case IDD_SETFREQ3: case IDD_SETFREQ4: case IDD_SETFREQ5: case IDD_SETFREQ6: case IDD_SETFREQ7:
-			if(HIWORD(wParam) == EN_SETFOCUS)PostMessage(GetDlgItem(hdwnd, LOWORD(wParam)), EM_SETSEL, 0, -1); //フォーカス時にテキストを全選択する
+			if(HIWORD(wParam) == EN_SETFOCUS)PostMessage(GetDlgItem(hdwnd, LOWORD(wParam)), EM_SETSEL, 0, -1); //Select all text when focusing
 			return -1;
 		case IDCANCEL:
 			EndDialog(hdwnd,0);
@@ -414,20 +414,20 @@ BOOL CALLBACK DialogSetting(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lPar
 			if(!SetTrackFreq(hdwnd, &mi))return 1;
 			SetPipiCheck( hdwnd, &mi );
 
-			//プレイヤーに表示
+			//Show to player
 			itoa(mi.wait,str,10);
 			SetDlgItemText(hDlgTrack,IDE_VIEWWAIT,str);
-			//パラメータを設定
+			//Set parameters
 			org_data.SetMusicInfo(&mi,SETGRID|SETWAIT|SETREPEAT|SETFREQ|SETPIPI);
-			//波形の作りなおし
+			//Re-create the waveform
 			for(j = 0; j < MAXMELODY; j++)
 				MakeOrganyaWave(j,mi.tdata[j].wave_no,mi.tdata[j].pipi);
-			//再描画
+			//redraw
 			org_data.PutMusic();
 			RedrawWindow(hWnd,&rect,NULL,RDW_INVALIDATE|RDW_ERASENOW);
 			EndDialog(hdwnd,0);
 			EnableDialogWindow(TRUE);
-			ClearEZC_Message(); //EZメッセージと範囲を消す
+			ClearEZC_Message(); //EZErase messages and ranges
 			return 1;
 		}
 	}
@@ -448,7 +448,7 @@ char *dram_name[] = {
 
 	"Bass03",
 	"Tom02",
-	"Bass04", //新規追加
+	"Bass04", //New addition
 	"Bass05",
 	"Snare03",
 
@@ -467,7 +467,7 @@ char *dram_name[] = {
 	"OrcDrm01",	
 	"Bell",
 	"Cat" ,
-	"Bass06",		//さらに追加
+	"Bass06",		//Add more
 	"Bass07",
 
 	"Snare05",
@@ -480,13 +480,13 @@ char *dram_name[] = {
 	"Clap01",
 	"Pesi01",
 	"Quick01",
-	"Bass08" ,		//懲りずに追加	// 2011.10.17 
+	"Bass08" ,		//Add without discernment	// 2011.10.17 
 
 	"Snare08",
 	"HiClose05",
 };
 
-//アルファベット順変換定義
+//Alphabetical conversion definition
 unsigned char Wave_no_to_List_no[]={
 	0,1,10,12,13,28,29,39,26,27,36,7,20,5,16,18,35,41,6,17,19,34,25,8,9,37,38,21,22,2,3,14,15,30,31,32,40,4,11,23,24,33
 };
@@ -554,17 +554,17 @@ BOOL CALLBACK DialogWave(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam)
 	static int iLastLBox = 0;
 	static int iMeloDrumMode = 0;
 	switch(message){
-	case WM_INITDIALOG://ダイアログが呼ばれた
-		//strTrack, strNNNTrackに文字列を代入する。
+	case WM_INITDIALOG://A dialog was called
+		//strTrack, strNNNTrack.
 		for(p = MessageString[IDS_STRING112], i=0; i<MAXTRACK; i++){
 			strTrack[i] = (char *)p;
-			for(; *p != 0; p++); //文字列終端までポインタ移動
-			p++; //その次の文字にポインタ移動
+			for(; *p != 0; p++); //Move pointer to end of character string
+			p++; //Move pointer to next character
 		}
 		for(p = MessageString[IDS_STRING113], i=0; i<MAXTRACK; i++){
 			strNNNTrack[i] = (char *)p;
-			for(; *p != 0; p++); //文字列終端までポインタ移動
-			p++; //その次の文字にポインタ移動
+			for(; *p != 0; p++); //Move pointer to end of character string
+			p++; //Move pointer to next character
 		}
 		org_data.GetMusicInfo(&mi);
 		//FREQ & PIPI
@@ -573,9 +573,9 @@ BOOL CALLBACK DialogWave(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam)
 			SetDlgItemText(hdwnd,IDD_SETFREQx0+j,str);
 			CheckDlgButton( hdwnd, IDC_CHECK_PIPIx0+j, (mi.tdata[j].pipi ? 1 : 0) );
 		}
-		//メロディリストボックスの初期化
+		//Initialize the melody list box
 		for(j = 0; j < MAXMELODY; j++){
-			SendDlgItemMessage(hdwnd,freqbox[j],LB_RESETCONTENT,0,0);//初期化
+			SendDlgItemMessage(hdwnd,freqbox[j],LB_RESETCONTENT,0,0);//Initialization
 			for(i = 0; i < MAXWAVE; i++){
 				if(i == mi.tdata[j].wave_no){
 					sprintf(str,MessageString[IDS_STRING117],i);	// 2010.09.30 D "Wave-%02d*"
@@ -585,22 +585,22 @@ BOOL CALLBACK DialogWave(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam)
 				//sprintf(str," %02d",i);	// 2010.09.30 A
 				SendDlgItemMessage(hdwnd,freqbox[j],LB_ADDSTRING,0,(LPARAM)str);//(LPARAM)wave_name[i].name);
 			}
-			//最初のアイテムを選択
+			//Select the first item
 			SendDlgItemMessage(hdwnd,freqbox[j],LB_SETCURSEL,mi.tdata[j].wave_no,0);
 			SendDlgItemMessage(hdwnd,freqbox[j],LB_SETTOPINDEX, maxx(0,mi.tdata[j].wave_no-9) ,0);
 		}
-		//ドラムリストボックスの初期化
+		//Initialize drum list box
 		for(j = MAXMELODY; j < MAXTRACK; j++){
-			SendDlgItemMessage(hdwnd,freqbox[j],LB_RESETCONTENT,0,0);//初期化
+			SendDlgItemMessage(hdwnd,freqbox[j],LB_RESETCONTENT,0,0);//Initialization
 			for(i = 0; i < NUMDRAMITEM; i++){
 				//SendDlgItemMessage(hdwnd,freqbox[j],LB_ADDSTRING,0,(LPARAM)dram_name[i]);//(LPARAM)wave_name[i].name);
 				SendDlgItemMessage(hdwnd,freqbox[j],LB_ADDSTRING,0,(LPARAM)dram_name[Wave_no_to_List_no[i]]);//(LPARAM)wave_name[i].name);
 			}
-			//最初のアイテムを選択
+			//Select the first item
 			SendDlgItemMessage(hdwnd,freqbox[j],LB_SETCURSEL,List_no_to_Wave_no[mi.tdata[j].wave_no],0);
 			SendDlgItemMessage(hdwnd,freqbox[j],LB_SETTOPINDEX, maxx(0,List_no_to_Wave_no[mi.tdata[j].wave_no]-9) ,0);
 		}
-		Sl_Reset(hdwnd); //スライダー初期化
+		Sl_Reset(hdwnd); //Slider initialization
 		EnableDialogWindow(FALSE);
 		iLastLBox = 0;
 		for(j=0;j<MAXTRACK;j++){
@@ -611,7 +611,7 @@ BOOL CALLBACK DialogWave(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam)
 		return 1;
 	case WM_COMMAND:
 		if((LOWORD(wParam) >= IDD_SETFREQx0 && LOWORD(wParam) <= IDD_SETFREQx7) && (HIWORD(wParam) == EN_SETFOCUS)){	// 2014.10.19 
-			PostMessage(GetDlgItem(hdwnd, LOWORD(wParam)), EM_SETSEL, 0, -1); //フォーカス時にテキストを全選択する
+			PostMessage(GetDlgItem(hdwnd, LOWORD(wParam)), EM_SETSEL, 0, -1); //Select all text when focusing
 			return -1;
 		}
 		if( (HWND)lParam == GetDlgItem( hdwnd, VS_VERSION_INFO ) || (HWND)lParam == GetDlgItem( hdwnd, IDCANCEL ) ){
@@ -625,7 +625,7 @@ BOOL CALLBACK DialogWave(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam)
 					n |= (i < 100 || i >1999) ? 1 : 0;
 					mi.tdata[j].pipi = (IsDlgButtonChecked( hdwnd, IDC_CHECK_PIPIx0+j )) ? 1 : 0;
 				}
-				//if (n) MessageBox(hdwnd,"100〜1900に設定したほうがいいですよ。","お知らせ(周波数)",MB_OK);	// 2014.10.19 D
+				//if (n) MessageBox(hdwnd,"100~1900It&#39;s better to set it to.","Notice(frequency)",MB_OK);	// 2014.10.19 D
 				if (n) msgbox(hdwnd,IDS_VALUESET1001900,IDS_INFO_TITLE_FREQ,MB_OK);	// 2014.10.19 A
 				org_data.SetMusicInfo(&mi,SETFREQ|SETPIPI|SETWAVE);
 				EndDialog(hdwnd,0);
@@ -644,7 +644,7 @@ BOOL CALLBACK DialogWave(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam)
 				EnableDialogWindow(TRUE);
 				return 1;
 			}
-		}else if( (HWND)lParam == GetDlgItem( hdwnd, VS_SLIDER_RESET ) ){ //リセットボタン
+		}else if( (HWND)lParam == GetDlgItem( hdwnd, VS_SLIDER_RESET ) ){ //Reset button
 			//FREQ & PIPI
 			//for(j = 0; j < MAXMELODY; j++){
 			//	i = mi.tdata[j].freq; itoa(i,str,10);
@@ -652,7 +652,7 @@ BOOL CALLBACK DialogWave(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam)
 			//	CheckDlgButton( hdwnd, IDC_CHECK_PIPIx0+j, (mi.tdata[j].pipi ? 1 : 0) );
 			//}
 			SamplePlayHeight = 36;
-			Sl_Reset(hdwnd); //スライダー初期化
+			Sl_Reset(hdwnd); //Slider initialization
 			//SetDlgItemText(hdwnd, VS_VERSION_INFO, "abc");
 			iMeloDrumMode = 0;
 			SendMessage(hdwnd, WM_INITDIALOG, 0, 0);
@@ -674,7 +674,7 @@ BOOL CALLBACK DialogWave(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam)
 					iLastLBox = j;
 					SetDlgItemText(hdwnd, iLastLBox + IDC_LABEL_TRACK_1, strNNNTrack[iLastLBox]);
 					Rxo_StopAllSoundNow();
-					i = SendDlgItemMessage(hdwnd, freqbox[j],LB_GETCURSEL,0,0);//インデックスを得る
+					i = SendDlgItemMessage(hdwnd, freqbox[j],LB_GETCURSEL,0,0);//Get Index
 					MakeOrganyaWave(j,i,mi.tdata[j].pipi);
 					PlayOrganKey(SamplePlayHeight,j,1000,240);
 					//org_data.GetMusicInfo(&mi);
@@ -698,8 +698,8 @@ BOOL CALLBACK DialogWave(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam)
 					iLastLBox = j;
 					SetDlgItemText(hdwnd, iLastLBox + IDC_LABEL_TRACK_1, strNNNTrack[iLastLBox]);
 					Rxo_StopAllSoundNow();
-					i = SendDlgItemMessage(hdwnd, freqbox[j],LB_GETCURSEL,0,0);//インデックスを得る
-					i = Wave_no_to_List_no[i]; //アルファベット順(List順)からWave順に変換する。これ重要。
+					i = SendDlgItemMessage(hdwnd, freqbox[j],LB_GETCURSEL,0,0);//Get Index
+					i = Wave_no_to_List_no[i]; //Alphabetical order(Listorder)FromWaveIn order. This is important.
 					InitDramObject(dram_name[i],j-MAXMELODY);
 					PlayOrganKey(SamplePlayHeight,j,1000,240);
 					//org_data.GetMusicInfo(&mi);
@@ -803,7 +803,7 @@ BOOL CALLBACK DialogNoteUsed(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lPa
 	long u,l;
 //	unsigned short a;
 	switch(message){
-	case WM_INITDIALOG://ダイアログが呼ばれた
+	case WM_INITDIALOG://A dialog was called
 		for(i = 0; i < MAXTRACK; i++){
 			org_data.GetNoteUsed(&u,&l,i);
 			itoa(u,str,10);
@@ -828,7 +828,7 @@ BOOL CALLBACK DialogMemo(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 //	char str[10] = {NULL};
 	switch(message){
-	case WM_INITDIALOG://ダイアログが呼ばれた
+	case WM_INITDIALOG://A dialog was called
 		EnableDialogWindow(FALSE);
 		return 1;
 	case WM_COMMAND:
@@ -855,13 +855,13 @@ bool CheckDefPanVol(HWND hdwnd, int WithSet)
 	for(t=0;t<MAXTRACK;t++){
 		a = GetText(hdwnd , txt_Pan[t]);
 		if(a > 12 || a < 0){
-			//MessageBox(hdwnd,"0〜12にしてください","ERROR(パン)",MB_OK);	// 2014.10.19 D
+			//MessageBox(hdwnd,"0~12Please","ERROR(Bread)",MB_OK);	// 2014.10.19 D
 			msgbox(hdwnd,IDS_VALUESET012,IDS_ERROR_PAN,MB_OK);	// 2014.10.19 A
 			return false;
 		}
 		b = GetText(hdwnd , txt_Vol[t]);
 		if(b > 254 || b < 0){
-			//MessageBox(hdwnd,"0〜254にしてください","ERROR(ボリューム)",MB_OK);	// 2014.10.19 D
+			//MessageBox(hdwnd,"0~254Please","ERROR(volume)",MB_OK);	// 2014.10.19 D
 			msgbox(hdwnd,IDS_VALUESET0254,IDS_ERROR_VOLUME,MB_OK);	// 2014.10.19 A
 			return false;
 		}
@@ -919,7 +919,7 @@ bool GetSetPVInitFile(HWND hdwnd, int IsSave, int iQuiet)
 	strcpy(init_file, music_file);
 	ml = strlen(init_file);
 	if(ml>4){
-		if(init_file[ml-4]=='.'){ //pvi付加
+		if(init_file[ml-4]=='.'){ //pviAddition
 			//init_file[ml-4]='.';
 			init_file[ml-3]='p';
 			init_file[ml-2]='v';
@@ -931,30 +931,30 @@ bool GetSetPVInitFile(HWND hdwnd, int IsSave, int iQuiet)
 	ofn.lStructSize = sizeof(OPENFILENAME);
 	ofn.hwndOwner   = hdwnd;
 	ofn.hInstance   = hInst;
-	//ofn.lpstrFilter = "パン／ボリューム初期値データ[*.pvi]¥0*.pvi¥0全ての形式 [*.*]¥0*.*¥0¥0"; //パン／ボリューム初期値データ[*.pvi]¥0*.pvi¥0全ての形式 [*.*]¥0*.*¥0¥0	// 2014.10.19 D
-	ofn.lpstrFilter = MessageString[IDS_STRING108]; //パン／ボリューム初期値データ[*.pvi]¥0*.pvi¥0全ての形式 [*.*]¥0*.*¥0¥0	// 2014.10.19 A
+	//ofn.lpstrFilter = "Pan / volume initial value data[*.pvi]¥0*.pvi¥0All formats [*.*]¥0*.*¥0¥0"; //Pan / volume initial value data[*.pvi]¥0*.pvi¥0All formats [*.*]¥0*.*¥0¥0	// 2014.10.19 D
+	ofn.lpstrFilter = MessageString[IDS_STRING108]; //Pan / volume initial value data[*.pvi]¥0*.pvi¥0All formats [*.*]¥0*.*¥0¥0	// 2014.10.19 A
 	ofn.lpstrFile   = init_file;
 	ofn.nMaxFile    = MAX_PATH;
 	ofn.lpstrDefExt = "pvi";
 	
-	if(IsSave>0){ //セーブ
+	if(IsSave>0){ //save
 		ofn.Flags       = OFN_CREATEPROMPT | OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT;
-		ofn.lpstrTitle  = MessageString[IDS_STRING65]; //パン／ボリューム初期値データの保存
+		ofn.lpstrTitle  = MessageString[IDS_STRING65]; //Save pan / volume initial value data
 		if(GetSaveFileName(&ofn));	//InvalidateRect(hwnd,NULL,TRUE);
-		else return false;			//キャンセルで0が返る
+		else return false;			//Cancel0Will return
 		
-	}else{			//ロード
+	}else{			//Load
 		ofn.Flags       = OFN_HIDEREADONLY;
-		ofn.lpstrTitle  = MessageString[IDS_STRING66]; //パン／ボリューム初期値データの読み込み
+		ofn.lpstrTitle  = MessageString[IDS_STRING66]; //Reading pan / volume initial value data
 		if(GetOpenFileName(&ofn));	//InvalidateRect(hwnd,NULL,TRUE);
-		else return false;			//キャンセルで0が返る
+		else return false;			//Cancel0Will return
 	}
-	fp = fopen(init_file,"rb");		//検査
+	fp = fopen(init_file,"rb");		//Inspection
 	if(fp == NULL){
 		if(IsSave==0){
-			//if(iQuiet == 0) MessageBox(hdwnd,"ファイルにアクセスできません","",MB_OK);	// 2014.10.19 D
+			//if(iQuiet == 0) MessageBox(hdwnd,"File can not be accessed","",MB_OK);	// 2014.10.19 D
 			if(iQuiet == 0) msgbox(hdwnd,IDS_WARNING_ACCESS_FILE,IDS_ERROR,MB_OK);	// 2014.10.19 A
-			return false;			//指定ファイルが存在しない
+			return false;			//Specified file does not exist
 		}
 	}else{
 		fclose(fp);
@@ -976,8 +976,8 @@ BOOL CALLBACK DialogDefault(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lPar
 	char str[32] = {NULL};
 	int i,a,b;
 	switch(message){
-	case WM_INITDIALOG://ダイアログが呼ばれた
-		//リピート範囲の初期化//////////////////
+	case WM_INITDIALOG://A dialog was called
+		//Initialization of repeat range//////////////////
 		/*
 		itoa(org_data.def_pan,str,10);
 		SetDlgItemText(hdwnd,IDD_DEFPAN,str);
@@ -995,7 +995,7 @@ BOOL CALLBACK DialogDefault(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lPar
 		switch(LOWORD(wParam)){
 		case IDC_PANPOT1: case IDC_PANPOT2: case IDC_PANPOT3: case IDC_PANPOT4: case IDC_PANPOT5: case IDC_PANPOT6: case IDC_PANPOT7: case IDC_PANPOT8: case IDC_PANPOT9: case IDC_PANPOT10: case IDC_PANPOT11: case IDC_PANPOT12: case IDC_PANPOT13: case IDC_PANPOT14: case IDC_PANPOT15: case IDC_PANPOT16:
 		case IDC_VOLUME1: case IDC_VOLUME2: case IDC_VOLUME3: case IDC_VOLUME4: case IDC_VOLUME5: case IDC_VOLUME6: case IDC_VOLUME7: case IDC_VOLUME8: case IDC_VOLUME9: case IDC_VOLUME10: case IDC_VOLUME11: case IDC_VOLUME12: case IDC_VOLUME13: case IDC_VOLUME14: case IDC_VOLUME15: case IDC_VOLUME16:
-			if(HIWORD(wParam) == EN_SETFOCUS)PostMessage(GetDlgItem(hdwnd, LOWORD(wParam)), EM_SETSEL, 0, -1); //フォーカス時にテキストを全選択する	// 2014.10.19 
+			if(HIWORD(wParam) == EN_SETFOCUS)PostMessage(GetDlgItem(hdwnd, LOWORD(wParam)), EM_SETSEL, 0, -1); //Select all text when focusing	// 2014.10.19 
 			return 1;
 		case IDC_DEF_NOWLOAD:
 			GetSetPVInitFile(hdwnd, 0, 0);
@@ -1047,24 +1047,24 @@ BOOL CALLBACK DialogDefault(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lPar
 			break;
 		case IDOK:
 			/*
-			//パンデフォルト値
+			//Pan default value
 			GetDlgItemText(hdwnd,IDD_DEFPAN,str,7);
 			i = atol(str);
 			if(i > 12 || i < 0){
-				MessageBox(hdwnd,"0〜12にしてください","ERROR(パン)",MB_OK);
+				MessageBox(hdwnd,"0~12Please","ERROR(Bread)",MB_OK);
 				return FALSE;
 			}
 			org_data.def_pan = (unsigned char)i;
-			//パンデフォルト値
+			//Pan default value
 			GetDlgItemText(hdwnd,IDD_DEFVOLUME,str,7);
 			i = atol(str);
 			if(i > 254 || i < 0){
-				MessageBox(hdwnd,"0〜254にしてください","ERROR(ボリューム)",MB_OK);
+				MessageBox(hdwnd,"0~254Please","ERROR(volume)",MB_OK);
 				return FALSE;
 			}
 			org_data.def_volume = (unsigned char)i;
 			*/
-			if( !CheckDefPanVol(hdwnd, 1) )return FALSE; //検査とセッティング
+			if( !CheckDefPanVol(hdwnd, 1) )return FALSE; //Inspection and setting
 			EndDialog(hdwnd,0);
 			EnableDialogWindow(TRUE);
 			return 1;
@@ -1075,12 +1075,12 @@ BOOL CALLBACK DialogDefault(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lPar
 BOOL CALLBACK DialogHelp(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 //	char str[10] = {NULL};
-//	char HelpString[10000]; //とりあえず10kB
-	char *HelpString; //A 2010.9.22 ヘルプファイルの容量拡大に伴い、動的確保に変更。
+//	char HelpString[10000]; //Tentatively10kB
+	char *HelpString; //A 2010.9.22 Along with expansion of the help file capacity, changed to dynamic allocation.
 	HRSRC hrscr;
 	HWND haDlg;
 	MINMAXINFO *pmmi;
-	//DWORD *lpdword;//リソースのアドレス
+	//DWORD *lpdword;//Resource address
 	char *cc,*ce,*cf;
 	//int i;
 	int DlgWidth, DlgHeight;
@@ -1091,15 +1091,15 @@ BOOL CALLBACK DialogHelp(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam)
 		//SendMessage(GetDlgItem(hdwnd, IDC_HELPTEXT), EM_SCROLLCARET, 0, 0);
 	}
 	switch(message){
-	case WM_INITDIALOG://ダイアログが呼ばれた
+	case WM_INITDIALOG://A dialog was called
 		t = 0;
-		HelpString = (char *)malloc(1048576 * sizeof(char));//動的容量確保(とりあえず1MB) A 2010.09.22
+		HelpString = (char *)malloc(1048576 * sizeof(char));//Dynamic capacity reservation(Tentatively1MB) A 2010.09.22
 		//EnableDialogWindow(FALSE); //D 2014.05.25
-		hrscr = FindResource(NULL, "TEXTHELP" , "TEXT");// リソースの検索
-		cc = (char*)LockResource(LoadResource(NULL, hrscr));// リソースのアドレスを取得
+		hrscr = FindResource(NULL, "TEXTHELP" , "TEXT");// Search resources
+		cc = (char*)LockResource(LoadResource(NULL, hrscr));// Get resource address
 		cf = HelpString; ce = cc;
 		do{
-			if(*ce=='¥n'){ //改行コード変換（ラインフィードを加えないといけないらしい）
+			if(*ce=='¥n'){ //Line feed code conversion (it seems that it is necessary to add a line feed)
 				*cf='¥r';
 				cf++;
 			}
@@ -1109,7 +1109,7 @@ BOOL CALLBACK DialogHelp(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam)
 		}while(*ce !=0);
 		*cf = *ce;
 		SetDlgItemText(hdwnd,IDC_HELPTEXT,HelpString);
-		free(HelpString); //開放 A 2010.09.22
+		free(HelpString); //Opening A 2010.09.22
 
 		if(GetDlgItem(hdwnd, IDC_HELPTEXT)!=NULL)
 			SendMessage(GetDlgItem(hdwnd, IDC_HELPTEXT), EM_SETSEL, 1, 2);
@@ -1117,7 +1117,7 @@ BOOL CALLBACK DialogHelp(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 		return 1;
 	case WM_SIZE:
-		DlgWidth  = LOWORD(lParam);	//クライアント領域のサイズ
+		DlgWidth  = LOWORD(lParam);	//Size of client area
 		DlgHeight = HIWORD(lParam);
 		haDlg = GetDlgItem(hdwnd, IDC_HELPTEXT);
 		SetWindowPos(haDlg, HWND_TOP, 1, 1, DlgWidth-4, DlgHeight-36, SWP_NOMOVE | SWP_NOACTIVATE | SWP_NOZORDER );
@@ -1127,8 +1127,8 @@ BOOL CALLBACK DialogHelp(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam)
 		pmmi = (MINMAXINFO *)lParam;
 		if ( pmmi )
 		{
-			pmmi->ptMinTrackSize.x = 648;  // 最小幅
-			pmmi->ptMinTrackSize.y = 329;  // 最小高
+			pmmi->ptMinTrackSize.x = 648;  // Minimum width
+			pmmi->ptMinTrackSize.y = 329;  // Minimum height
 		}
 		return 1;
 	case WM_MOUSEMOVE:

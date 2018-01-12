@@ -2,21 +2,21 @@
 #define MAXBITMAP		64
 
 //void PutMusic(void);
-//GDIの初期化
+//GDIInitialize
 BOOL StartGDI(HWND hwnd);
 
 BOOL ResizeGDI(HWND hwnd);
 
-//GDIの開放
+//GDIOpening
 void EndGDI(void);
-//画像のロード(リソースから)
+//Load images(From resources)
 HBITMAP InitBitmap(char *name,int bmp_no);
-//いわゆるフリップ
+//The so-called flip
 void RefleshScreen(HDC hdc);
 void PutBitmap(long x,long y, RECT *rect, int bmp_no);
 void PutBitmapCenter16(long x,long y, RECT *rect, int bmp_no);
 ////////////////////////////////
-///以下はユニークな関数//////////
+///The following is a unique function//////////
 bool MakeMusicParts(unsigned char line,unsigned char dot);
 void PutMusicParts(long x,long y);
 void PutPanParts(void);
@@ -24,7 +24,7 @@ void MakePanParts(unsigned char line,unsigned char dot);
 
 void PutSelectParts(void);
 
-//以下はチト特殊。音符を描くときのみに用いることとする。
+//The following is Tito special. It is used only when drawing notes.
 void Dw_BeginToDraw(void);
 void Dw_FinishToDraw(void);
 void Dw_PutBitmap(long x,long y, RECT *rect, int bmp_no);

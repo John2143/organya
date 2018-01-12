@@ -1,24 +1,24 @@
 # Microsoft Developer Studio Project File - Name="Org13" - Package Owner=<4>
 # Microsoft Developer Studio Generated Build File, Format Version 6.00
-# ** 編集しないでください **
+# ** Please do not edit **
 
 # TARGTYPE "Win32 (x86) Application" 0x0101
 
 CFG=Org13 - Win32 Debug
-!MESSAGE これは有効なﾒｲｸﾌｧｲﾙではありません。 このﾌﾟﾛｼﾞｪｸﾄをﾋﾞﾙﾄﾞするためには NMAKE を使用してください。
-!MESSAGE [ﾒｲｸﾌｧｲﾙのｴｸｽﾎﾟｰﾄ] ｺﾏﾝﾄﾞを使用して実行してください
+!MESSAGE This is not a valid makefile. In order to build this project NMAKE Please use.
+!MESSAGE [Export Makefile] Please use command to execute
 !MESSAGE 
 !MESSAGE NMAKE /f "Org13.mak".
 !MESSAGE 
-!MESSAGE NMAKE の実行時に構成を指定できます
-!MESSAGE ｺﾏﾝﾄﾞ ﾗｲﾝ上でﾏｸﾛの設定を定義します。例:
+!MESSAGE NMAKE You can specify the configuration at run time
+!MESSAGE Command Define macro settings on the line. An example:
 !MESSAGE 
 !MESSAGE NMAKE /f "Org13.mak" CFG="Org13 - Win32 Debug"
 !MESSAGE 
-!MESSAGE 選択可能なﾋﾞﾙﾄﾞ ﾓｰﾄﾞ:
+!MESSAGE Selectable builds Mode:
 !MESSAGE 
-!MESSAGE "Org13 - Win32 Release" ("Win32 (x86) Application" 用)
-!MESSAGE "Org13 - Win32 Debug" ("Win32 (x86) Application" 用)
+!MESSAGE "Org13 - Win32 Release" ("Win32 (x86) Application" for)
+!MESSAGE "Org13 - Win32 Debug" ("Win32 (x86) Application" for)
 !MESSAGE 
 
 # Begin Project

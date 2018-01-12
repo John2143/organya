@@ -14,7 +14,7 @@ char strMIDI_TITLE[256];
 char strMIDI_AUTHOR[256];
 unsigned char ucMIDIProgramChangeValue[MAXTRACK];
 
-//MIDIのデルタタイム(TLast - TFirst)を計算し、バッファ*pに格納。 戻り値は書き込んだバイト長
+//MIDIDelta Time(TLast - TFirst)And calculates the buffer*pStore in. The return value is the written byte length
 int setDeltaTime(long TFirst, long TLast, unsigned char *p){
 	unsigned long r, lDelta;
 	unsigned long qbit[32], tbit[32], wbit[32];
@@ -26,7 +26,7 @@ int setDeltaTime(long TFirst, long TLast, unsigned char *p){
 		lDelta = TFirst - TLast;
 	}
 
-	if(lDelta <= 0x7F){ //1バイトで収まり、後続の面倒な計算はいらないので。
+	if(lDelta <= 0x7F){ //1It fits in bytes, so it does not need subsequent troublesome calculations.
 		*p = (unsigned char)(lDelta & 0x7F);
 		return 1;
 	}
@@ -74,9 +74,9 @@ int setDeltaTime(long TFirst, long TLast, unsigned char *p){
 }
 
 
-//標準MIDI形式で出力する
+//standardMIDIOutput in format
 BOOL OrgData::ExportMIDIData(char *strMidiFileName, int iRepeat){
-	long iDeltaTime = 60; //iDeltaTime < 127であるべし。
+	long iDeltaTime = 60; //iDeltaTime < 127It must be.
 	unsigned char tmpuc;
 	unsigned char *ucbuf,*p, lastVol = 100, *pBufLen;
 	NOTELIST *np, *npStart;
@@ -87,7 +87,7 @@ BOOL OrgData::ExportMIDIData(char *strMidiFileName, int iRepeat){
 
 	unsigned char flgNoteOff[MAXTRACK], flg89;
 	//unsigned char NoteY[MAXTRACK] = {0,0,0,0, 0,0,0,0, 36, 38, 42, 46,  49, 50, 59, 66};
-	unsigned char Convert_Wave_no_to_MIDI_no[] = { //タムはわかりやすいように99。
+	unsigned char Convert_Wave_no_to_MIDI_no[] = { //Tam is easy to understand99.
         36,36,38,38,99,
         42,46,57,76,77,
         35,99,35,36,40,
@@ -98,9 +98,9 @@ BOOL OrgData::ExportMIDIData(char *strMidiFileName, int iRepeat){
         42,39,75,70,36,
         60,42,
         
-        36,36,36,36,36,36,36,36, //←今後ドラム音色を追加するときはここも修正すること。
+        36,36,36,36,36,36,36,36, //←When adding a drum sound in future, please also modify here.
 	};
-	unsigned char Tom_DrumMap[] = { //99にしたTomの味付け音色
+	unsigned char Tom_DrumMap[] = { //99MadeTomSeasoned tone
 		41, //0: Low Tom 2
 		43, //1: Low Tom 1
 		45, //2: Mid Tom 2
@@ -108,7 +108,7 @@ BOOL OrgData::ExportMIDIData(char *strMidiFileName, int iRepeat){
 		48, //4: High Tom 2
 		50, //5: High Tom 1
 	};
-	unsigned char Tom_Threshold[] = { //Tomの味付け閾値（この値以上のとき、そのTomになる）
+	unsigned char Tom_Threshold[] = { //TomSeasoning threshold value (When this value is exceeded, thatTombecome)
 		0,  //0: Low Tom 2
 		19, //1: Low Tom 1
 		27, //2: Mid Tom 2
@@ -120,19 +120,19 @@ BOOL OrgData::ExportMIDIData(char *strMidiFileName, int iRepeat){
 
 	FILE *fp;
 	if((fp=fopen(strMidiFileName,"wb"))==NULL){
-		//MessageBox(hWnd,"ファイルにアクセスできません","Error (Export)",MB_OK);	// 2014.10.19 D
+		//MessageBox(hWnd,"File can not be accessed","Error (Export)",MB_OK);	// 2014.10.19 D
 		msgbox(hWnd,IDS_WARNING_ACCESS_FILE,IDS_ERROR_EXPORT,MB_OK);	// 2014.10.19 A
 		return(FALSE);
 	}
-	//                                                                   ↓Tr数 + ConductorTrack + Dummy + Drum
+	//                                                                   ↓Trnumber + ConductorTrack + Dummy + Drum
 	unsigned char strMIDIHeader[] = {'M', 'T', 'h', 'd', 0,0,0,6,  0,1,  0,  9+1+1  ,0,0};
-	//４分音符の分解能
+	//Resolution of quarter note
 	strMIDIHeader[12] = (unsigned char)((info.dot * iDeltaTime / 0x100) & 0x7F);
 	strMIDIHeader[13] = (unsigned char)((info.dot * iDeltaTime) & 0xFF);
 	fwrite(strMIDIHeader, 14, 1, fp);
 
 	unsigned char strConductorTrack[] = {'M','T','r','k',0,0,0,0x0B, 0x00, 0xFF, 0x51, 0x03,  0,0,0,  0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, };
-	//テンポ
+	//tempo
 	//long ltempo, invtempo;
 	long invtempo, LastPan;
 	int i, iUseCode90, isdl;
@@ -143,7 +143,7 @@ BOOL OrgData::ExportMIDIData(char *strMidiFileName, int iRepeat){
 	
 	p = &strConductorTrack[8]; lenbuf = 8;
 
-	//初期テンポ=999
+	//Initial tempo=999
 	*p++=0x00; lenbuf++;
 	*p++=0xFF; lenbuf++;
 	*p++=0x51; lenbuf++;
@@ -154,7 +154,7 @@ BOOL OrgData::ExportMIDIData(char *strMidiFileName, int iRepeat){
 	tmpuc = (unsigned char)((invtempo / 0x100) % 0x0100);   *p++ = tmpuc; lenbuf++;
 	tmpuc = (unsigned char)((invtempo / 0x1) % 0x0100);     *p++ = tmpuc; lenbuf++;
 
-	//曲のタイトル表示
+	//Title display of song
 	tmpuc = (unsigned char)strlen(strMIDI_TITLE);
 	if(tmpuc>0){
 		*p++=0x00; lenbuf++;
@@ -167,7 +167,7 @@ BOOL OrgData::ExportMIDIData(char *strMidiFileName, int iRepeat){
 		p+=tmpuc;
 	}
 
-	//著作権表示
+	//Copyright notice
 	tmpuc = (unsigned char)strlen(strMIDI_AUTHOR);
 	if(tmpuc>0){
 		*p++=0x00; lenbuf++;
@@ -181,17 +181,17 @@ BOOL OrgData::ExportMIDIData(char *strMidiFileName, int iRepeat){
 		p+=tmpuc;
 	}
 	
-	//任意テキスト
+	//Optional text
 	*p++=0x00; lenbuf++;
 	*p++=0xFF; lenbuf++;
 	*p++=0x01; lenbuf++;
 	*p++=0x00; pBufLen = p-1; lenbuf++;
-	strcpy((char *)p, "                        "); //あらかじめ空白でクリア
-	strcpy((char *)p, MessageString[IDS_STRING114]); //ここは "Exported by Organya Twei" しか入らない前提。
+	strcpy((char *)p, "                        "); //Clear with blank beforehand
+	strcpy((char *)p, MessageString[IDS_STRING114]); //here "Exported by Organya Twei" The premise that it enters only.
 	lenbuf+=24; *pBufLen=24; p+=24;	// 2014.10.19 D
 
 
-	//拍子
+	//Beat
 	*p++=0x00; lenbuf++;
 	*p++=0xFF; lenbuf++;
 	*p++=0x58; lenbuf++;
@@ -227,7 +227,7 @@ BOOL OrgData::ExportMIDIData(char *strMidiFileName, int iRepeat){
 	*p++=0xF7; lenbuf++;
 */
 
-	//テンポ
+	//tempo
 	isdl = setDeltaTime((info.line - 1) * info.dot * iDeltaTime , 0, p); p+=isdl;  lenbuf+=isdl;
 	*p++=0xFF; lenbuf++;
 	*p++=0x51; lenbuf++;
@@ -238,7 +238,7 @@ BOOL OrgData::ExportMIDIData(char *strMidiFileName, int iRepeat){
 	tmpuc = (unsigned char)((invtempo / 0x100) % 0x0100);   *p++ = tmpuc; lenbuf++;
 	tmpuc = (unsigned char)((invtempo / 0x1) % 0x0100);     *p++ = tmpuc; lenbuf++;
 
-	//終端
+	//Termination
 	*p++=0x00; lenbuf++;
 	*p++=0xFF; lenbuf++;
 	*p++=0x2F; lenbuf++;
@@ -256,10 +256,10 @@ BOOL OrgData::ExportMIDIData(char *strMidiFileName, int iRepeat){
 	/*
 	//MTrk : System Setup
 	//Length 172=0xA3
-	//FF 21 01 pp : 出力ポート指定 (現在のSMFでは未定義) 0
-	//146:GM システムオン,  141:GS Reset
-	//マスタＶＯＬ
-	//ドラム追加
+	//FF 21 01 pp : Output port specification (PresentSMFUndefined in) 0
+	//146:GM System on,  141:GS Reset
+	//Master VOL
+	//Add drum
 	unsigned char strDummyTrack[] ={
 		0x4D, 0x54, 0x72, 0x6B, 
 		0x00, 0x00, 0x00, 0xAC, 
@@ -289,7 +289,7 @@ BOOL OrgData::ExportMIDIData(char *strMidiFileName, int iRepeat){
 
 		ucbuf = (unsigned char *)calloc(iUse * 2 * 16 * iRepeat + 1024, sizeof(char));
 		
-		//memset(ucbuf, 0, iUse * 2 * 16 * iRepeat + 1024); //ゼロクリア callocでもいいのでは。
+		//memset(ucbuf, 0, iUse * 2 * 16 * iRepeat + 1024); //Zero clear callocEven if it is okay.
 		ucbuf[0]= 'M'; 
 		ucbuf[1]= 'T'; 
 		ucbuf[2]= 'r'; 
@@ -297,7 +297,7 @@ BOOL OrgData::ExportMIDIData(char *strMidiFileName, int iRepeat){
 		p = &ucbuf[8];
 		lenbuf = 0;
 
-		//シーケンス名(曲タイトル)・トラック名 	
+		//Sequence name(Song title)· Track name 	
 		*p++ = 0x00;
 		*p++ = 0xFF;
 		*p++ = 0x03; pBufLen = p;
@@ -333,38 +333,38 @@ BOOL OrgData::ExportMIDIData(char *strMidiFileName, int iRepeat){
 		*p++=0x00;
 		lenbuf += 4;
 
-		//音量(VOL)
+		//volume(VOL)
 		*p++=0x04;
 		*p++=0xB0 + i;
 		*p++=0x07;
 		*p++=0x64;
 		lenbuf += 4;
 
-		//リバーブ 0 
+		//Reverb 0 
 		*p++=0x00;
 		*p++=0xB0 + i;
 		*p++=0x5B;
 		*p++=0x00;
 		lenbuf += 4;
 
-		//コーラス 0 
+		//chorus 0 
 		*p++=0x00;
 		*p++=0xB0 + i;
 		*p++=0x5D;
 		*p++=0x00;
 		lenbuf += 4;
 
-		//音量(Exp)
+		//volume(Exp)
 		*p++=0x04;
 		*p++=0xB0 + i;
 		*p++=0x0B;
 		*p++=0x7F;
 		lenbuf += 4;
 
-		//音色(強引 ^^; ...)
+		//Sound(Brute force ^^; ...)
 		*p++=0x04;
 		*p++=0xC0 + i;
-		//ダイアログでucMIDIProgramChangeValue[i]が適切に設定されているはず。
+		//In the dialogucMIDIProgramChangeValue[i]It should be set appropriately.
 		if(ucMIDIProgramChangeValue[i]<128){
 			*p++ = ucMIDIProgramChangeValue[i];
 		}else{
@@ -372,8 +372,8 @@ BOOL OrgData::ExportMIDIData(char *strMidiFileName, int iRepeat){
 		}
 		lenbuf += 3;
 
-		//ピッチベンド En mm ll (3byte)
-        //チャンネルnに対し、ピッチベンド値llmmを送信する (さりげなくlittle endianなので注意)。 ピッチベンドが-8192,0,8191に対応する値llmmはそれぞれ 0x0000, 0x4000, 0x7F7F となる。 
+		//Pitch Bend En mm ll (3byte)
+        //ChannelnTo the pitch bend valuellmmSend (Unceremoniouslylittle endianSo be careful). Pitch Bend-8192,0,8191Value corresponding tollmmAre 0x0000, 0x4000, 0x7F7F . 
 		long lPvnd = (info.tdata[i].freq - 1000) + 0x4000;
 		int iFlgOfOverRepeatPoint;
 		*p++=0x04;
@@ -402,13 +402,13 @@ BOOL OrgData::ExportMIDIData(char *strMidiFileName, int iRepeat){
 				}
 			}
 			
-			if(np->x >= info.repeat_x && iFlgOfOverRepeatPoint == 0){ //リピート開始点を通過した最初のX
+			if(np->x >= info.repeat_x && iFlgOfOverRepeatPoint == 0){ //First pass through the repeat starting pointX
 				npStart = np;
 				iFlgOfOverRepeatPoint = 1;
 			}
 			if(np->y != KEYDUMMY ){
 				pLast = p;
-				if(LastPan != (long)np->pan && np->pan != PANDUMMY){ //PAN変更
+				if(LastPan != (long)np->pan && np->pan != PANDUMMY){ //PANChange
 					CurrentX = np->x * iDeltaTime; 
 					isdl = setDeltaTime(CurrentX, LastX, p);
 					p+=isdl;
@@ -440,7 +440,7 @@ BOOL OrgData::ExportMIDIData(char *strMidiFileName, int iRepeat){
 					*p++ = lastVol;
 				}
 				//xx = np->length;
-				//if(xx>=128){ //雑。デルタタイムはメンドイ。
+				//if(xx>=128){ //Sundry. Delta time is Mendoi.
 					//*p++ = (unsigned char)(xx/128)|0x80;
 					//*p++ = (unsigned char)xx%128;
 				//}else{
@@ -460,7 +460,7 @@ BOOL OrgData::ExportMIDIData(char *strMidiFileName, int iRepeat){
 					iUseCode90 = 1;
 				}
 				*p++ = 12 + np->y;
-				*p++ = 0; // 音を消す 
+				*p++ = 0; // To turn off the sound 
 				lenbuf += (p - pLast);
 			}
 			np = np->to;
@@ -472,7 +472,7 @@ BOOL OrgData::ExportMIDIData(char *strMidiFileName, int iRepeat){
 		*p++=0x00;
 		lenbuf += 4;
 
-		//ブロック長
+		//Block length
 		tmpuc = (unsigned char)((lenbuf / 0x1000000) & 0xFF);
 		ucbuf[4] = tmpuc;
 		tmpuc = (unsigned char)((lenbuf / 0x10000) & 0xFF);
@@ -504,7 +504,7 @@ BOOL OrgData::ExportMIDIData(char *strMidiFileName, int iRepeat){
 			if(np->y != KEYDUMMY && np->volume>0 && np->volume<VOLDUMMY){
 				w = t * 256 * info.line * info.dot * 2 + np->x * 2 ;
 				*(bufv + w) = np->volume;
-				*(bufv + w + 1) = np->y; //Tomの高さが知りたいので
+				*(bufv + w + 1) = np->y; //TomI want to know the height of
 				//if(np->x > FinalNoteX) FinalNoteX = np->x;
 			}
 		}
@@ -512,11 +512,11 @@ BOOL OrgData::ExportMIDIData(char *strMidiFileName, int iRepeat){
 	FinalNoteX = info.end_x;
 
 	ucbuf = (unsigned char *)calloc(iUse * 2 * 8 * 16 * iRepeat + 1024, sizeof(char));
-	//memset(ucbuf, 0, iUse * 2 * 8 * 16 * iRepeat + 1024); //ゼロクリア callocでもいいのでは。
+	//memset(ucbuf, 0, iUse * 2 * 8 * 16 * iRepeat + 1024); //Zero clear callocEven if it is okay.
 	ucbuf[0]= 'M'; ucbuf[1]= 'T'; ucbuf[2]= 'r'; ucbuf[3]= 'k';
 	p = &ucbuf[8];
 	lenbuf = 0;
-	//シーケンス名(曲タイトル)・トラック名 	
+	//Sequence name(Song title)· Track name 	
 	*p++ = 0x00;
 	*p++ = 0xFF;
 	*p++ = 0x03; pBufLen = p;
@@ -526,7 +526,7 @@ BOOL OrgData::ExportMIDIData(char *strMidiFileName, int iRepeat){
 	*pBufLen = 5;
 	lenbuf += 5;
 
-	//出力ポート指定
+	//Output port specification
 	*p++=0x00;
 	*p++=0xFF;
 	*p++=0x21;
@@ -541,21 +541,21 @@ BOOL OrgData::ExportMIDIData(char *strMidiFileName, int iRepeat){
 	*p++=0x00;
 	lenbuf += 4;
 
-	//音量(VOL)
+	//volume(VOL)
 	*p++=0x04;
-	*p++=0xB9; //B0 + 9で Aポート 10チャネル = Drum Set
+	*p++=0xB9; //B0 + 9so Aport 10channel = Drum Set
 	*p++=0x07;
 	*p++=0x64;
 	lenbuf += 4;
 
-	//リバーブ 80 
+	//Reverb 80 
 	*p++=0x00;
 	*p++=0xB9;
 	*p++=0x5B;
 	*p++=0x50;
 	lenbuf += 4;
 
-	//音量(Exp)
+	//volume(Exp)
 	*p++=0x04;
 	*p++=0xB9;
 	*p++=0x0B;
@@ -573,7 +573,7 @@ BOOL OrgData::ExportMIDIData(char *strMidiFileName, int iRepeat){
 			x = info.repeat_x;
 			rp++;
 			if(rp >= iRepeat)break;
-			x--; //for処理で x++されるので。
+			x--; //forIn processing x++Because it is done.
 			LastX -=(info.end_x - info.repeat_x)* iDeltaTime;
 			continue;
 		}
@@ -602,13 +602,13 @@ BOOL OrgData::ExportMIDIData(char *strMidiFileName, int iRepeat){
 				p+=isdl;
 				LastX = CurrentX;
 				ucCurrentDrumKey[i] = Convert_Wave_no_to_MIDI_no[info.tdata[i].wave_no];
-				if(ucCurrentDrumKey[i] == 99){ //Tomのとき
+				if(ucCurrentDrumKey[i] == 99){ //TomWhen
 					ucCurrentDrumKey[i] = Tom_DrumMap[0];
 					for(j = 1; j< 6; j++){
 						if( (*(bufv+w+1)) >= Tom_Threshold[j]) ucCurrentDrumKey[i] = Tom_DrumMap[j];
 					}
 				}else if(ucCurrentDrumKey[i] == 57){ //Crash Symbal 2
-					if((*(bufv+w+1)) < 36)ucCurrentDrumKey[i] = 49; //Crash Symbal 1(低いほうにする)
+					if((*(bufv+w+1)) < 36)ucCurrentDrumKey[i] = 49; //Crash Symbal 1(To lower)
 				}
 				*p++ = 0x99;
 				*p++ = ucCurrentDrumKey[i];
@@ -619,7 +619,7 @@ BOOL OrgData::ExportMIDIData(char *strMidiFileName, int iRepeat){
 		}
 		lenbuf += (p - pLast);
 	}
-	//終端
+	//Termination
 	*p++=0x00;
 	*p++=0xFF;
 	*p++=0x2F;
@@ -627,7 +627,7 @@ BOOL OrgData::ExportMIDIData(char *strMidiFileName, int iRepeat){
 	lenbuf += 4;
 
 
-	//ブロック長
+	//Block length
 	tmpuc = (unsigned char)((lenbuf / 0x1000000) & 0xFF);
 	ucbuf[4] = tmpuc;
 	tmpuc = (unsigned char)((lenbuf / 0x10000) & 0xFF);

@@ -19,7 +19,7 @@ extern HWND hWnd;
 extern HWND hDlgPlayer;
 extern HWND hDlgEZCopy;
 int EZCopyWindowState;
-extern int gDrawDouble;	//両方のトラックグループを描画する
+extern int gDrawDouble;	//Draw both track groups
 extern int iDragMode;
 
 int Bn[]={
@@ -44,8 +44,8 @@ int Hni[]={
 
 NOTECOPY nc_Select;
 int tra=-256, ful=0,haba=0;
-int sGrid = 0;	//範囲選択はグリッド単位で
-int sACrnt = 0;	//範囲選択は常にｶﾚﾝﾄﾄﾗｯｸ
+int sGrid = 0;	//Range selection is on a grid level
+int sACrnt = 0;	//Range selection is always the current track
 
 char CpHelp[512];
 void ShowStatusMessage(void);
@@ -76,22 +76,22 @@ void ClearEZC_Message()
 void EZ_Delete()
 {
 	if(tra<0){
-		wsprintf(CpHelp,MessageString[IDS_STRING67]); //"範囲が指定されていない。"
+		wsprintf(CpHelp,MessageString[IDS_STRING67]); //"A range is not specified."
 		PrintCpHelp();
 		return;
 	}
 	//int anss;
-	//anss = MessageBox(hWnd,"消去範囲は正しいですか？","確認",MB_OKCANCEL|MB_ICONEXCLAMATION);
+	//anss = MessageBox(hWnd,"Is the erase range correct?","Confirmation",MB_OKCANCEL|MB_ICONEXCLAMATION);
 	//if(anss!=IDOK)return;
 	long scr_h,scr_v,lash;
 	scr_data.GetScrollPosition(&scr_h,&scr_v);
-	RECT rect = {64,0,WWidth,WHeight};//更新する領域(トラック変更)
+	RECT rect = {64,0,WWidth,WHeight};//Area to update(Track change)
 	//char str[5];
 	char mss[255],mks[512];
 	MUSICINFO mi;
 	org_data.GetMusicInfo(&mi);
-	//GetDlgItemText(hDlgPlayer,IDE_VIEWMEAS,str,4);//範囲from
-	nc_Select.x2 = scr_h* mi.dot * mi.line; //ここにコピー
+	//GetDlgItemText(hDlgPlayer,IDE_VIEWMEAS,str,4);//rangefrom
+	nc_Select.x2 = scr_h* mi.dot * mi.line; //Copy here
 	nc_Select.num = 1;
 	int t;
 	if(ful==1){
@@ -120,11 +120,11 @@ void EZ_Delete()
 		org_data.CheckNoteTail(tra);
 		
 	}
-	//MessageBox(NULL,"コピーしました","通知",MB_OK);
+	//MessageBox(NULL,"Copied","notification",MB_OK);
 	org_data.PutMusic();
 	RedrawWindow(hWnd,&rect,NULL,RDW_INVALIDATE|RDW_ERASENOW);
 	lash = scr_h + haba;
-	wsprintf(mss,MessageString[IDS_STRING68]);//"　消去しました。"
+	wsprintf(mss,MessageString[IDS_STRING68]);//"I erased it."
 
 
 	strcpy(mks,CpHelp);
@@ -143,13 +143,13 @@ void EZ_DeleteAndTrim()
 	int tmptra, tmpful, tmpsACrnt;
 	
 	scr_data.GetScrollPosition(&scr_h,&scr_v);
-	RECT rect = {64,0,WWidth,WHeight};//更新する領域(トラック変更)
+	RECT rect = {64,0,WWidth,WHeight};//Area to update(Track change)
 	org_data.GetMusicInfo(&mi);
-	//GetDlgItemText(hDlgPlayer,IDE_VIEWMEAS,str,4);//範囲from
-	delNC.x2 = scr_h* mi.dot * mi.line; //ここにコピー
+	//GetDlgItemText(hDlgPlayer,IDE_VIEWMEAS,str,4);//rangefrom
+	delNC.x2 = scr_h* mi.dot * mi.line; //Copy here
 	if(tra<0){
-		wsprintf(CpHelp,MessageString[IDS_STRING69]); //"範囲が指定されていないので 画面左端から 1ドットを"
-		//wsprintf(CpHelp,"範囲が指定されていない。");
+		wsprintf(CpHelp,MessageString[IDS_STRING69]); //"Since a range is not specified From the left edge of the screen 1Dot"
+		//wsprintf(CpHelp,"A range is not specified.");
 		//PrintCpHelp();
 		//return;
 		tmptra = org_data.track;
@@ -171,7 +171,7 @@ void EZ_DeleteAndTrim()
 	tmpNC.x2   = delNC.x1_1;
 	tmpNC.num = 1;
 	//int anss;
-	//anss = MessageBox(hWnd,"消去範囲は正しいですか？","確認",MB_OKCANCEL|MB_ICONEXCLAMATION);
+	//anss = MessageBox(hWnd,"Is the erase range correct?","Confirmation",MB_OKCANCEL|MB_ICONEXCLAMATION);
 	//if(anss!=IDOK)return;
 	//char str[5];
 	int t;
@@ -210,11 +210,11 @@ void EZ_DeleteAndTrim()
 		
 	}
 
-	//MessageBox(NULL,"コピーしました","通知",MB_OK);
+	//MessageBox(NULL,"Copied","notification",MB_OK);
 	org_data.PutMusic();
 	RedrawWindow(hWnd,&rect,NULL,RDW_INVALIDATE|RDW_ERASENOW);
 	lash = scr_h + haba;
-	wsprintf(mss,MessageString[IDS_STRING70]); //"　消去し、詰めました。"
+	wsprintf(mss,MessageString[IDS_STRING70]); //"It erased and packed."
 
 	strcpy(mks,CpHelp);
 	strcat(mks,mss);
@@ -232,13 +232,13 @@ void EZ_Insert()
 	int tmptra, tmpful, tmpsACrnt;
 	MUSICINFO mi;
 	scr_data.GetScrollPosition(&scr_h,&scr_v);
-	RECT rect = {64,0,WWidth,WHeight};//更新する領域(トラック変更)
+	RECT rect = {64,0,WWidth,WHeight};//Area to update(Track change)
 	org_data.GetMusicInfo(&mi);
-	//GetDlgItemText(hDlgPlayer,IDE_VIEWMEAS,str,4);//範囲from
-	delNC.x2 = scr_h* mi.dot * mi.line; //ここにコピー
+	//GetDlgItemText(hDlgPlayer,IDE_VIEWMEAS,str,4);//rangefrom
+	delNC.x2 = scr_h* mi.dot * mi.line; //Copy here
 	if(tra<0){
-		wsprintf(CpHelp,MessageString[IDS_STRING69]); //"範囲が指定されていないので 画面左端から 1ドットを"
-		//wsprintf(CpHelp,"範囲が指定されていない。");
+		wsprintf(CpHelp,MessageString[IDS_STRING69]); //"Since a range is not specified From the left edge of the screen 1Dot"
+		//wsprintf(CpHelp,"A range is not specified.");
 		//PrintCpHelp();
 		//return;
 		tmptra = org_data.track;
@@ -259,7 +259,7 @@ void EZ_Insert()
 	tmpNC.x2   = delNC.x1_2 + 1;
 	tmpNC.num = 1;
 	//int anss;
-	//anss = MessageBox(hWnd,"消去範囲は正しいですか？","確認",MB_OKCANCEL|MB_ICONEXCLAMATION);
+	//anss = MessageBox(hWnd,"Is the erase range correct?","Confirmation",MB_OKCANCEL|MB_ICONEXCLAMATION);
 	//if(anss!=IDOK)return;
 	//char str[5];
 	int t;
@@ -298,11 +298,11 @@ void EZ_Insert()
 		
 	}
 
-	//MessageBox(NULL,"コピーしました","通知",MB_OK);
+	//MessageBox(NULL,"Copied","notification",MB_OK);
 	org_data.PutMusic();
 	RedrawWindow(hWnd,&rect,NULL,RDW_INVALIDATE|RDW_ERASENOW);
 	lash = scr_h + haba;
-	wsprintf(mss,MessageString[IDS_STRING71]);//"　後ろにずらしました。"
+	wsprintf(mss,MessageString[IDS_STRING71]);//"I shifted behind."
 
 	strcpy(mks,CpHelp);
 	strcat(mks,mss);
@@ -317,19 +317,19 @@ void EZ_Insert()
 void EZ_Paste(int iNum)
 {
 	if(tra<0){
-		wsprintf(CpHelp,MessageString[IDS_STRING67]); //範囲が指定されていない
+		wsprintf(CpHelp,MessageString[IDS_STRING67]); //A range is not specified
 		PrintCpHelp();
 		return;
 	}
 	long scr_h,scr_v,lash;
 	scr_data.GetScrollPosition(&scr_h,&scr_v);
-	RECT rect = {64,0,WWidth,WHeight};//更新する領域(トラック変更)
+	RECT rect = {64,0,WWidth,WHeight};//Area to update(Track change)
 	//char str[5];
 	char mss[255],mks[512];
 	MUSICINFO mi;
 	org_data.GetMusicInfo(&mi);
-	//GetDlgItemText(hDlgPlayer,IDE_VIEWMEAS,str,4);//範囲from
-	nc_Select.x2 = scr_h* mi.dot * mi.line; //ここにコピー
+	//GetDlgItemText(hDlgPlayer,IDE_VIEWMEAS,str,4);//rangefrom
+	nc_Select.x2 = scr_h* mi.dot * mi.line; //Copy here
 	nc_Select.num = iNum;
 	int t;
 	if(ful==1){
@@ -356,13 +356,13 @@ void EZ_Paste(int iNum)
 		org_data.CheckNoteTail(tra);
 		
 	}
-	//MessageBox(NULL,"コピーしました","通知",MB_OK);
+	//MessageBox(NULL,"Copied","notification",MB_OK);
 	org_data.PutMusic();
 	RedrawWindow(hWnd,&rect,NULL,RDW_INVALIDATE|RDW_ERASENOW);
 	lash = scr_h + haba;
-	//if(ful==1)wsprintf(mss,"　%d小節〜%d小節に%d回コピーしました。",scr_h,lash,nc_Select.num);	// 2014.10.19 D
+	//if(ful==1)wsprintf(mss,"　%dMeasure%dIn a bar%dI copied it.",scr_h,lash,nc_Select.num);	// 2014.10.19 D
 	if(ful==1)wsprintf(mss,MessageString[IDS_STRING72],scr_h,lash,nc_Select.num);	// 2014.10.19 A
-	//else wsprintf(mss,"　トラック%c の%d小節〜%d小節に%d回コピーしました。",TrackN[nc_Select.track2],scr_h,lash,nc_Select.num);	// 2014.10.19 D
+	//else wsprintf(mss,"truck%c of%dMeasure%dIn a bar%dI copied it.",TrackN[nc_Select.track2],scr_h,lash,nc_Select.num);	// 2014.10.19 D
 	else wsprintf(mss,MessageString[IDS_STRING73],TrackN[nc_Select.track2],scr_h,lash,nc_Select.num);	// 2014.10.19 A
 
 	strcpy(mks,CpHelp);
@@ -373,12 +373,12 @@ void EZ_Paste(int iNum)
 
 
 BOOL CALLBACK DialogEZCopy(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam){
-	RECT rect = {64,0,WWidth,WHeight};//更新する領域(トラック変更)
+	RECT rect = {64,0,WWidth,WHeight};//Area to update(Track change)
 	int i,bt;
 	long scr_h,scr_v;
 	MUSICINFO mi;
 	switch(message){
-	case WM_INITDIALOG://ダイアログが呼ばれた
+	case WM_INITDIALOG://A dialog was called
 		PrintCpHelp();
 		return 1;
 	case WM_CLOSE:
@@ -403,26 +403,26 @@ BOOL CALLBACK DialogEZCopy(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lPara
 			for(i=0;i<12;i++){
 				if(LOWORD(wParam) == Bn[i])bt=i;
 			}
-			if(bt>=0){ //＋１とかのボタンが押された。
+			if(bt>=0){ //A button such as +1 was pressed.
 				int a,b,d,bb;
 				//char str[5];
 				org_data.GetMusicInfo(&mi);
 				scr_data.GetScrollPosition(&scr_h,&scr_v);
-				//GetDlgItemText(hDlgPlayer,IDE_VIEWMEAS,str,4);//範囲from
+				//GetDlgItemText(hDlgPlayer,IDE_VIEWMEAS,str,4);//rangefrom
 				//b = atol(str);
 				b = scr_h;
 				bb = b + Hni[bt];
 				haba = Hni[bt];
-				a = b * mi.dot * mi.line; //開始点
-				d = bb* mi.dot * mi.line - 1; //終了点
+				a = b * mi.dot * mi.line; //Starting point
+				d = bb* mi.dot * mi.line - 1; //End point
 				nc_Select.x1_1 = a;
 				nc_Select.x1_2 = d;
-				if(bt>=6)ful=1;else ful=0; //全トラック？
+				if(bt>=6)ful=1;else ful=0; //All tracks?
 				tra = org_data.track;
 				//org_data.CopyNoteDataToCB(&nc_Select, tra, ful);
-				//if(ful==0)wsprintf(CpHelp,"トラック%c の%d小節〜%d小節までを",TrackN[tra],b,bb);	// 2014.10.19 D
+				//if(ful==0)wsprintf(CpHelp,"truck%c of%dMeasure%dUp to the measure",TrackN[tra],b,bb);	// 2014.10.19 D
 				if(ful==0)wsprintf(CpHelp,MessageString[IDS_STRING74],TrackN[tra],b,bb);	// 2014.10.19 A
-				//else wsprintf(CpHelp,"全トラックの%d小節〜%d小節までを",b,bb);	// 2014.10.19 D
+				//else wsprintf(CpHelp,"All tracks%dMeasure%dUp to the measure",b,bb);	// 2014.10.19 D
 				else wsprintf(CpHelp,MessageString[IDS_STRING75],b,bb);	// 2014.10.19 A
 				PrintCpHelp();
 				org_data.PutMusic();

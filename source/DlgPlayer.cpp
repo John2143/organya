@@ -28,7 +28,7 @@ int mute_name[MAXTRACK] = {
 	IDC_MUTE14,
 	IDC_MUTE15,
 };
-//簡単なダイアログ関数
+//Simple dialog functions
 BOOL CALLBACK DialogPlayer(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam){
 	int i;
 	HMENU hmenu,hsubmenu;
@@ -38,27 +38,27 @@ BOOL CALLBACK DialogPlayer(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lPara
 	long hp,vp;
 	char str[32];
 	switch(message){
-	case WM_INITDIALOG://ダイアログが呼ばれた
+	case WM_INITDIALOG://A dialog was called
 		HANDLE hBmp;
 		org_data.GetMusicInfo(&mi);
 		itoa(mi.wait,str,10);
 		SetDlgItemText(hdwnd,IDE_VIEWWAIT,str);
-		org_data.SetPlayPointer(0);//頭出し
-		//プレイヤーに表示
-		//hFont1 = CreateFont(0, 0, 0, 0, 900, 0, 0, 0, SHIFTJIS_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, ANTIALIASED_QUALITY, DEFAULT_PITCH, "ＭＳ ゴシック");
+		org_data.SetPlayPointer(0);//Cueing
+		//Show to player
+		//hFont1 = CreateFont(0, 0, 0, 0, 900, 0, 0, 0, SHIFTJIS_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, ANTIALIASED_QUALITY, DEFAULT_PITCH, "MS Gothic");
 		hFont1 = CreateFont(18, 0, 0, 0, FW_NORMAL, FALSE, FALSE, 0,
 			ANSI_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS,
 			ANTIALIASED_QUALITY, DEFAULT_PITCH, "Arial Black");
 		hCtrlWnd = GetDlgItem(hdwnd, IDE_VIEWMEAS);
-		SendMessage(hCtrlWnd, WM_SETFONT, (WPARAM)hFont1, MAKELPARAM(FALSE, 0)); /* フォントの変更 */
+		SendMessage(hCtrlWnd, WM_SETFONT, (WPARAM)hFont1, MAKELPARAM(FALSE, 0)); /* Change font */
 		SetDlgItemText(hdwnd,IDE_VIEWMEAS,"0");
 
 		hCtrlWnd = GetDlgItem(hdwnd, IDE_VIEWXPOS);
-		SendMessage(hCtrlWnd, WM_SETFONT, (WPARAM)hFont1, MAKELPARAM(FALSE, 0)); /* フォントの変更 */
+		SendMessage(hCtrlWnd, WM_SETFONT, (WPARAM)hFont1, MAKELPARAM(FALSE, 0)); /* Change font */
 		SetDlgItemText(hdwnd,IDE_VIEWXPOS,"0");
-		DeleteObject(hFont1); //フォントオブジェクトの削除
+		DeleteObject(hFont1); //Delete font object
 
-		//画像張りつけ
+		//Image sticking
 /*
 		hBmp = (HBITMAP)LoadImage( hInst, "HEAD", IMAGE_BITMAP, 32, 16, LR_DEFAULTCOLOR );
 		SendDlgItemMessage( hdwnd, IDC_START, BM_SETIMAGE, IMAGE_BITMAP, (long)hBmp );
@@ -93,7 +93,7 @@ BOOL CALLBACK DialogPlayer(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lPara
 		case IDC_PLAY:
 			if(timer_sw == 0){
 				
-				//メニューを無効にする。
+				//Disable the menu.
 				hmenu = GetMenu(hWnd);
 				hsubmenu = GetSubMenu(hmenu,0);
 				EnableMenuItem(hmenu,0,MF_BYPOSITION|MF_DISABLED);
@@ -105,8 +105,8 @@ BOOL CALLBACK DialogPlayer(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lPara
 				EnableMenuItem(hmenu,6,MF_BYPOSITION|MF_DISABLED);
 				EnableMenuItem(hmenu,7,MF_BYPOSITION|MF_DISABLED);
 				EnableMenuItem(hmenu,8,MF_BYPOSITION|MF_DISABLED);
-				DragAcceptFiles(hWnd,FALSE);//ドラッグ禁止
-				//トラック ミュート のチェック
+				DragAcceptFiles(hWnd,FALSE);//Drag prohibition
+				//truck mute Check of
 				for(i = 0; i < MAXTRACK; i++){
 					if(SendDlgItemMessage(hDlgTrack,mute_name[i],BM_GETCHECK,0,0)){
 						org_data.mute[i] = 1;
@@ -114,13 +114,13 @@ BOOL CALLBACK DialogPlayer(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lPara
 						org_data.mute[i] = 0;
 					}
 				}
-				//プレイポインターの設定
+				//Set play pointer
 				scr_data.GetScrollPosition(&hp,&vp);
 				org_data.GetMusicInfo(&mi);
 				org_data.SetPlayPointer(hp*mi.dot*mi.line);
 				timer_sw = 1;
 				InitMMTimer();
-				//テンポを取得
+				//Get the tempo
 				MUSICINFO mi;
 				org_data.GetMusicInfo(&mi);
 				StartTimer(mi.wait);
@@ -130,7 +130,7 @@ BOOL CALLBACK DialogPlayer(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lPara
 		case IDC_STOP:
 		case IDC_START:
 			if(timer_sw){
-				//メニューを有効にする。
+				//Enable the menu.
 				hmenu = GetMenu(hWnd);
 				hsubmenu = GetSubMenu(hmenu,0);
 				EnableMenuItem(hmenu,0,MF_BYPOSITION|MF_ENABLED);
@@ -142,7 +142,7 @@ BOOL CALLBACK DialogPlayer(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lPara
 				EnableMenuItem(hmenu,6,MF_BYPOSITION|MF_ENABLED);
 				EnableMenuItem(hmenu,7,MF_BYPOSITION|MF_ENABLED);
 				EnableMenuItem(hmenu,8,MF_BYPOSITION|MF_ENABLED);
-				DragAcceptFiles(hWnd,TRUE);//ドラッグ許可
+				DragAcceptFiles(hWnd,TRUE);//Drag permission
 				org_data.GetMusicInfo(&mi);
 				Rxo_StopAllSoundNow();	// 2010.11.30 C
 				/*
@@ -154,8 +154,8 @@ BOOL CALLBACK DialogPlayer(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lPara
 			}
 			SetFocus(hWnd);
 //			return 1;
-//			if(timer_sw){//ストップの効果も
-//				//メニューを有効にする。
+//			if(timer_sw){//Also the effect of the stop
+//				//Enable the menu.
 //				hmenu = GetMenu(hWnd);
 //				hsubmenu = GetSubMenu(hmenu,0);
 //				EnableMenuItem(hmenu,0,MF_BYPOSITION|MF_ENABLED);
@@ -167,7 +167,7 @@ BOOL CALLBACK DialogPlayer(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lPara
 //				EnableMenuItem(hmenu,6,MF_BYPOSITION|MF_ENABLED);
 //				EnableMenuItem(hmenu,7,MF_BYPOSITION|MF_ENABLED);
 //				EnableMenuItem(hmenu,8,MF_BYPOSITION|MF_ENABLED);
-//				DragAcceptFiles(hWnd,TRUE);//ドラッグ許可
+//				DragAcceptFiles(hWnd,TRUE);//Drag permission
 //				org_data.GetMusicInfo(&mi);
 //				Rxo_StopAllSoundNow();	// 2010.11.30 C
 //				/*
@@ -183,7 +183,7 @@ BOOL CALLBACK DialogPlayer(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lPara
 				SetDlgItemText(hdwnd,IDE_VIEWMEAS,"0");
 				SetDlgItemText(hdwnd,IDE_VIEWXPOS,"0");
 				scr_data.SetHorzScroll(0);
-				org_data.SetPlayPointer(0);//頭出し
+				org_data.SetPlayPointer(0);//Cueing
 				SetFocus(hWnd);
 			}
 			return 1;
@@ -215,7 +215,7 @@ BOOL CALLBACK DialogPlayer(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lPara
 			*/
 		//	break;
 	case WM_CLOSE:
-		//DeleteObject(hFont1); //フォントオブジェクトの削除
+		//DeleteObject(hFont1); //Delete font object
 		return 1;
 	}
 	return 0;

@@ -6,21 +6,21 @@
 
 typedef struct ScrollData{
 	private:
-		long hpos;//横スクロール値
-		long vpos;//縦スクロール値
+		long hpos;//Horizontal scroll value
+		long vpos;//Vertical scroll value
 		SCROLLINFO scr_info;
 		long vScrollMax;
 	public:
 		void SetIniFile();
-		BOOL InitScroll(void);//初期化
-		void VertScrollProc(WPARAM wParam);//スクロールさせた時の処理
+		BOOL InitScroll(void);//Initialization
+		void VertScrollProc(WPARAM wParam);//Processing when scrolling
 		void HorzScrollProc(WPARAM wParam);
-		void WheelScrollProc(LPARAM lParam, WPARAM wParam); //ホイールを...
+		void WheelScrollProc(LPARAM lParam, WPARAM wParam); //Wheel...
 		void GetScrollPosition(long *hp,long *vp);
 		void SetHorzScroll(long x);
-		void AttachScroll(void);	//ウィンドウサイズ変更に応じてスクロールを修正
-		void KeyScroll(int iDirection); //キー操作によるスクロール用
+		void AttachScroll(void);	//Fixed scrolling according to window size change
+		void KeyScroll(int iDirection); //For scrolling by key operation
 		void PrintHorzPosition(void);
-		void ChangeVerticalRange(int WindowHeight = -1); //ウィンドウサイズに応じてスクロールバーRangeを変更
+		void ChangeVerticalRange(int WindowHeight = -1); //Scroll bar according to window sizeRangechange
 }SCROLLDATA;
-extern SCROLLDATA scr_data;//スクロールデータ
+extern SCROLLDATA scr_data;//Scroll data

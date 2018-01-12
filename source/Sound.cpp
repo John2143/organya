@@ -6,44 +6,44 @@
 #include "DefOrg.h"
 #define SE_MAX	512
 
-// シンボル定義.
-#define	SMPFRQ			48000				//!< サンプリング周波数.
-#define	BUFSIZE			((SMPFRQ * 4) / 10)	//!< データバッファサイズ (100ms相当).
+// Symbol definition.
+#define	SMPFRQ			48000				//!< Sampling frequency.
+#define	BUFSIZE			((SMPFRQ * 4) / 10)	//!< Data buffer size (100msEquivalent).
 
 
-// DirectSound構造体 
-LPDIRECTSOUND       lpDS = NULL;            // DirectSoundオブジェクト
-LPDIRECTSOUNDBUFFER lpPRIMARYBUFFER = NULL; // 一時バッファ
+// DirectSoundStructure 
+LPDIRECTSOUND       lpDS = NULL;            // DirectSoundobject
+LPDIRECTSOUNDBUFFER lpPRIMARYBUFFER = NULL; // Temporary buffer
 LPDIRECTSOUNDBUFFER lpSECONDARYBUFFER[SE_MAX] = {NULL};
 LPDIRECTSOUNDBUFFER lpORGANBUFFER[8][8][2] = {NULL};
 LPDIRECTSOUNDBUFFER lpDRAMBUFFER[8] = {NULL};
 
-//録音用
-//HANDLE						CapEvent[2];			//!< 入力イベント・オブジェクト.
-//DWORD						CapBufSize;				//!< キャプチャバッファ・サイズ.
-//DWORD						GetPos;					//!< キャプチャバッファの読み込み開始位置.
-//DWORD						PutPos;					//!< キャプチャバッファの書き込み開始位置.
-//BYTE*						DataBuff;				//!< データバッファ.
-//LPDIRECTSOUNDCAPTURE 		CapDev;					//!< IDirectSoundCaptureインターフェイス ポインタ.
-//LPDIRECTSOUNDCAPTUREBUFFER	CapBuf;					//!< IDirectSoundBufferインターフェイス ポインタ.
+//For recording
+//HANDLE						CapEvent[2];			//!< Input event object.
+//DWORD						CapBufSize;				//!< Capture buffer size.
+//DWORD						GetPos;					//!< Capture buffer read start position.
+//DWORD						PutPos;					//!< Writing start position of capture buffer.
+//BYTE*						DataBuff;				//!< Data buffer.
+//LPDIRECTSOUNDCAPTURE 		CapDev;					//!< IDirectSoundCaptureInterface Pointer.
+//LPDIRECTSOUNDCAPTUREBUFFER	CapBuf;					//!< IDirectSoundBufferInterface Pointer.
 
-DWORD						OutBufSize;				//!< ストリームバッファ・サイズ.
+DWORD						OutBufSize;				//!< Stream buffer size.
 
 
-// DirectSoundの開始 
+// DirectSoundThe start of the 
 BOOL InitDirectSound(HWND hwnd)
 {
 //    int i;
     DSBUFFERDESC dsbd;
 
-    // DirectDrawの初期化
+    // DirectDrawInitialize
     if(DirectSoundCreate(NULL, &lpDS, NULL) != DS_OK){
 		lpDS = NULL;
 		return(FALSE);
 	}
     lpDS->SetCooperativeLevel(hwnd, DSSCL_EXCLUSIVE);
 
-    // 一次バッファの初期化
+    // Initialization of primary buffer
     ZeroMemory(&dsbd, sizeof(DSBUFFERDESC));
     dsbd.dwSize = sizeof(DSBUFFERDESC);
     dsbd.dwFlags = DSBCAPS_PRIMARYBUFFER; // | DSBCAPS_CTRLPOSITIONNOTIFY;
@@ -51,18 +51,18 @@ BOOL InitDirectSound(HWND hwnd)
 
 //    for(i = 0; i < SE_MAX; i++) lpSECONDARYBUFFER[i] = NULL;
 	
-	//キャプチャバッファの作成 第一引数NULLでデフォルト。これはどうか。
+	//Create capture buffer First argumentNULLDefault with. How about this?
 //	if( DirectSoundCaptureCreate( NULL, &CapDev, NULL ) != S_OK ){
 //		return FALSE;
 //	}
-//	dsbd.dwFlags = 0; //セカンダリバッファ
+//	dsbd.dwFlags = 0; //Secondary buffer
 //	CapDev->CreateCaptureBuffer(&dsbd, &CapBuf, NULL);
 
 
     return(TRUE);
 }
 
-// DirectSoundの終了 
+// DirectSoundTermination 
 void EndDirectSound(void)
 {
     int i;
@@ -97,43 +97,43 @@ void ReleaseSoundObject(int no){
 }
 
 
-// サウンドの設定 
+// Sound settings 
 BOOL InitSoundObject( LPCSTR resname, int no)
 {
     HRSRC hrscr;
     DSBUFFERDESC dsbd;
-    DWORD *lpdword;//リソースのアドレス
-    // リソースの検索
+    DWORD *lpdword;//Resource address
+    // Search resources
     if((hrscr = FindResource(NULL, resname, "WAVE")) == NULL)
                                                     return(FALSE);
-    // リソースのアドレスを取得
+    // Get resource address
     lpdword = (DWORD*)LockResource(LoadResource(NULL, hrscr));
-	// 二次バッファの生成
+	// Generation of secondary buffer
 	ZeroMemory(&dsbd, sizeof(DSBUFFERDESC));
 	dsbd.dwSize = sizeof(DSBUFFERDESC);
 	dsbd.dwFlags = 
 		DSBCAPS_STATIC|
 		DSBCAPS_STICKYFOCUS
 		|DSBCAPS_CTRLPAN | DSBCAPS_CTRLVOLUME | DSBCAPS_CTRLFREQUENCY;
-	dsbd.dwBufferBytes = *(DWORD*)((BYTE*)lpdword+0x36);//WAVEデータのサイズ
+	dsbd.dwBufferBytes = *(DWORD*)((BYTE*)lpdword+0x36);//WAVEData size
 	dsbd.lpwfxFormat = (LPWAVEFORMATEX)(lpdword+5); 
 	if(lpDS->CreateSoundBuffer(&dsbd, &lpSECONDARYBUFFER[no],
 								NULL) != DS_OK) return(FALSE);
     LPVOID lpbuf1, lpbuf2;
     DWORD dwbuf1, dwbuf2;
-    // 二次バッファのロック
+    // Secondary buffer lock
     lpSECONDARYBUFFER[no]->Lock(0, *(DWORD*)((BYTE*)lpdword+0x36),
                         &lpbuf1, &dwbuf1, &lpbuf2, &dwbuf2, 0); 
-	// 音源データの設定
+	// Setting of sound source data
 	CopyMemory(lpbuf1, (BYTE*)lpdword+0x3a, dwbuf1);
     if(dwbuf2 != 0) CopyMemory(lpbuf2, (BYTE*)lpdword+0x3a+dwbuf1, dwbuf2);
-	// 二次バッファのロック解除
+	// Unlock secondary buffer
 	lpSECONDARYBUFFER[no]->Unlock(lpbuf1, dwbuf1, lpbuf2, dwbuf2); 
 
     return(TRUE);
 }
 
-//extern LPDIRECTDRAW            lpDD;	// DirectDrawオブジェクト
+//extern LPDIRECTDRAW            lpDD;	// DirectDrawobject
 BOOL LoadSoundObject(char *file_name, int no)
 {
 	DWORD i;
@@ -141,11 +141,11 @@ BOOL LoadSoundObject(char *file_name, int no)
 	char check_box[58];
 	FILE *fp;
 	if((fp=fopen(file_name,"rb"))==NULL){
-//		char msg_str[64];				//数値確認用
-//		lpDD->FlipToGDISurface(); //メッセージ表示の方にフリップ
-//		sprintf(msg_str,"%sが見当たりません",file_name);
+//		char msg_str[64];				//For numerical confirmation
+//		lpDD->FlipToGDISurface(); //Flip toward the message display
+//		sprintf(msg_str,"%sI can not find it",file_name);
 //		MessageBox(hWND,msg_str,"title",MB_OK);
-//		SetCursor(FALSE); // カーソル消去
+//		SetCursor(FALSE); // Clear cursor
 		return(FALSE);
 	}
 	for(i = 0; i < 58; i++){
@@ -158,18 +158,18 @@ BOOL LoadSoundObject(char *file_name, int no)
 	file_size = *((DWORD *)&check_box[4]);
 
 	DWORD *wp;
-	wp = (DWORD*)malloc(file_size);//ファイルのワークスペースを作る
+	wp = (DWORD*)malloc(file_size);//Make a file workspace
 	fseek(fp,0,SEEK_SET);
 	for(i = 0; i < file_size; i++){
 		fread((BYTE*)wp+i,sizeof(BYTE),1,fp);
 	}
 	fclose(fp);
-	//セカンダリバッファの生成
+	//Generate secondary buffer
 	DSBUFFERDESC dsbd;
 	ZeroMemory(&dsbd, sizeof(DSBUFFERDESC));
 	dsbd.dwSize = sizeof(DSBUFFERDESC);
 	dsbd.dwFlags = DSBCAPS_STATIC|DSBCAPS_STICKYFOCUS|DSBCAPS_CTRLPAN | DSBCAPS_CTRLVOLUME | DSBCAPS_CTRLFREQUENCY;
-	dsbd.dwBufferBytes = *(DWORD*)((BYTE*)wp+0x36);//WAVEデータのサイズ
+	dsbd.dwBufferBytes = *(DWORD*)((BYTE*)wp+0x36);//WAVEData size
 	dsbd.lpwfxFormat = (LPWAVEFORMATEX)(wp+5); 
 	if(lpDS->CreateSoundBuffer(&dsbd, &lpSECONDARYBUFFER[no],
 								NULL) != DS_OK){
@@ -185,7 +185,7 @@ BOOL LoadSoundObject(char *file_name, int no)
 		free(wp);
 		return (FALSE);
 	}
-	CopyMemory(lpbuf1, (BYTE*)wp+0x3a, dwbuf1);//+3aはデータの頭
+	CopyMemory(lpbuf1, (BYTE*)wp+0x3a, dwbuf1);//+3aThe head of data
 	if(dwbuf2 != 0)	CopyMemory(lpbuf2, (BYTE*)wp+0x3a+dwbuf1, dwbuf2);
 	lpSECONDARYBUFFER[no]->Unlock(lpbuf1, dwbuf1, lpbuf2, dwbuf2); 
 	
@@ -193,51 +193,51 @@ BOOL LoadSoundObject(char *file_name, int no)
 	return(TRUE);
 }
 
-// サウンドの再生 
+// Play sound 
 void PlaySoundObject(int no, int mode)
 {
     if(lpSECONDARYBUFFER[no] != NULL){
 		switch(mode){
-		case 0: // 停止
+		case 0: // Stop
 			lpSECONDARYBUFFER[no]->Stop();
 			break;
-		case 1: // 再生
+		case 1: // Playback
 			lpSECONDARYBUFFER[no]->Stop();
 			lpSECONDARYBUFFER[no]->SetCurrentPosition(0);
             lpSECONDARYBUFFER[no]->Play(0, 0, 0);
             break;
-		case -1: // ループ再生
+		case -1: // Loop play
 			lpSECONDARYBUFFER[no]->Play(0, 0, DSBPLAY_LOOPING);
 			break;
 		}
     }
 }
 
-void ChangeSoundFrequency(int no, DWORD rate)//100がMIN9999がMAXで2195?がﾉｰﾏﾙ
+void ChangeSoundFrequency(int no, DWORD rate)//100ButMIN9999ButMAXso2195?Is normal
 {
 	if(lpSECONDARYBUFFER[no] != NULL)
 		lpSECONDARYBUFFER[no]->SetFrequency( rate );
 }
-void ChangeSoundVolume(int no, long volume)//300がMAXで300がﾉｰﾏﾙ
+void ChangeSoundVolume(int no, long volume)//300ButMAXso300Is normal
 {
 	if(lpSECONDARYBUFFER[no] != NULL)
 		lpSECONDARYBUFFER[no]->SetVolume((volume-300)*8);
 }
-void ChangeSoundPan(int no, long pan)//512がMAXで256がﾉｰﾏﾙ
+void ChangeSoundPan(int no, long pan)//512ButMAXso256Is normal
 {
 	if(lpSECONDARYBUFFER[no] != NULL)
 		lpSECONDARYBUFFER[no]->SetPan((pan-256)*10);
 }
 
 /////////////////////////////////////////////
-//■オルガーニャ■■■■■■■■■■■■///////
+//■Orgagna■■■■■■■■■■■■///////
 /////////////////////
 
 
 typedef struct{
-	short wave_size;//波形のサイズ
-	short oct_par;//オクターブを実現する掛け率(/8)
-	short oct_size;//オクターブを実現する掛け率(/8)
+	short wave_size;//Waveform size
+	short oct_par;//Multiplying factor to achieve octave(/8)
+	short oct_size;//Multiplying factor to achieve octave(/8)
 }OCTWAVE;
 
 OCTWAVE oct_wave[8] = {
@@ -250,20 +250,20 @@ OCTWAVE oct_wave[8] = {
 	{ 16, 64, 28},
 	{  8,128, 32},
 };
-BYTE format_tbl2[] = {0x01,0x00,0x01,0x00,0x22,0x56,0x00,//22050HzのFormat
+BYTE format_tbl2[] = {0x01,0x00,0x01,0x00,0x22,0x56,0x00,//22050HzofFormat
 0x00,0x22,0x56,0x00,0x00,0x01,0x00,0x08,0x00,0x00,0x00};
-//BYTE format_tbl3[] = {0x01,0x00,0x01,0x00,0x44,0xac,0x00,//441000HzのFormat
+//BYTE format_tbl3[] = {0x01,0x00,0x01,0x00,0x44,0xac,0x00,//441000HzofFormat
 //0x00,0x44,0xac,0x00,0x00,0x08,0x00,0x00,0x00,0x66,0x61};
 BOOL MakeSoundObject8(char *wavep,char track, char pipi )
 {
 	DWORD i,j,k;
-	unsigned long wav_tp;//WAVテーブルをさすポインタ
+	unsigned long wav_tp;//WAVPointer pointing to table
 	DWORD wave_size;//256;
 	DWORD data_size;
 	BYTE *wp;
 	BYTE *wp_sub;
 	int work;
-	//セカンダリバッファの生成
+	//Generate secondary buffer
 	DSBUFFERDESC dsbd;
 
 	for(j = 0; j < 8; j++){
@@ -280,7 +280,7 @@ BOOL MakeSoundObject8(char *wavep,char track, char pipi )
 			dsbd.lpwfxFormat = (LPWAVEFORMATEX)(&format_tbl2[0]);
 				if(lpDS->CreateSoundBuffer(&dsbd, &lpORGANBUFFER[track][j][k],//j = se_no
 										NULL) != DS_OK) return(FALSE);
-			wp = (BYTE*)malloc(data_size);//ファイルのワークスペースを作る
+			wp = (BYTE*)malloc(data_size);//Make a file workspace
 			wp_sub = wp;
 			wav_tp = 0;
 			for(i = 0; i < data_size; i++){
@@ -291,7 +291,7 @@ BOOL MakeSoundObject8(char *wavep,char track, char pipi )
 				if( wav_tp > 255 ) wav_tp -= 256;
 				wp_sub++;
 			}
-			//データの転送
+			//Data transfer
 			LPVOID lpbuf1, lpbuf2;
 			DWORD dwbuf1, dwbuf2=0;
 			HRESULT hr;
@@ -301,7 +301,7 @@ BOOL MakeSoundObject8(char *wavep,char track, char pipi )
 				free( wp );
 				return (FALSE);
 			}
-			CopyMemory(lpbuf1, (BYTE*)wp,dwbuf1);//+3aはデータの頭
+			CopyMemory(lpbuf1, (BYTE*)wp,dwbuf1);//+3aThe head of data
 			if(dwbuf2 != 0)	CopyMemory(lpbuf2, (BYTE*)wp+dwbuf1, dwbuf2);
 			lpORGANBUFFER[track][j][k]->Unlock(lpbuf1, dwbuf1, lpbuf2, dwbuf2); 
 			lpORGANBUFFER[track][j][k]->SetCurrentPosition(0);
@@ -310,7 +310,7 @@ BOOL MakeSoundObject8(char *wavep,char track, char pipi )
 	}
 	return(TRUE);
 }
-//2.1.0で 整数型から小数点型に変更してみた。20140401
+//2.1.0so I changed from integer type to decimal type.20140401
 //short freq_tbl[12] = {261,278,294,311,329,349,371,391,414,440,466,494};
 double freq_tbl[12] = {261.62556530060, 277.18263097687, 293.66476791741, 311.12698372208, 329.62755691287, 349.22823143300, 369.99442271163, 391.99543598175, 415.30469757995, 440.00000000000, 466.16376151809, 493.88330125612};
 void ChangeOrganFrequency(unsigned char key,char track, DWORD a)
@@ -321,69 +321,69 @@ void ChangeOrganFrequency(unsigned char key,char track, DWORD a)
 			tmpDouble = (((double)oct_wave[j].wave_size * freq_tbl[key])*(double)oct_wave[j].oct_par)/8.00f + ((double)a - 1000.0f);
 			
 			
-			lpORGANBUFFER[track][j][i]->SetFrequency(//1000を+αのデフォルト値とする
+			lpORGANBUFFER[track][j][i]->SetFrequency(//1000To+αDefault value of
 				(DWORD)tmpDouble
 //				((oct_wave[j].wave_size*freq_tbl[key])*oct_wave[j].oct_par)/8 + (a-1000)
 			);
 		}
 }
 short pan_tbl[13] = {0,43,86,129,172,215,256,297,340,383,426,469,512}; 
-unsigned char old_key[MAXTRACK] = {255,255,255,255,255,255,255,255};//再生中の音
-unsigned char key_on[MAXTRACK] = {0};//キースイッチ
-unsigned char key_twin[MAXTRACK] = {0};//今使っているキー(連続時のノイズ防止の為に二つ用意)
-void ChangeOrganPan(unsigned char key, unsigned char pan,char track)//512がMAXで256がﾉｰﾏﾙ
+unsigned char old_key[MAXTRACK] = {255,255,255,255,255,255,255,255};//Sound during playback
+unsigned char key_on[MAXTRACK] = {0};//Key switch
+unsigned char key_twin[MAXTRACK] = {0};//The key you are using now(Two are prepared for noise prevention at the time of continuous)
+void ChangeOrganPan(unsigned char key, unsigned char pan,char track)//512ButMAXso256Is normal
 {
 	if(old_key[track] != 255)
 		lpORGANBUFFER[track][old_key[track]/12][key_twin[track]]->SetPan((pan_tbl[pan]-256)*10);
 }
-void ChangeOrganVolume(int no, long volume,char track)//300がMAXで300がﾉｰﾏﾙ
+void ChangeOrganVolume(int no, long volume,char track)//300ButMAXso300Is normal
 {
 	if(old_key[track] != 255)
 		lpORGANBUFFER[track][old_key[track]/12][key_twin[track]]->SetVolume((volume-255)*8);
 }
-// サウンドの再生 
+// Play sound 
 void PlayOrganObject(unsigned char key, int mode,char track,DWORD freq)
 {
 	
     if(lpORGANBUFFER[track][key/12][key_twin[track]] != NULL){
 		switch(mode){
-		case 0: // 停止
+		case 0: // Stop
 			lpORGANBUFFER[track][old_key[track]/12][key_twin[track]]->Stop();
 			lpORGANBUFFER[track][old_key[track]/12][key_twin[track]]->SetCurrentPosition(0);
 			break;
-		case 1: // 再生
+		case 1: // Playback
 //			if(key_on == 1 && no == old_key/12)//
 //				lpORGANBUFFER[old_key/12]->Stop();
-//				ChangeOrganFrequency(key%12);//周波数を設定して
+//				ChangeOrganFrequency(key%12);//Set the frequency
 //				lpORGANBUFFER[no]->Play(0, 0, 0);
-//			if(key_on == 1 && no == old_key/12){//鳴ってるWAVが同じWAVNOなら
+//			if(key_on == 1 && no == old_key/12){//It&#39;s ringingWAVSameWAVNOIf
 //				old_key = key;
-//				ChangeOrganFrequency(key%12);//周波数を変えるだけ
+//				ChangeOrganFrequency(key%12);//Just change the frequency
 //			}
 			break;
-		case 2: // 歩かせ停止
+		case 2: // Stop walking
 			if(old_key[track] != 255){
 				lpORGANBUFFER[track][old_key[track]/12][key_twin[track]]->Play(0, 0, 0);
 				old_key[track] = 255;
 			}
             break;
 		case -1:
-			if(old_key[track] == 255){//新規鳴らす
-				ChangeOrganFrequency(key%12,track,freq);//周波数を設定して
+			if(old_key[track] == 255){//To ring a new sound
+				ChangeOrganFrequency(key%12,track,freq);//Set the frequency
 				lpORGANBUFFER[track][key/12][key_twin[track]]->Play(0, 0, DSBPLAY_LOOPING);
 				old_key[track] = key;
 				key_on[track] = 1;
-			}else if(key_on[track] == 1 && old_key[track] == key){//同じ音
-				//今なっているのを歩かせ停止
+			}else if(key_on[track] == 1 && old_key[track] == key){//Same sound
+				//Stop walking now and stop
 				lpORGANBUFFER[track][old_key[track]/12][key_twin[track]]->Play(0, 0, 0);
 				key_twin[track]++;
 				if(key_twin[track] == 2)key_twin[track] = 0; 
 				lpORGANBUFFER[track][key/12][key_twin[track]]->Play(0, 0, DSBPLAY_LOOPING);
-			}else{//違う音を鳴らすなら
-				lpORGANBUFFER[track][old_key[track]/12][key_twin[track]]->Play(0, 0, 0);//今なっているのを歩かせ停止
+			}else{//If you play a different sound
+				lpORGANBUFFER[track][old_key[track]/12][key_twin[track]]->Play(0, 0, 0);//Stop walking now and stop
 				key_twin[track]++;
 				if(key_twin[track] == 2)key_twin[track] = 0; 
-				ChangeOrganFrequency(key%12,track,freq);//周波数を設定して
+				ChangeOrganFrequency(key%12,track,freq);//Set the frequency
 				lpORGANBUFFER[track][key/12][key_twin[track]]->Play(0, 0, DSBPLAY_LOOPING);
 				old_key[track] = key;
 			}
@@ -391,49 +391,49 @@ void PlayOrganObject(unsigned char key, int mode,char track,DWORD freq)
 		}
     }
 }
-//ぴぴ
+//Crack
 void PlayOrganObject2(unsigned char key, int mode,char track,DWORD freq)
 {
 	
     if(lpORGANBUFFER[track][key/12][key_twin[track]] != NULL){
 		switch(mode){
-		case 0: // 停止
+		case 0: // Stop
 			lpORGANBUFFER[track][old_key[track]/12][key_twin[track]]->Stop();
 			lpORGANBUFFER[track][old_key[track]/12][key_twin[track]]->SetCurrentPosition(0);
 			break;
-		case 1: // 再生
+		case 1: // Playback
 //			if(key_on == 1 && no == old_key/12)//
 //				lpORGANBUFFER[old_key/12]->Stop();
-//				ChangeOrganFrequency(key%12);//周波数を設定して
+//				ChangeOrganFrequency(key%12);//Set the frequency
 //				lpORGANBUFFER[no]->Play(0, 0, 0);
-//			if(key_on == 1 && no == old_key/12){//鳴ってるWAVが同じWAVNOなら
+//			if(key_on == 1 && no == old_key/12){//It&#39;s ringingWAVSameWAVNOIf
 //				old_key = key;
-//				ChangeOrganFrequency(key%12);//周波数を変えるだけ
+//				ChangeOrganFrequency(key%12);//Just change the frequency
 //			}
 			break;
-		case 2: // 歩かせ停止
+		case 2: // Stop walking
 			if(old_key[track] != 255){
 //				lpORGANBUFFER[track][old_key[track]/12][key_twin[track]]->Play(0, 0, 0);
 				old_key[track] = 255;
 			}
             break;
 		case -1:
-			if(old_key[track] == 255){//新規鳴らす
-				ChangeOrganFrequency(key%12,track,freq);//周波数を設定して
+			if(old_key[track] == 255){//To ring a new sound
+				ChangeOrganFrequency(key%12,track,freq);//Set the frequency
 				lpORGANBUFFER[track][key/12][key_twin[track]]->Play(0, 0, 0);//DSBPLAY_LOOPING);
 				old_key[track] = key;
 				key_on[track] = 1;
-			}else if(key_on[track] == 1 && old_key[track] == key){//同じ音
-				//今なっているのを歩かせ停止
+			}else if(key_on[track] == 1 && old_key[track] == key){//Same sound
+				//Stop walking now and stop
 //				lpORGANBUFFER[track][old_key[track]/12][key_twin[track]]->Play(0, 0, 0);
 				key_twin[track]++;
 				if(key_twin[track] == 2)key_twin[track] = 0; 
 				lpORGANBUFFER[track][key/12][key_twin[track]]->Play(0, 0, 0);//DSBPLAY_LOOPING);
-			}else{//違う音を鳴らすなら
-//				lpORGANBUFFER[track][old_key[track]/12][key_twin[track]]->Play(0, 0, 0);//今なっているのを歩かせ停止
+			}else{//If you play a different sound
+//				lpORGANBUFFER[track][old_key[track]/12][key_twin[track]]->Play(0, 0, 0);//Stop walking now and stop
 				key_twin[track]++;
 				if(key_twin[track] == 2)key_twin[track] = 0; 
-				ChangeOrganFrequency(key%12,track,freq);//周波数を設定して
+				ChangeOrganFrequency(key%12,track,freq);//Set the frequency
 				lpORGANBUFFER[track][key/12][key_twin[track]]->Play(0, 0, 0);//DSBPLAY_LOOPING);
 				old_key[track] = key;
 			}
@@ -441,7 +441,7 @@ void PlayOrganObject2(unsigned char key, int mode,char track,DWORD freq)
 		}
     }
 }
-//オルガーニャオブジェクトを開放
+//Opening Orgagna Object
 void ReleaseOrganyaObject(char track){
 	for(int i = 0; i < 8; i++){
 		if(lpORGANBUFFER[track][i][0] != NULL){
@@ -454,18 +454,18 @@ void ReleaseOrganyaObject(char track){
 		}
 	}
 }
-//波形データをロード
+//Load waveform data
 //char wave_data[100*256];
 char *wave_data = NULL;
 BOOL InitWaveData100(void)
 {
 	if(wave_data == NULL)wave_data = (char *)malloc(sizeof(char) * 256 * 256);
     HRSRC hrscr;
-    DWORD *lpdword;//リソースのアドレス
-    // リソースの検索
+    DWORD *lpdword;//Resource address
+    // Search resources
     if((hrscr = FindResource(NULL, "WAVE100", "WAVE")) == NULL)
                                                     return(FALSE);
-    // リソースのアドレスを取得
+    // Get resource address
     lpdword = (DWORD*)LockResource(LoadResource(NULL, hrscr));
 	memcpy(wave_data,lpdword,100*256);
 	return TRUE;
@@ -488,7 +488,7 @@ BOOL DeleteWaveData100(void)
 	free(wave_data);
 	return TRUE;
 }
-//波形を１００個の中から選択して作成
+//Select and create a waveform from 100
 BOOL MakeOrganyaWave(char track,char wave_no, char pipi)
 {
 	if(wave_no > 99)return FALSE;
@@ -497,9 +497,9 @@ BOOL MakeOrganyaWave(char track,char wave_no, char pipi)
 	return TRUE;
 }
 /////////////////////////////////////////////
-//■オルガーニャドラムス■■■■■■■■///////
+//■Organa drums■■■■■■■■///////
 /////////////////////
-//オルガーニャオブジェクトを開放
+//Opening Orgagna Object
 void ReleaseDramObject(char track){
 	for(int i = 0; i < 8; i++){
 		if(lpDRAMBUFFER[track] != NULL){
@@ -508,35 +508,35 @@ void ReleaseDramObject(char track){
 		}
 	}
 }
-// サウンドの設定 
+// Sound settings 
 BOOL InitDramObject( LPCSTR resname, int no)
 {
     HRSRC hrscr;
     DSBUFFERDESC dsbd;
-    DWORD *lpdword;//リソースのアドレス
-    // リソースの検索
-	ReleaseDramObject(no); //ここにおいてみた。
+    DWORD *lpdword;//Resource address
+    // Search resources
+	ReleaseDramObject(no); //I tried it here.
 
     if((hrscr = FindResource(NULL, resname, "WAVE")) == NULL)
                                                     return(FALSE);
-    // リソースのアドレスを取得
+    // Get resource address
     lpdword = (DWORD*)LockResource(LoadResource(NULL, hrscr));
-	// 二次バッファの生成
+	// Generation of secondary buffer
 	ZeroMemory(&dsbd, sizeof(DSBUFFERDESC));
 	dsbd.dwSize = sizeof(DSBUFFERDESC);
 	dsbd.dwFlags = 
 		DSBCAPS_STATIC|
 		DSBCAPS_STICKYFOCUS
 		|DSBCAPS_CTRLPAN | DSBCAPS_CTRLVOLUME | DSBCAPS_CTRLFREQUENCY;
-	dsbd.dwBufferBytes = *(DWORD*)((BYTE*)lpdword+0x36);//WAVEデータのサイズ
+	dsbd.dwBufferBytes = *(DWORD*)((BYTE*)lpdword+0x36);//WAVEData size
 	dsbd.lpwfxFormat = (LPWAVEFORMATEX)(lpdword+5); 
 	if(lpDS->CreateSoundBuffer(&dsbd, &lpDRAMBUFFER[no],NULL) != DS_OK) return(FALSE);
     LPVOID lpbuf1, lpbuf2;
     DWORD dwbuf1, dwbuf2;
-    // 二次バッファのロック
+    // Secondary buffer lock
     lpDRAMBUFFER[no]->Lock(0, *(DWORD*)((BYTE*)lpdword+0x36),
                         &lpbuf1, &dwbuf1, &lpbuf2, &dwbuf2, 0); 
-	// 音源データの設定
+	// Setting of sound source data
 	CopyMemory(lpbuf1, (BYTE*)lpdword+0x3a, dwbuf1);
     if(dwbuf2 != 0){
 		CopyMemory(lpbuf2, (BYTE*)lpdword+0x3a+dwbuf1, dwbuf2);
@@ -544,7 +544,7 @@ BOOL InitDramObject( LPCSTR resname, int no)
 		
 	}
 
-	// 二次バッファのロック解除
+	// Unlock secondary buffer
 	lpDRAMBUFFER[no]->Unlock(lpbuf1, dwbuf1, lpbuf2, dwbuf2); 
 	lpDRAMBUFFER[no]->SetCurrentPosition(0);
 
@@ -560,11 +560,11 @@ BOOL LoadDramObject(char *file_name, int no)
 	FILE *fp;
 	ReleaseDramObject(no);
 	if((fp=fopen(file_name,"rb"))==NULL){
-//		char msg_str[64];				//数値確認用
-//		lpDD->FlipToGDISurface(); //メッセージ表示の方にフリップ
-//		sprintf(msg_str,"%sが見当たりません",file_name);
+//		char msg_str[64];				//For numerical confirmation
+//		lpDD->FlipToGDISurface(); //Flip toward the message display
+//		sprintf(msg_str,"%sI can not find it",file_name);
 //		MessageBox(hWND,msg_str,"title",MB_OK);
-//		SetCursor(FALSE); // カーソル消去
+//		SetCursor(FALSE); // Clear cursor
 		return(FALSE);
 	}
 	for(i = 0; i < 58; i++){
@@ -577,20 +577,20 @@ BOOL LoadDramObject(char *file_name, int no)
 	file_size = *((DWORD *)&check_box[4]);
 
 	DWORD *wp;
-	wp = (DWORD*)malloc(file_size);//ファイルのワークスペースを作る
+	wp = (DWORD*)malloc(file_size);//Make a file workspace
 	fseek(fp,0,SEEK_SET);
 	for(i = 0; i < file_size; i++){
 		fread((BYTE*)wp+i,sizeof(BYTE),1,fp);
 	}
 	fclose(fp);
-	//セカンダリバッファの生成
+	//Generate secondary buffer
 	DSBUFFERDESC dsbd;
 	ZeroMemory(&dsbd, sizeof(DSBUFFERDESC));
 	dsbd.dwSize = sizeof(DSBUFFERDESC);
 	dsbd.dwFlags = DSBCAPS_STATIC|
 		DSBCAPS_STICKYFOCUS
 		|DSBCAPS_CTRLDEFAULT;
-	dsbd.dwBufferBytes = *(DWORD*)((BYTE*)wp+0x36);//WAVEデータのサイズ
+	dsbd.dwBufferBytes = *(DWORD*)((BYTE*)wp+0x36);//WAVEData size
 	dsbd.lpwfxFormat = (LPWAVEFORMATEX)(wp+5); 
 	if(lpDS->CreateSoundBuffer(&dsbd, &lpDRAMBUFFER[no],
 								NULL) != DS_OK) return(FALSE);	
@@ -600,7 +600,7 @@ BOOL LoadDramObject(char *file_name, int no)
 	hr = lpDRAMBUFFER[no]->Lock(0, file_size-58,
 							&lpbuf1, &dwbuf1, &lpbuf2, &dwbuf2, 0); 
 	if(hr != DS_OK)return (FALSE);
-	CopyMemory(lpbuf1, (BYTE*)wp+0x3a, dwbuf1);//+3aはデータの頭
+	CopyMemory(lpbuf1, (BYTE*)wp+0x3a, dwbuf1);//+3aThe head of data
 	if(dwbuf2 != 0)	CopyMemory(lpbuf2, (BYTE*)wp+0x3a+dwbuf1, dwbuf2);
 	lpDRAMBUFFER[no]->Unlock(lpbuf1, dwbuf1, lpbuf2, dwbuf2); 
 	
@@ -611,7 +611,7 @@ void ChangeDramFrequency(unsigned char key,char track)
 {
 	lpDRAMBUFFER[track]->SetFrequency(key*800+100);
 }
-void ChangeDramPan(unsigned char pan,char track)//512がMAXで256がﾉｰﾏﾙ
+void ChangeDramPan(unsigned char pan,char track)//512ButMAXso256Is normal
 {
 	lpDRAMBUFFER[track]->SetPan((pan_tbl[pan]-256)*10);
 }
@@ -619,23 +619,23 @@ void ChangeDramVolume(long volume,char track)//
 {
 	lpDRAMBUFFER[track]->SetVolume((volume-255)*8);
 }
-// サウンドの再生 
+// Play sound 
 void PlayDramObject(unsigned char key, int mode,char track)
 {
 	
     if(lpDRAMBUFFER[track] != NULL){
 		switch(mode){
-		case 0: // 停止
+		case 0: // Stop
 			lpDRAMBUFFER[track]->Stop();
 			lpDRAMBUFFER[track]->SetCurrentPosition(0);
 			break;
-		case 1: // 再生
+		case 1: // Playback
 			lpDRAMBUFFER[track]->Stop();
 			lpDRAMBUFFER[track]->SetCurrentPosition(0);
-			ChangeDramFrequency(key,track);//周波数を設定して
+			ChangeDramFrequency(key,track);//Set the frequency
 			lpDRAMBUFFER[track]->Play(0, 0, 0);
 			break;
-		case 2: // 歩かせ停止
+		case 2: // Stop walking
             break;
 		case -1:
 			break;
@@ -647,17 +647,17 @@ void PlayOrganKey(unsigned char key,char track,DWORD freq,int Nagasa)
 	if(key>96)return;
 	if(track < MAXMELODY){
 		DWORD wait = timeGetTime();
-		ChangeOrganFrequency(key%12,track,freq);//周波数を設定して
+		ChangeOrganFrequency(key%12,track,freq);//Set the frequency
 		lpORGANBUFFER[track][key/12][0]->SetVolume((160-255)*8);
 		lpORGANBUFFER[track][key/12][0]->Play(0, 0, DSBPLAY_LOOPING);
 		do{
 		}while(timeGetTime() < wait + (DWORD)Nagasa);
-//		lpORGANBUFFER[track][key/12][0]->Play(0, 0, 0); //C 2010.09.23 即時停止する。
+//		lpORGANBUFFER[track][key/12][0]->Play(0, 0, 0); //C 2010.09.23 Immediately stop.
 		lpORGANBUFFER[track][key/12][0]->Stop();
 	}else{
 		lpDRAMBUFFER[track - MAXMELODY]->Stop();
 		lpDRAMBUFFER[track - MAXMELODY]->SetCurrentPosition(0);
-		ChangeDramFrequency(key,track - MAXMELODY);//周波数を設定して
+		ChangeDramFrequency(key,track - MAXMELODY);//Set the frequency
 		lpDRAMBUFFER[track - MAXMELODY]->SetVolume((160-255)*8);
 		lpDRAMBUFFER[track - MAXMELODY]->Play(0, 0, 0);
 	}
@@ -675,7 +675,7 @@ void Rxo_PlayKey(unsigned char key,char track,DWORD freq, int Phase)
 	}else{
 		lpDRAMBUFFER[track - MAXMELODY]->Stop();
 		lpDRAMBUFFER[track - MAXMELODY]->SetCurrentPosition(0);
-		ChangeDramFrequency(key,track - MAXMELODY);//周波数を設定して
+		ChangeDramFrequency(key,track - MAXMELODY);//Set the frequency
 		lpDRAMBUFFER[track - MAXMELODY]->SetVolume((160-255)*8);
 		lpDRAMBUFFER[track - MAXMELODY]->Play(0, 0, 0);
 	}
@@ -692,13 +692,13 @@ void Rxo_StopKey(unsigned char key,char track, int Phase)
 	}	
 }
 
-//デバッグ用。いろんな状態を出力。
+//For debugging purposes. Output various states.
 void Rxo_ShowDirectSoundObject(HWND hwnd)
 {
 	
 }
 
-//音をすぐに全部止める
+//Stop all sound immediately
 void Rxo_StopAllSoundNow(void)
 {
 	int i,j,k;
@@ -708,5 +708,5 @@ void Rxo_StopAllSoundNow(void)
 		for(j=0;j<8;j++)for(k=0;k<2;k++)lpORGANBUFFER[i][j][k]->Stop();
 		lpDRAMBUFFER[i]->Stop();
 	}
-	for(i=0;i<MAXTRACK;i++)old_key[i]=255; //2014.05.02 A これで頭が変な音にならなくする。
+	for(i=0;i<MAXTRACK;i++)old_key[i]=255; //2014.05.02 A This will make it a strange sound.
 }

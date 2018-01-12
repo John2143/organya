@@ -5,22 +5,22 @@
 #define MAXBITMAP		64
 
 HBITMAP hBmp[MAXBITMAP];
-HBITMAP hbWork;//いわゆるバックバッファ
-HBITMAP hbMparts;//楽譜用ワーク
-HBITMAP hbPan;//パンボリューム用ワーク
+HBITMAP hbWork;//The so-called back buffer
+HBITMAP hbMparts;//Sheet music work
+HBITMAP hbPan;//Work for pan volume
 
-extern int gDrawDouble;	//両方のトラックグループを描画する
+extern int gDrawDouble;	//Draw both track groups
 
-extern RECT WinRect; //ウィンドウサイズ保存用 A 2010.09.22
+extern RECT WinRect; //For saving window size A 2010.09.22
 extern int NoteWidth;
 extern int NoteEnlarge_Until_16px;
-//GDIの初期化
+//GDIInitialize
 BOOL StartGDI(HWND hwnd)
 {
-	HDC hdc;//デバイスコンテキスト
-	BOOL status = FALSE;//この関数の返り値
+	HDC hdc;//Device context
+	BOOL status = FALSE;//Return value of this function
     int nDesktopWidth = GetSystemMetrics( SM_CXFULLSCREEN );
-    int nDesktopHeight = GetSystemMetrics( SM_CYFULLSCREEN );	//タスクバー考慮
+    int nDesktopHeight = GetSystemMetrics( SM_CYFULLSCREEN );	//Task bar consideration
     int nScreenWidth = GetSystemMetrics( SM_CXSCREEN );
     int nScreenHeight = GetSystemMetrics( SM_CYSCREEN );
 
@@ -31,8 +31,8 @@ BOOL StartGDI(HWND hwnd)
 	if(nVirtualWidth > nScreenWidth)nScreenWidth = nVirtualWidth;	//A 2010.09.22
 	if(nVirtualHeight > nScreenHeight)nScreenHeight = nVirtualHeight;	//A 2010.09.22
 
-	hdc = GetDC(hwnd);//DC取得
-	//バックサーフェスを作るにあたる
+	hdc = GetDC(hwnd);//DCGet
+	//To create a back surface
 	if((hbWork = CreateCompatibleBitmap(hdc,nScreenWidth,nScreenHeight)) == NULL){
 		status = FALSE;
 	}
@@ -45,14 +45,14 @@ BOOL StartGDI(HWND hwnd)
 	ReleaseDC(hwnd,hdc);
 	return(status);
 }
-//リサイズされたとき（失敗した関数）
+//When resized (failed function)
 BOOL ResizeGDI(HWND hwnd)
 {
 	if(hbWork != NULL)DeleteObject(hbWork);
-	HDC hdc;//デバイスコンテキスト
-	BOOL status = FALSE;//この関数の返り値
+	HDC hdc;//Device context
+	BOOL status = FALSE;//Return value of this function
 
-	hdc = GetDC(hwnd);//DC取得
+	hdc = GetDC(hwnd);//DCGet
 	if((hbWork = CreateCompatibleBitmap(hdc,WWidth,WHeight)) == NULL){
 		status = FALSE;
 	}
@@ -60,7 +60,7 @@ BOOL ResizeGDI(HWND hwnd)
 	return(status);
 
 }
-//GDIの開放
+//GDIOpening
 void EndGDI(void)
 {
 	int i;
@@ -71,7 +71,7 @@ void EndGDI(void)
 	if(hbMparts != NULL)DeleteObject(hbMparts);
 	if(hbPan != NULL)DeleteObject(hbPan);
 }
-//画像のロード(リソースから)
+//Load images(From resources)
 HBITMAP InitBitmap(char *name,int no)
 {
 	hBmp[no] = (HBITMAP)LoadImage(GetModuleHandle(NULL),
@@ -79,19 +79,19 @@ HBITMAP InitBitmap(char *name,int no)
 	return hBmp[no];
 }
 
-//いわゆるフリップ
+//The so-called flip
 void RefleshScreen(HDC hdc)
 {
 
-	HDC hdcwork;//バックサーフェスのDC
-	HBITMAP hbold;//過去のハンドルを保存
+	HDC hdcwork;//Back of the surfaceDC
+	HBITMAP hbold;//Save past handles
 	
-	hdcwork = CreateCompatibleDC(hdc);//DCの生成
-	hbold = (HBITMAP)SelectObject(hdcwork,hbWork);//バックサーフェスを選択
-	//表示(フリップ)
+	hdcwork = CreateCompatibleDC(hdc);//DCGeneration
+	hbold = (HBITMAP)SelectObject(hdcwork,hbWork);//Select back surface
+	//display(Flip)
 	BitBlt(hdc, 0, 0, WWidth, WHeight,hdcwork,0,0,SRCCOPY);
-	SelectObject(hdcwork, hbold);//選択オブジェクトを元に戻す
-	DeleteDC(hdcwork);//デバイスコンテキストの削除
+	SelectObject(hdcwork, hbold);//Restore selected objects
+	DeleteDC(hdcwork);//Delete device context
 
 }
 
@@ -107,7 +107,7 @@ void PutBitmap(long x,long y, RECT *rect, int bmp_no)
 	fromold = (HBITMAP)SelectObject(fromDC,hBmp[bmp_no]);
 
 	BitBlt(toDC,x,y,rect->right - rect->left,
-		rect->bottom - rect->top,fromDC,rect->left,rect->top,SRCCOPY);//表示
+		rect->bottom - rect->top,fromDC,rect->left,rect->top,SRCCOPY);//display
 
 	SelectObject(toDC,toold);
 	SelectObject(fromDC,fromold);
@@ -116,7 +116,7 @@ void PutBitmap(long x,long y, RECT *rect, int bmp_no)
 	ReleaseDC(hWnd,hdc);
 }
 
-void PutBitmapCenter16(long x,long y, RECT *rect, int bmp_no) //中心に描画する 2014.05.26
+void PutBitmapCenter16(long x,long y, RECT *rect, int bmp_no) //Draw in the center 2014.05.26
 {
 	if(rect->right - rect->left != 16 || NoteWidth == 16){
 		PutBitmap(x, y, rect, bmp_no);
@@ -133,9 +133,9 @@ void PutBitmapCenter16(long x,long y, RECT *rect, int bmp_no) //中心に描画�
 
 	int ww = NoteWidth - 4;
 
-	BitBlt(toDC,x     ,y,2   , rect->bottom - rect->top,  fromDC,  rect->left   ,rect->top,SRCCOPY);//表示
-	BitBlt(toDC,x+2   ,y,ww  , rect->bottom - rect->top,  fromDC,  rect->left+2 ,rect->top,SRCCOPY);//表示
-	BitBlt(toDC,x+2+ww,y,2   , rect->bottom - rect->top,  fromDC,  rect->left+14,rect->top,SRCCOPY);//表示
+	BitBlt(toDC,x     ,y,2   , rect->bottom - rect->top,  fromDC,  rect->left   ,rect->top,SRCCOPY);//display
+	BitBlt(toDC,x+2   ,y,ww  , rect->bottom - rect->top,  fromDC,  rect->left+2 ,rect->top,SRCCOPY);//display
+	BitBlt(toDC,x+2+ww,y,2   , rect->bottom - rect->top,  fromDC,  rect->left+14,rect->top,SRCCOPY);//display
 
 	SelectObject(toDC,toold);
 	SelectObject(fromDC,fromold);
@@ -144,17 +144,17 @@ void PutBitmapCenter16(long x,long y, RECT *rect, int bmp_no) //中心に描画�
 	ReleaseDC(hWnd,hdc);
 }
 ///////////////////////////////////////////////
-////以降はユニークば関数////////////////////////
+////After that, if it is unique function////////////////////////
 ///////////////////////////////////////////////
-//楽譜のパーツ生成
+//Parts generation of score
 bool MakeMusicParts(unsigned char line,unsigned char dot)
 {
 	if(line*dot==0)return false;
 //	RECT m_rect[] = {
-//		{  0,  0, 64,144},//鍵盤
-//		{ 64,  0, 80,144},//小節ライン
-//		{ 80,  0, 96,144},//一拍ライン
-//		{ 96,  0,112,144},//1/16ライン
+//		{  0,  0, 64,144},//keyboard
+//		{ 64,  0, 80,144},//Bar line
+//		{ 80,  0, 96,144},//One beat line
+//		{ 96,  0,112,144},//1/16line
 //	};
 	HDC hdc,toDC,fromDC;
 	HBITMAP toold,fromold;
@@ -170,16 +170,16 @@ bool MakeMusicParts(unsigned char line,unsigned char dot)
 	else x=0;
 
 	for(int i = 0; i < (WWidth/NoteWidth)+15; i++){
-		if(i%(line*dot) == 0)//線
-//			BitBlt(toDC,i*16,0,16,192+WDWHEIGHTPLUS,fromDC,x+64,0,SRCCOPY);//表示
-			BitBlt(toDC,i*NoteWidth,0,NoteWidth,WHeight+192-WHNM,fromDC,x+64,0,SRCCOPY);//表示
-		else if(i%dot == 0)//破線
-			BitBlt(toDC,i*NoteWidth,0,NoteWidth,WHeight+192-WHNM,fromDC,x+64+16,0,SRCCOPY);//表示
+		if(i%(line*dot) == 0)//line
+//			BitBlt(toDC,i*16,0,16,192+WDWHEIGHTPLUS,fromDC,x+64,0,SRCCOPY);//display
+			BitBlt(toDC,i*NoteWidth,0,NoteWidth,WHeight+192-WHNM,fromDC,x+64,0,SRCCOPY);//display
+		else if(i%dot == 0)//Dashed line
+			BitBlt(toDC,i*NoteWidth,0,NoteWidth,WHeight+192-WHNM,fromDC,x+64+16,0,SRCCOPY);//display
 		else{
 			if(NoteWidth>=8){
-				BitBlt(toDC,i*NoteWidth,0,NoteWidth,WHeight+192-WHNM,fromDC,x+64+32,0,SRCCOPY);//表示
+				BitBlt(toDC,i*NoteWidth,0,NoteWidth,WHeight+192-WHNM,fromDC,x+64+32,0,SRCCOPY);//display
 			}else{
-				BitBlt(toDC,i*NoteWidth,0,NoteWidth,WHeight+192-WHNM,fromDC,x+64+32+1,0,SRCCOPY);//表示
+				BitBlt(toDC,i*NoteWidth,0,NoteWidth,WHeight+192-WHNM,fromDC,x+64+32+1,0,SRCCOPY);//display
 			}
 		}
 	}
@@ -203,7 +203,7 @@ void PutMusicParts(long x,long y)
 	toold   = (HBITMAP)SelectObject(toDC,hbWork);
 	fromold = (HBITMAP)SelectObject(fromDC,hbMparts);
 
-	BitBlt(toDC,x,y,WWidth,WHeight+192-WHNM,fromDC,0,0,SRCCOPY);//表示
+	BitBlt(toDC,x,y,WWidth,WHeight+192-WHNM,fromDC,0,0,SRCCOPY);//display
 
 	SelectObject(toDC,toold);
 	SelectObject(fromDC,fromold);
@@ -211,7 +211,7 @@ void PutMusicParts(long x,long y)
 	DeleteDC(fromDC);
 	ReleaseDC(hWnd,hdc);
 }
-//パン・ボリュームライン表示
+//Pan / volume line display
 void PutPanParts(void)
 {
 	HDC hdc,toDC,fromDC;
@@ -223,7 +223,7 @@ void PutPanParts(void)
 	toold   = (HBITMAP)SelectObject(toDC,hbWork);
 	fromold = (HBITMAP)SelectObject(fromDC,hbPan);
 
-	BitBlt(toDC,64,WHeight+288-WHNM,WWidth,WHeight+192-WHNM,fromDC,0,0,SRCCOPY);//表示
+	BitBlt(toDC,64,WHeight+288-WHNM,WWidth,WHeight+192-WHNM,fromDC,0,0,SRCCOPY);//display
 
 	SelectObject(toDC,toold);
 	SelectObject(fromDC,fromold);
@@ -235,10 +235,10 @@ void PutPanParts(void)
 void MakePanParts(unsigned char line,unsigned char dot)
 {
 //	RECT m_rect[] = {
-//		{  0,  0, 64,144},//鍵盤
-//		{ 64,  0, 80,144},//小節ライン
-//		{ 80,  0, 96,144},//一拍ライン
-//		{ 96,  0,112,144},//1/16ライン
+//		{  0,  0, 64,144},//keyboard
+//		{ 64,  0, 80,144},//Bar line
+//		{ 80,  0, 96,144},//One beat line
+//		{ 96,  0,112,144},//1/16line
 //	};
 	HDC hdc,toDC,fromDC;
 	HBITMAP toold,fromold;
@@ -252,15 +252,15 @@ void MakePanParts(unsigned char line,unsigned char dot)
 
 //	for(int i = 0; i < 40; i++){
 	for(int i = 0; i < (WWidth/NoteWidth)+15; i++){
-		if(i%(line*dot) == 0)//線
-			BitBlt(toDC,i*NoteWidth,0,NoteWidth,WHeight+192-WHNM+16,fromDC,64,0,SRCCOPY);//表示
-		else if(i%dot == 0)//破線
-			BitBlt(toDC,i*NoteWidth,0,NoteWidth,WHeight+192-WHNM+16,fromDC,64+16,0,SRCCOPY);//表示
+		if(i%(line*dot) == 0)//line
+			BitBlt(toDC,i*NoteWidth,0,NoteWidth,WHeight+192-WHNM+16,fromDC,64,0,SRCCOPY);//display
+		else if(i%dot == 0)//Dashed line
+			BitBlt(toDC,i*NoteWidth,0,NoteWidth,WHeight+192-WHNM+16,fromDC,64+16,0,SRCCOPY);//display
 		else {
 			if(NoteWidth>=8){
-				BitBlt(toDC,i*NoteWidth,0,NoteWidth,WHeight+192-WHNM+16,fromDC,64+32,0,SRCCOPY);//表示
+				BitBlt(toDC,i*NoteWidth,0,NoteWidth,WHeight+192-WHNM+16,fromDC,64+32,0,SRCCOPY);//display
 			}else{
-				BitBlt(toDC,i*NoteWidth,0,NoteWidth,WHeight+192-WHNM+16,fromDC,64+32+1,0,SRCCOPY);//表示
+				BitBlt(toDC,i*NoteWidth,0,NoteWidth,WHeight+192-WHNM+16,fromDC,64+32+1,0,SRCCOPY);//display
 			}
 		}
 	}
@@ -283,7 +283,7 @@ void PutSelectParts(void)
 	toold   = (HBITMAP)SelectObject(toDC,hbWork);
 	fromold = (HBITMAP)SelectObject(fromDC,hbPan);
 
-	BitBlt(toDC,64,WHeight-16,WWidth,WHeight,fromDC,0,144,SRCCOPY);//表示
+	BitBlt(toDC,64,WHeight-16,WWidth,WHeight,fromDC,0,144,SRCCOPY);//display
 
 	SelectObject(toDC,toold);
 	SelectObject(fromDC,fromold);
@@ -293,7 +293,7 @@ void PutSelectParts(void)
 
 }
 
-//以下はチト特殊。音符を描くときのみに用いることとする。
+//The following is Tito special. It is used only when drawing notes.
 HDC		Dw_hdc, Dw_toDC, Dw_fromDC;
 HBITMAP Dw_toold, Dw_fromold;
 
@@ -317,27 +317,27 @@ void Dw_FinishToDraw(void)
 
 }
 
-void Dw_PutBitmap(long x,long y, RECT *rect, int bmp_no) //最後の引数は最早意味なし.
+void Dw_PutBitmap(long x,long y, RECT *rect, int bmp_no) //The last argument is no longer meaningless.
 {
 	if(NoteWidth == 16){
 		BitBlt(Dw_toDC,x,y,rect->right - rect->left,
-			rect->bottom - rect->top,Dw_fromDC,rect->left,rect->top,SRCCOPY);//表示
-	}else if(NoteWidth >= 4){ //短縮の場合
+			rect->bottom - rect->top,Dw_fromDC,rect->left,rect->top,SRCCOPY);//display
+	}else if(NoteWidth >= 4){ //In case of shortening
 		int ww = NoteWidth - 4;
 		BitBlt(Dw_toDC,x,y,2, rect->bottom - rect->top,
-			Dw_fromDC,rect->left,rect->top,SRCCOPY);//表示
+			Dw_fromDC,rect->left,rect->top,SRCCOPY);//display
 		
 		if(ww>0){
 			BitBlt(Dw_toDC,x+2,y,ww, rect->bottom - rect->top,
-				Dw_fromDC,rect->left + 2,rect->top,SRCCOPY);//表示
+				Dw_fromDC,rect->left + 2,rect->top,SRCCOPY);//display
 		}
 		BitBlt(Dw_toDC,x+2+ww,y,2, rect->bottom - rect->top,
-			Dw_fromDC,rect->left + 14,rect->top,SRCCOPY);//表示
+			Dw_fromDC,rect->left + 14,rect->top,SRCCOPY);//display
 
 	}
 }
 
-int Dw_PutBitmap_Head(long x,long y, RECT *rect, int bmp_no, int iNoteLength) //bmp_noは最早意味なし. iLengthは必ず1以上。 np->lengthをそのまま代入すること。
+int Dw_PutBitmap_Head(long x,long y, RECT *rect, int bmp_no, int iNoteLength) //bmp_noIt is no longer meaningless. iLengthBe sure to1that&#39;s all. np->lengthSubstitute as it is.
 {
 	int iTotalLength = NoteWidth * iNoteLength;
 	int bitWidth = iTotalLength; if(bitWidth > 16)bitWidth = 16;
@@ -345,55 +345,55 @@ int Dw_PutBitmap_Head(long x,long y, RECT *rect, int bmp_no, int iNoteLength) //
 
 	if(NoteWidth == 16 || iTotalLength >= 16){
 		BitBlt(Dw_toDC,x,y,rect->right - rect->left,
-			rect->bottom - rect->top,Dw_fromDC,rect->left,rect->top,SRCCOPY);//表示
+			rect->bottom - rect->top,Dw_fromDC,rect->left,rect->top,SRCCOPY);//display
 		return 16;
-	}else if(NoteWidth >= 4){ //短縮の場合
+	}else if(NoteWidth >= 4){ //In case of shortening
 		int ww = bitWidth - 4;
 
 		BitBlt(Dw_toDC,x,y,2, rect->bottom - rect->top,
-			Dw_fromDC,rect->left,rect->top,SRCCOPY);//表示
+			Dw_fromDC,rect->left,rect->top,SRCCOPY);//display
 		
 		if(ww>0){
 			BitBlt(Dw_toDC,x+2,y,ww, rect->bottom - rect->top,
-				Dw_fromDC,rect->left + 2,rect->top,SRCCOPY);//表示
+				Dw_fromDC,rect->left + 2,rect->top,SRCCOPY);//display
 		}
 		BitBlt(Dw_toDC,x+2+ww,y,2, rect->bottom - rect->top,
-			Dw_fromDC,rect->left + 14,rect->top,SRCCOPY);//表示
+			Dw_fromDC,rect->left + 14,rect->top,SRCCOPY);//display
 
 	}
 	return bitWidth;
 }
 
-//PAN, VOLに特化しているなー
-void Dw_PutBitmap_Center(long x,long y, RECT *rect, int bmp_no) //最後の引数は最早意味なし.
+//PAN, VOLI am specializing in
+void Dw_PutBitmap_Center(long x,long y, RECT *rect, int bmp_no) //The last argument is no longer meaningless.
 {
 	if(NoteWidth == 16){
 		BitBlt(Dw_toDC,x,y,rect->right - rect->left,
-			rect->bottom - rect->top,Dw_fromDC,rect->left,rect->top,SRCCOPY);//表示
-	}else if(NoteWidth >= 4){ //短縮の場合
+			rect->bottom - rect->top,Dw_fromDC,rect->left,rect->top,SRCCOPY);//display
+	}else if(NoteWidth >= 4){ //In case of shortening
 //		int ww = (16 - NoteWidth) / 2;
 //		BitBlt(Dw_toDC,x ,y,rect->right - rect->left - 2 * ww,
-//			rect->bottom - rect->top,Dw_fromDC,rect->left + ww,rect->top,SRCCOPY);//表示
+//			rect->bottom - rect->top,Dw_fromDC,rect->left + ww,rect->top,SRCCOPY);//display
 		int ww = NoteWidth / 2;
 		BitBlt(Dw_toDC,x ,y,
 			ww,
 			rect->bottom - rect->top,
-			Dw_fromDC,rect->left ,rect->top,SRCCOPY);//表示
+			Dw_fromDC,rect->left ,rect->top,SRCCOPY);//display
 
 		//BitBlt(Dw_toDC,x+ww-1 ,y-3,
 		//	2,
 		//	rect->bottom - rect->top,
-		//	Dw_fromDC,rect->left+7 ,rect->top,SRCCOPY);//表示
+		//	Dw_fromDC,rect->left+7 ,rect->top,SRCCOPY);//display
 
 		BitBlt(Dw_toDC,x+ww ,y,
 			ww,
 			rect->bottom - rect->top,
-			Dw_fromDC,rect->left+16-ww ,rect->top,SRCCOPY);//表示
+			Dw_fromDC,rect->left+16-ww ,rect->top,SRCCOPY);//display
 
 		BitBlt(Dw_toDC,x+ww-1 ,y,
 			2,
 			rect->bottom - rect->top,
-			Dw_fromDC,rect->left+7 ,rect->top,SRCCOPY);//表示
+			Dw_fromDC,rect->left+7 ,rect->top,SRCCOPY);//display
 
 	}
 }

@@ -1,27 +1,27 @@
 /*****							  *****/
-/*****   DirectSoundサポート関数   *****/
+/*****   DirectSoundSupport function   *****/
 /*****							  *****/
 
 //#include <dsound.h>
 
-// DirectSoundの開始
+// DirectSoundThe start of the
 BOOL InitDirectSound(HWND hwnd);
 BOOL LoadSoundObject( char *file_name, int no);
-// DirectSoundの終了
+// DirectSoundTermination
 void EndDirectSound(void);
-void ReleaseSoundObject(int no);//バッファの開放
+void ReleaseSoundObject(int no);//Release of buffer
 BOOL InitSoundObject(LPCSTR resname, int no);
-// サウンドの再生
+// Play sound
 void PlaySoundObject(int no, int mode);
-void ChangeSoundVolume(int no, long volume);//9999がMAX2195?がﾉｰﾏﾙ
-void ChangeSoundFrequency(int no, DWORD rate);//300がMAX300がﾉｰﾏﾙ
+void ChangeSoundVolume(int no, long volume);//9999ButMAX2195?Is normal
+void ChangeSoundFrequency(int no, DWORD rate);//300ButMAX300Is normal
 void ChangeSoundPan(int no, long pan);
 
 BOOL MakeSoundObject8(char *wavep,char track, char pipi);
 
-void ChangeOrganFrequency(unsigned char key,char track,DWORD a);//9999がMAXで2195?がﾉｰﾏﾙ
-void ChangeOrganVolume(int no, long volume,char track);//300がMAXで300がﾉｰﾏﾙ
-void ChangeOrganPan(unsigned char key, unsigned char pan,char track);//0が←で6がﾉｰﾏﾙ11が→
+void ChangeOrganFrequency(unsigned char key,char track,DWORD a);//9999ButMAXso2195?Is normal
+void ChangeOrganVolume(int no, long volume,char track);//300ButMAXso300Is normal
+void ChangeOrganPan(unsigned char key, unsigned char pan,char track);//0But←so6Is normal11But→
 void PlayOrganObject(unsigned char key, int mode,char track,DWORD freq);
 void PlayOrganObject2(unsigned char key, int mode,char track,DWORD freq);
 void PlayOrganKey(unsigned char key,char track,DWORD freq, int Nagasa = 80);
@@ -35,8 +35,8 @@ BOOL MakeOrganyaWave(char track,char wave_no, char pipi);
 BOOL InitDramObject(LPCSTR resname, int no);
 void ReleaseDramObject(char track);
 void ChangeDramFrequency(unsigned char key,char track);
-void ChangeDramPan(unsigned char pan,char track);//512がMAXで256がﾉｰﾏﾙ
-void ChangeDramVolume(long volume,char track);//300がMAXで300がﾉｰﾏﾙ
+void ChangeDramPan(unsigned char pan,char track);//512ButMAXso256Is normal
+void ChangeDramVolume(long volume,char track);//300ButMAXso300Is normal
 void PlayDramObject(unsigned char key, int mode,char track);
 
 
