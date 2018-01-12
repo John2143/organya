@@ -34,19 +34,19 @@ LANGUAGE LANG_JAPANESE, SUBLANG_DEFAULT
 
 1 TEXTINCLUDE DISCARDABLE 
 BEGIN
-    "resource.h¥0"
+    "resource.h\0"
 END
 
 2 TEXTINCLUDE DISCARDABLE 
 BEGIN
-    "#include ""afxres.h""¥r¥n"
-    "¥0"
+    "#include ""afxres.h""\r\n"
+    "\0"
 END
 
 3 TEXTINCLUDE DISCARDABLE 
 BEGIN
-    "¥r¥n"
-    "¥0"
+    "\r\n"
+    "\0"
 END
 
 #endif    // APSTUDIO_INVOKED
@@ -56,8 +56,6 @@ END
 //
 // Cursor
 //
-
-CURSOR                  CURSOR  DISCARDABLE     "bitmap¥¥cursor.cur"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -127,7 +125,7 @@ BEGIN
                     132,180,8,8
     DEFPUSHBUTTON   "Ok!",IDOK,76,201,39,18
     PUSHBUTTON      "No!",IDCANCEL,117,201,29,18
-    LTEXT           "Please enter a weight value.¥nBPMIs a bonus feature for conversion.",
+    LTEXT           "Please enter a weight value.\nBPMIs a bonus feature for conversion.",
                     IDC_STATIC,13,27,122,17
 END
 
@@ -610,8 +608,8 @@ BEGIN
                     WS_EX_STATICEDGE
     DEFPUSHBUTTON   "Ok!",IDOK,104,163,60,21
     PUSHBUTTON      "Cancel",IDCANCEL,104,189,60,15
-    CTEXT           "Pan pot¥n(0-6-12)",IDC_STATIC,15,5,30,15
-    CTEXT           "volume¥n(0−254)",IDC_STATIC,45,5,35,20
+    CTEXT           "Pan pot\n(0-6-12)",IDC_STATIC,15,5,30,15
+    CTEXT           "volume\n(0−254)",IDC_STATIC,45,5,35,20
     CTEXT           "1",IDC_STATIC,5,32,8,10
     CTEXT           "2",IDC_STATIC,5,47,8,10
     CTEXT           "3",IDC_STATIC,5,62,8,10
@@ -620,8 +618,8 @@ BEGIN
     CTEXT           "6",IDC_STATIC,5,110,8,10
     CTEXT           "7",IDC_STATIC,5,125,8,10
     CTEXT           "8",IDC_STATIC,5,140,8,10
-    CTEXT           "Pan pot¥n(0-6-12)",IDC_STATIC,101,5,30,15
-    CTEXT           "volume¥n(0−254)",IDC_STATIC,131,5,35,20
+    CTEXT           "Pan pot\n(0-6-12)",IDC_STATIC,101,5,30,15
+    CTEXT           "volume\n(0−254)",IDC_STATIC,131,5,35,20
     CTEXT           "Q",IDC_STATIC,90,32,8,10
     CTEXT           "W",IDC_STATIC,90,47,8,10
     CTEXT           "E",IDC_STATIC,90,62,8,10
@@ -913,15 +911,15 @@ ORGANYAMENU MENU DISCARDABLE
 BEGIN
     POPUP "File (&F)"
     BEGIN
-        MENUITEM "Create New(&N)...¥tCtrl+Alt+I", IDM_INIT
-        MENUITEM "open (&O)...¥tCtrl+O",        IDM_LOAD
-        MENUITEM "Open in your own dialog(P)...¥tHome", IDM_LOAD2
+        MENUITEM "Create New(&N)...\tCtrl+Alt+I", IDM_INIT
+        MENUITEM "open (&O)...\tCtrl+O",        IDM_LOAD
+        MENUITEM "Open in your own dialog(P)...\tHome", IDM_LOAD2
         MENUITEM SEPARATOR
-        MENUITEM "overwrite save (&S)¥tCtrl+S",     IDM_SAVEOVER
-        MENUITEM "Save as a different name (&W)...¥tShift+Ctrl+S", IDM_SAVENEW
+        MENUITEM "overwrite save (&S)\tCtrl+S",     IDM_SAVEOVER
+        MENUITEM "Save as a different name (&W)...\tShift+Ctrl+S", IDM_SAVENEW
         MENUITEM SEPARATOR
         MENUITEM "▼ export",             ID_EXPORT, INACTIVE
-        MENUITEM "standardMIDIFile(*.mid) (&M)...¥tCtrl+Alt+M", IDM_EXPORT_MIDI
+        MENUITEM "standardMIDIFile(*.mid) (&M)...\tCtrl+Alt+M", IDM_EXPORT_MIDI
         MENUITEM SEPARATOR
         MENUITEM SEPARATOR
         MENUITEM "▼ Recent file",       ID_MENUITEM40135, INACTIVE
@@ -940,30 +938,30 @@ BEGIN
     END
     POPUP "Song setting (&S)"
     BEGIN
-        MENUITEM "Waveform / Tone color selection(&W)...¥tF1",   IDM_DLGWAVE
-        MENUITEM "Tempo / beat attribute(&T)...¥tF2", IDM_DLGSETTING
-        MENUITEM "Pan / volume initial value(R)...¥tF3", IDM_DLGDEFAULT
+        MENUITEM "Waveform / Tone color selection(&W)...\tF1",   IDM_DLGWAVE
+        MENUITEM "Tempo / beat attribute(&T)...\tF2", IDM_DLGSETTING
+        MENUITEM "Pan / volume initial value(R)...\tF3", IDM_DLGDEFAULT
         MENUITEM SEPARATOR
         MENUITEM "Residual score(&O)...",             IDM_DLGUSED
     END
     POPUP "Edit range (&E)"
     BEGIN
-        MENUITEM "Restore(&U)¥tCtrl+Z",        IDM_UNDO, GRAYED
-        MENUITEM "Redo(&R)¥tCtrl+Y",        IDM_REDO, GRAYED
+        MENUITEM "Restore(&U)\tCtrl+Z",        IDM_UNDO, GRAYED
+        MENUITEM "Redo(&R)\tCtrl+Y",        IDM_REDO, GRAYED
         MENUITEM SEPARATOR
-        MENUITEM "select all(&A)¥tCtrl+A",      IDM_SELECT_ALL
-        MENUITEM "Cancel selection(&K)¥tCtrl+D",  IDM_SELECT_RESET
+        MENUITEM "select all(&A)\tCtrl+A",      IDM_SELECT_ALL
+        MENUITEM "Cancel selection(&K)\tCtrl+D",  IDM_SELECT_RESET
         MENUITEM SEPARATOR
         MENUITEM SEPARATOR
-        MENUITEM "copy(&C)...¥tCtrl+F2",      IDM_DLGCOPY
-        MENUITEM "Set copy(&F)...¥tCtrl+F3", IDM_DLGCOPY2
+        MENUITEM "copy(&C)...\tCtrl+F2",      IDM_DLGCOPY
+        MENUITEM "Set copy(&F)...\tCtrl+F3", IDM_DLGCOPY2
         MENUITEM SEPARATOR
-        MENUITEM "Pan pot(&P)...¥tCtrl+F4",  IDM_DLGPAN
-        MENUITEM "volume(&V)...¥tF4",       IDM_DLGVOL
-        MENUITEM "Transpose(&T)...¥tShift+F4", IDM_DLGTRANS
+        MENUITEM "Pan pot(&P)...\tCtrl+F4",  IDM_DLGPAN
+        MENUITEM "volume(&V)...\tF4",       IDM_DLGVOL
+        MENUITEM "Transpose(&T)...\tShift+F4", IDM_DLGTRANS
         MENUITEM SEPARATOR
-        MENUITEM "Erase(&D)...¥tCtrl+Del",       IDM_DLGDELETE
-        MENUITEM "Track replacement(&S)...¥tShift+Ctrl+F4", IDM_DLGSWAP
+        MENUITEM "Erase(&D)...\tCtrl+Del",       IDM_DLGDELETE
+        MENUITEM "Track replacement(&S)...\tShift+Ctrl+F4", IDM_DLGSWAP
     END
     POPUP "VOLoperation(&1)"
     BEGIN
@@ -992,20 +990,20 @@ BEGIN
     POPUP "VOLoperation(&2)"
     BEGIN
         MENUITEM "DummyNOTEAutomatic addition",            IDM_CT_S0, INACTIVE
-        MENUITEM "  (&1)Convex upward(Elongation)Attenuation strength¥tCtrl+1", IDM_CT_S1
-        MENUITEM "  (&2)Convex upward(Elongation)Attenuation weak¥tCtrl+2", IDM_CT_S2
-        MENUITEM "  (&3)Linear attenuation¥tCtrl+3",      IDM_CT_S3
-        MENUITEM "  (&4)Convex downward(sudden)Attenuation weak¥tCtrl+4", IDM_CT_S4
-        MENUITEM "  (&5)Convex downward(sudden)Attenuation strength¥tCtrl+5", IDM_CT_S5
-        MENUITEM "  (&6)initial value¥tCtrl+6",        IDM_CT_S6
-        MENUITEM "  (&7)S curve¥tCtrl+7",      IDM_CT_S7
-        MENUITEM "  (&8)Just last chopped attenuation¥tCtrl+8", IDM_CT_S8
-        MENUITEM "  (&9)Vibrato damping¥tCtrl+9", IDM_CT_S9
+        MENUITEM "  (&1)Convex upward(Elongation)Attenuation strength\tCtrl+1", IDM_CT_S1
+        MENUITEM "  (&2)Convex upward(Elongation)Attenuation weak\tCtrl+2", IDM_CT_S2
+        MENUITEM "  (&3)Linear attenuation\tCtrl+3",      IDM_CT_S3
+        MENUITEM "  (&4)Convex downward(sudden)Attenuation weak\tCtrl+4", IDM_CT_S4
+        MENUITEM "  (&5)Convex downward(sudden)Attenuation strength\tCtrl+5", IDM_CT_S5
+        MENUITEM "  (&6)initial value\tCtrl+6",        IDM_CT_S6
+        MENUITEM "  (&7)S curve\tCtrl+7",      IDM_CT_S7
+        MENUITEM "  (&8)Just last chopped attenuation\tCtrl+8", IDM_CT_S8
+        MENUITEM "  (&9)Vibrato damping\tCtrl+9", IDM_CT_S9
         MENUITEM SEPARATOR
-        MENUITEM "  (&0)random¥tCtrl+Alt+0",  IDM_CT_S10
-        MENUITEM "  (&1)start point-Gradient at end point¥tCtrl+Alt+1", IDM_CT_S11
-        MENUITEM "  (&2)Ambient amplification downward¥tCtrl+Alt+2", IDM_CT_S12
-        MENUITEM "  (&3)Linear amplification¥tCtrl+Alt+3",  IDM_CT_S13
+        MENUITEM "  (&0)random\tCtrl+Alt+0",  IDM_CT_S10
+        MENUITEM "  (&1)start point-Gradient at end point\tCtrl+Alt+1", IDM_CT_S11
+        MENUITEM "  (&2)Ambient amplification downward\tCtrl+Alt+2", IDM_CT_S12
+        MENUITEM "  (&3)Linear amplification\tCtrl+Alt+3",  IDM_CT_S13
         MENUITEM "  (&4)undefined",                IDM_CT_S14, GRAYED
         MENUITEM "  (&5)undefined",                IDM_CT_S15, GRAYED
         MENUITEM "  (&6)undefined",                IDM_CT_S16, GRAYED
@@ -1013,37 +1011,37 @@ BEGIN
         MENUITEM "  (&8)undefined",                IDM_CT_S18, GRAYED
         MENUITEM "  (&9)undefined",                IDM_CT_S19, GRAYED
         MENUITEM SEPARATOR
-        MENUITEM "(&0)No noteNOTEClear¥tCtrl+0", IDM_CT_S20
+        MENUITEM "(&0)No noteNOTEClear\tCtrl+0", IDM_CT_S20
     END
     MENUITEM "|",                           IDM_DUMMY_TATE_SEPARATOR, GRAYED
     POPUP "Music manipulation(&O)"
     BEGIN
         MENUITEM "Current Track",            ID_MENUITEM40145, INACTIVE
-        MENUITEM "  Shift bread to the right(&R)¥tShift+Ctrl+R", IDM_CT_PAN_R
-        MENUITEM "  Shift bread to the left(&L)¥tShift+Ctrl+L", IDM_CT_PAN_L
-        MENUITEM "  Pan reversed right and left(&G)¥tCtrl+Alt+R", IDM_CT_PAN_REVERSE
-        MENUITEM "  Raise the volume(&H)¥tF11", IDM_CT_VOL_PLUS
-        MENUITEM "  Lower the volume(&K)¥tF12", IDM_CT_VOL_MINUS
-        MENUITEM "  The volume12.5%increase(&I)¥tShift+Ctrl+F11", 
+        MENUITEM "  Shift bread to the right(&R)\tShift+Ctrl+R", IDM_CT_PAN_R
+        MENUITEM "  Shift bread to the left(&L)\tShift+Ctrl+L", IDM_CT_PAN_L
+        MENUITEM "  Pan reversed right and left(&G)\tCtrl+Alt+R", IDM_CT_PAN_REVERSE
+        MENUITEM "  Raise the volume(&H)\tF11", IDM_CT_VOL_PLUS
+        MENUITEM "  Lower the volume(&K)\tF12", IDM_CT_VOL_MINUS
+        MENUITEM "  The volume12.5%increase(&I)\tShift+Ctrl+F11", 
                                                 IDM_CT_VOLWARIAI_UP
-        MENUITEM "  The volume12.5%To lower(&J)¥tShift+Ctrl+F12", 
+        MENUITEM "  The volume12.5%To lower(&J)\tShift+Ctrl+F12", 
                                                 IDM_CT_VOLWARIAI_DOWN
-        MENUITEM "  Increase key(&U)¥tShift+Ctrl+U", IDM_CT_TRANS_UP
-        MENUITEM "  Lower key(&D)¥tShift+Ctrl+D", IDM_CT_TRANS_DOWN
-        MENUITEM "  Raise the key octave(&O)¥tCtrl+Alt+U", IDM_CT_OCT_UP
-        MENUITEM "  Lower the key octave(&N)¥tCtrl+Alt+D", IDM_CT_OCT_DOWN
+        MENUITEM "  Increase key(&U)\tShift+Ctrl+U", IDM_CT_TRANS_UP
+        MENUITEM "  Lower key(&D)\tShift+Ctrl+D", IDM_CT_TRANS_DOWN
+        MENUITEM "  Raise the key octave(&O)\tCtrl+Alt+U", IDM_CT_OCT_UP
+        MENUITEM "  Lower the key octave(&N)\tCtrl+Alt+D", IDM_CT_OCT_DOWN
         MENUITEM SEPARATOR
         MENUITEM "Melody whole track",        ID_MENUITEM40146, INACTIVE
         MENUITEM "  Shift bread to the right(&R)",      IDM_ML_PAN_R
         MENUITEM "  Shift bread to the left(&L)",      IDM_ML_PAN_L
-        MENUITEM "  Raise the volume(&U)¥tShift+F11", IDM_ML_VOL_PLUS
-        MENUITEM "  Lower the volume(&D)¥tShift+F12", IDM_ML_VOL_MINUS
-        MENUITEM "  Increase key(&H)¥tShift+Ctrl+H", IDM_ML_TRANS_UP
-        MENUITEM "  Lower key(&K)¥tShift+Ctrl+N", IDM_ML_TRANS_DOWN
+        MENUITEM "  Raise the volume(&U)\tShift+F11", IDM_ML_VOL_PLUS
+        MENUITEM "  Lower the volume(&D)\tShift+F12", IDM_ML_VOL_MINUS
+        MENUITEM "  Increase key(&H)\tShift+Ctrl+H", IDM_ML_TRANS_UP
+        MENUITEM "  Lower key(&K)\tShift+Ctrl+N", IDM_ML_TRANS_DOWN
         MENUITEM SEPARATOR
         MENUITEM "Entire drum track",          ID_MENUITEM40147, INACTIVE
-        MENUITEM "  Raise the volume(&U)¥tCtrl+F11", IDM_DR_VOL_PLUS
-        MENUITEM "  Lower the volume(&D)¥tCtrl+F12", IDM_DR_VOL_MINUS
+        MENUITEM "  Raise the volume(&U)\tCtrl+F11", IDM_DR_VOL_PLUS
+        MENUITEM "  Lower the volume(&D)\tCtrl+F12", IDM_DR_VOL_MINUS
         MENUITEM SEPARATOR
         POPUP "Resolution change(&N)"
         BEGIN
@@ -1059,24 +1057,24 @@ BEGIN
     POPUP "environment(&C)"
     BEGIN
         MENUITEM "display",                        IDM_DUMMY, INACTIVE
-        MENUITEM "   XExpanded in the axial direction(&B)¥tF7",  IDM_LOUPE_PLUS
-        MENUITEM "   XAxial reduction display(&M)¥tF8",  IDM_LOUPE_MINUS
+        MENUITEM "   XExpanded in the axial direction(&B)\tF7",  IDM_LOUPE_PLUS
+        MENUITEM "   XAxial reduction display(&M)\tF8",  IDM_LOUPE_MINUS
         MENUITEM "   Make note heads stand out at reduced display(&O)", IDM_NOTE_ENLARGE
-        MENUITEM "   Show all tracks (Ghost display)¥tCtrl+F9", 
+        MENUITEM "   Show all tracks (Ghost display)\tCtrl+F9", 
                                                 IDM_DRAWDOUBLE
-        MENUITEM "   TrackFor each noteyMove coordinates slightly(&T)¥tShift+F9", 
+        MENUITEM "   TrackFor each noteyMove coordinates slightly(&T)\tShift+F9", 
                                                 IDM_SLIDEOVERLAPNOTES
         MENUITEM SEPARATOR
         MENUITEM "Window dialog",      IDM_DUMMY, INACTIVE
-        MENUITEM "   Range selection operator display / hide(&V)¥tF9", 
+        MENUITEM "   Range selection operator display / hide(&V)\tF9", 
                                                 IDM_EZCOPYVISIBLE
         MENUITEM "   Display confirmation message when finished(&S)", IDM_CHANGEFINISH
         MENUITEM SEPARATOR
         MENUITEM "operation",                        IDM_DUMMY, INACTIVE
-        MENUITEM "   Grid(Beat)Select by unit(&G)¥tCtrl+G", IDM_GRIDMODE
-        MENUITEM "   Always the current track target(&C)¥tCtrl+T", IDM_ALWAYS_CURRENT
-        MENUITEM "   Extend notes with drag(&E)¥tCtrl+Alt+F9", IDM_DRAGMODE
-        MENUITEM "   Change the length by clicking the head of the note(&O)¥tCtrl+Alt+F10", 
+        MENUITEM "   Grid(Beat)Select by unit(&G)\tCtrl+G", IDM_GRIDMODE
+        MENUITEM "   Always the current track target(&C)\tCtrl+T", IDM_ALWAYS_CURRENT
+        MENUITEM "   Extend notes with drag(&E)\tCtrl+Alt+F9", IDM_DRAGMODE
+        MENUITEM "   Change the length by clicking the head of the note(&O)\tCtrl+Alt+F10", 
                                                 IDM_PRESSNOTE
         MENUITEM "   Make it possible to play the keyboard while playing(&P)", IDM_ENABLEPLAYING
         MENUITEM SEPARATOR
@@ -1093,7 +1091,7 @@ BEGIN
     END
     POPUP "Notes(&M)"
     BEGIN
-        MENUITEM "Simple help(&H)...¥tCtrl+Alt+H", IDM_DLGHELP
+        MENUITEM "Simple help(&H)...\tCtrl+Alt+H", IDM_DLGHELP
         MENUITEM SEPARATOR
         MENUITEM "version information(&V)...",       IDM_DLGMEMO
     END
@@ -1105,35 +1103,35 @@ END
 // Bitmap
 //
 
-MUSIC                   BITMAP  DISCARDABLE     "Bitmap¥¥Music.bmp"
-NOTE                    BITMAP  DISCARDABLE     "Bitmap¥¥Note.bmp"
-NUMBER                  BITMAP  DISCARDABLE     "Bitmap¥¥Number.bmp"
-PAN                     BITMAP  DISCARDABLE     "Bitmap¥¥Pan.bmp"
-B_STOP                  BITMAP  DISCARDABLE     "Bitmap¥¥org_stop.bmp"
-B_HEAD                  BITMAP  DISCARDABLE     "Bitmap¥¥org_home.bmp"
-B_RIGHT                 BITMAP  DISCARDABLE     "Bitmap¥¥org_next.bmp"
-B_PLAY                  BITMAP  DISCARDABLE     "Bitmap¥¥org_play.bmp"
-B_LEFT                  BITMAP  DISCARDABLE     "Bitmap¥¥org_back.bmp"
-WAVE100                 BITMAP  DISCARDABLE     "Bitmap¥¥wave100.bmp"
-B_SOLO                  BITMAP  DISCARDABLE     "Bitmap¥¥Solo.bmp"
-B_TRACK_1               BITMAP  DISCARDABLE     "Bitmap¥¥button_track_1.bmp"
-B_TRACK_2               BITMAP  DISCARDABLE     "Bitmap¥¥button_track_2.bmp"
-B_TRACK_3               BITMAP  DISCARDABLE     "Bitmap¥¥button_track_3.bmp"
-B_TRACK_4               BITMAP  DISCARDABLE     "Bitmap¥¥button_track_4.bmp"
-B_TRACK_5               BITMAP  DISCARDABLE     "Bitmap¥¥button_track_5.bmp"
-B_TRACK_6               BITMAP  DISCARDABLE     "Bitmap¥¥button_track_6.bmp"
-B_TRACK_7               BITMAP  DISCARDABLE     "Bitmap¥¥button_track_7.bmp"
-B_TRACK_8               BITMAP  DISCARDABLE     "Bitmap¥¥button_track_8.bmp"
-B_TRACK_Q               BITMAP  DISCARDABLE     "Bitmap¥¥button_track_Q.bmp"
-B_TRACK_W               BITMAP  DISCARDABLE     "Bitmap¥¥button_track_W.bmp"
-B_TRACK_E               BITMAP  DISCARDABLE     "Bitmap¥¥button_track_E.bmp"
-B_TRACK_R               BITMAP  DISCARDABLE     "Bitmap¥¥button_track_R.bmp"
-B_TRACK_T               BITMAP  DISCARDABLE     "Bitmap¥¥button_track_T.bmp"
-B_TRACK_Y               BITMAP  DISCARDABLE     "Bitmap¥¥button_track_Y.bmp"
-B_TRACK_U               BITMAP  DISCARDABLE     "Bitmap¥¥button_track_U.bmp"
-B_TRACK_I               BITMAP  DISCARDABLE     "Bitmap¥¥button_track_I.bmp"
-B_LOUPE_PLUS            BITMAP  DISCARDABLE     "Bitmap¥¥Loupe_PLUS.bmp"
-B_LOUPE_MINUS           BITMAP  DISCARDABLE     "Bitmap¥¥Loupe_MINUS.bmp"
+MUSIC                   BITMAP  DISCARDABLE     "Bitmap\\Music.bmp"
+NOTE                    BITMAP  DISCARDABLE     "Bitmap\\Note.bmp"
+NUMBER                  BITMAP  DISCARDABLE     "Bitmap\\Number.bmp"
+PAN                     BITMAP  DISCARDABLE     "Bitmap\\Pan.bmp"
+B_STOP                  BITMAP  DISCARDABLE     "Bitmap\\org_stop.bmp"
+B_HEAD                  BITMAP  DISCARDABLE     "Bitmap\\org_home.bmp"
+B_RIGHT                 BITMAP  DISCARDABLE     "Bitmap\\org_next.bmp"
+B_PLAY                  BITMAP  DISCARDABLE     "Bitmap\\org_play.bmp"
+B_LEFT                  BITMAP  DISCARDABLE     "Bitmap\\org_back.bmp"
+WAVE100                 BITMAP  DISCARDABLE     "Bitmap\\wave100.bmp"
+B_SOLO                  BITMAP  DISCARDABLE     "Bitmap\\Solo.bmp"
+B_TRACK_1               BITMAP  DISCARDABLE     "Bitmap\\button_track_1.bmp"
+B_TRACK_2               BITMAP  DISCARDABLE     "Bitmap\\button_track_2.bmp"
+B_TRACK_3               BITMAP  DISCARDABLE     "Bitmap\\button_track_3.bmp"
+B_TRACK_4               BITMAP  DISCARDABLE     "Bitmap\\button_track_4.bmp"
+B_TRACK_5               BITMAP  DISCARDABLE     "Bitmap\\button_track_5.bmp"
+B_TRACK_6               BITMAP  DISCARDABLE     "Bitmap\\button_track_6.bmp"
+B_TRACK_7               BITMAP  DISCARDABLE     "Bitmap\\button_track_7.bmp"
+B_TRACK_8               BITMAP  DISCARDABLE     "Bitmap\\button_track_8.bmp"
+B_TRACK_Q               BITMAP  DISCARDABLE     "Bitmap\\button_track_Q.bmp"
+B_TRACK_W               BITMAP  DISCARDABLE     "Bitmap\\button_track_W.bmp"
+B_TRACK_E               BITMAP  DISCARDABLE     "Bitmap\\button_track_E.bmp"
+B_TRACK_R               BITMAP  DISCARDABLE     "Bitmap\\button_track_R.bmp"
+B_TRACK_T               BITMAP  DISCARDABLE     "Bitmap\\button_track_T.bmp"
+B_TRACK_Y               BITMAP  DISCARDABLE     "Bitmap\\button_track_Y.bmp"
+B_TRACK_U               BITMAP  DISCARDABLE     "Bitmap\\button_track_U.bmp"
+B_TRACK_I               BITMAP  DISCARDABLE     "Bitmap\\button_track_I.bmp"
+B_LOUPE_PLUS            BITMAP  DISCARDABLE     "Bitmap\\Loupe_PLUS.bmp"
+B_LOUPE_MINUS           BITMAP  DISCARDABLE     "Bitmap\\Loupe_MINUS.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -1142,57 +1140,57 @@ B_LOUPE_MINUS           BITMAP  DISCARDABLE     "Bitmap¥¥Loupe_MINUS.bmp"
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-ICON                    ICON    DISCARDABLE     "bitmap¥¥icon1.ico"
-ZZZ                     ICON    DISCARDABLE     "bitmap¥¥ffff.ico"
+ICO                     ICON    DISCARDABLE     "bitmap\\icon1.ico"
+ZZZ                     ICON    DISCARDABLE     "bitmap\\ffff.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // WAVE
 //
 
-WAVE100                 WAVE    DISCARDABLE     "Wave¥¥Wave.dat"
-TOM01                   WAVE    DISCARDABLE     "Wave¥¥Tom01.wav"
-BASS02                  WAVE    DISCARDABLE     "Wave¥¥Bass02.wav"
-BASS03                  WAVE    DISCARDABLE     "Wave¥¥Bass03.wav"
-HICLOSE                 WAVE    DISCARDABLE     "Wave¥¥HiClose.wav"
-HIOPEN                  WAVE    DISCARDABLE     "Wave¥¥HiOpen.wav"
-PER01                   WAVE    DISCARDABLE     "Wave¥¥Per01.wav"
-PER02                   WAVE    DISCARDABLE     "Wave¥¥Per02.wav"
-SNARE01                 WAVE    DISCARDABLE     "Wave¥¥Snare01.wav"
-SNARE02                 WAVE    DISCARDABLE     "Wave¥¥Snare02.wav"
-BASS01                  WAVE    DISCARDABLE     "Wave¥¥Bass01.wav"
-TOM02                   WAVE    DISCARDABLE     "Wave¥¥Tom02.wav"
-CRASH                   WAVE    DISCARDABLE     "Wave¥¥Crash.wav"
-BASS04                  WAVE    DISCARDABLE     "Wave¥¥Bass04.wav"
-SNARE03                 WAVE    DISCARDABLE     "Wave¥¥Snare03.wav"
-HIOPEN02                WAVE    DISCARDABLE     "Wave¥¥HiOpen2.wav"
-HICLOSE02               WAVE    DISCARDABLE     "Wave¥¥HiClose2.wav"
-TOM03                   WAVE    DISCARDABLE     "Wave¥¥Tom03.wav"
-ORCDRM01                WAVE    DISCARDABLE     "Wave¥¥OrcDrm01.wav"
-CRASH02                 WAVE    DISCARDABLE     "Wave¥¥Crash02.wav"
-HICLOSE03               WAVE    DISCARDABLE     "Wave¥¥HiClose03.wav"
-SNARE04                 WAVE    DISCARDABLE     "Wave¥¥Snare04.wav"
-HIOPEN03                WAVE    DISCARDABLE     "Wave¥¥HiOpen03.wav"
-RIDE01                  WAVE    DISCARDABLE     "Wave¥¥Ride01.wav"
-BASS05                  WAVE    DISCARDABLE     "Wave¥¥Bass05.wav"
-REVSYM01                WAVE    DISCARDABLE     "Wave¥¥RevSym01.wav"
-CAT                     WAVE    DISCARDABLE     "Wave¥¥cat.wav"
-TOM04                   WAVE    DISCARDABLE     "Wave¥¥Tom04.wav"
-BELL                    WAVE    DISCARDABLE     "Wave¥¥Bell.wav"
-SNARE06                 WAVE    DISCARDABLE     "Wave¥¥Snare06.wav"
-PESI01                  WAVE    DISCARDABLE     "Wave¥¥Pesi01.wav"
-TOM05                   WAVE    DISCARDABLE     "Wave¥¥Tom05.wav"
-SNARE07                 WAVE    DISCARDABLE     "Wave¥¥Snare07.wav"
-BASS06                  WAVE    DISCARDABLE     "Wave¥¥Bass06.wav"
-QUICK01                 WAVE    DISCARDABLE     "Wave¥¥Quick01.wav"
-BASS07                  WAVE    DISCARDABLE     "Wave¥¥Bass07.wav"
-CLAP01                  WAVE    DISCARDABLE     "Wave¥¥Clap01.wav"
-HIOPEN04                WAVE    DISCARDABLE     "Wave¥¥HiOpen04.wav"
-HICLOSE04               WAVE    DISCARDABLE     "Wave¥¥HiClose04.wav"
-SNARE05                 WAVE    DISCARDABLE     "Wave¥¥Snare05.wav"
-BASS08                  WAVE    DISCARDABLE     "Wave¥¥Bass08.wav"
-HICLOSE05               WAVE    DISCARDABLE     "Wave¥¥HiClose05.wav"
-SNARE08                 WAVE    DISCARDABLE     "Wave¥¥Snare08.wav"
+WAVE100                 WAVE    DISCARDABLE     "Wave\\Wave.dat"
+TOM01                   WAVE    DISCARDABLE     "Wave\\Tom01.wav"
+BASS02                  WAVE    DISCARDABLE     "Wave\\Bass02.wav"
+BASS03                  WAVE    DISCARDABLE     "Wave\\Bass03.wav"
+HICLOSE                 WAVE    DISCARDABLE     "Wave\\HiClose.wav"
+HIOPEN                  WAVE    DISCARDABLE     "Wave\\HiOpen.wav"
+PER01                   WAVE    DISCARDABLE     "Wave\\Per01.wav"
+PER02                   WAVE    DISCARDABLE     "Wave\\Per02.wav"
+SNARE01                 WAVE    DISCARDABLE     "Wave\\Snare01.wav"
+SNARE02                 WAVE    DISCARDABLE     "Wave\\Snare02.wav"
+BASS01                  WAVE    DISCARDABLE     "Wave\\Bass01.wav"
+TOM02                   WAVE    DISCARDABLE     "Wave\\Tom02.wav"
+CRASH                   WAVE    DISCARDABLE     "Wave\\Crash.wav"
+BASS04                  WAVE    DISCARDABLE     "Wave\\Bass04.wav"
+SNARE03                 WAVE    DISCARDABLE     "Wave\\Snare03.wav"
+HIOPEN02                WAVE    DISCARDABLE     "Wave\\HiOpen2.wav"
+HICLOSE02               WAVE    DISCARDABLE     "Wave\\HiClose2.wav"
+TOM03                   WAVE    DISCARDABLE     "Wave\\Tom03.wav"
+ORCDRM01                WAVE    DISCARDABLE     "Wave\\OrcDrm01.wav"
+CRASH02                 WAVE    DISCARDABLE     "Wave\\Crash02.wav"
+HICLOSE03               WAVE    DISCARDABLE     "Wave\\HiClose03.wav"
+SNARE04                 WAVE    DISCARDABLE     "Wave\\Snare04.wav"
+HIOPEN03                WAVE    DISCARDABLE     "Wave\\HiOpen03.wav"
+RIDE01                  WAVE    DISCARDABLE     "Wave\\Ride01.wav"
+BASS05                  WAVE    DISCARDABLE     "Wave\\Bass05.wav"
+REVSYM01                WAVE    DISCARDABLE     "Wave\\RevSym01.wav"
+CAT                     WAVE    DISCARDABLE     "Wave\\cat.wav"
+TOM04                   WAVE    DISCARDABLE     "Wave\\Tom04.wav"
+BELL                    WAVE    DISCARDABLE     "Wave\\Bell.wav"
+SNARE06                 WAVE    DISCARDABLE     "Wave\\Snare06.wav"
+PESI01                  WAVE    DISCARDABLE     "Wave\\Pesi01.wav"
+TOM05                   WAVE    DISCARDABLE     "Wave\\Tom05.wav"
+SNARE07                 WAVE    DISCARDABLE     "Wave\\Snare07.wav"
+BASS06                  WAVE    DISCARDABLE     "Wave\\Bass06.wav"
+QUICK01                 WAVE    DISCARDABLE     "Wave\\Quick01.wav"
+BASS07                  WAVE    DISCARDABLE     "Wave\\Bass07.wav"
+CLAP01                  WAVE    DISCARDABLE     "Wave\\Clap01.wav"
+HIOPEN04                WAVE    DISCARDABLE     "Wave\\HiOpen04.wav"
+HICLOSE04               WAVE    DISCARDABLE     "Wave\\HiClose04.wav"
+SNARE05                 WAVE    DISCARDABLE     "Wave\\Snare05.wav"
+BASS08                  WAVE    DISCARDABLE     "Wave\\Bass08.wav"
+HICLOSE05               WAVE    DISCARDABLE     "Wave\\HiClose05.wav"
+SNARE08                 WAVE    DISCARDABLE     "Wave\\Snare08.wav"
 
 #ifndef _MAC
 /////////////////////////////////////////////////////////////////////////////
@@ -1217,18 +1215,18 @@ BEGIN
     BEGIN
         BLOCK "041104b0"
         BEGIN
-            VALUE "Comments", "Please miss the coarse part.¥0"
-            VALUE "CompanyName", "There is no unnecessary taste.¥0"
-            VALUE "FileDescription", "Organya Twei¥0"
-            VALUE "FileVersion", "2.1.1¥0"
-            VALUE "InternalName", "¥0"
-            VALUE "LegalCopyright", "Copyright (C) 2005-2014 Pixel and Rxo Inverse¥0"
-            VALUE "LegalTrademarks", "¥0"
-            VALUE "OriginalFilename", "Org211.exe¥0"
-            VALUE "PrivateBuild", "¥0"
-            VALUE "ProductName", "Orgagna 2¥0"
-            VALUE "ProductVersion", "2.1.1¥0"
-            VALUE "SpecialBuild", "¥0"
+            VALUE "Comments", "Please miss the coarse part.\0"
+            VALUE "CompanyName", "There is no unnecessary taste.\0"
+            VALUE "FileDescription", "Organya Twei\0"
+            VALUE "FileVersion", "2.1.1\0"
+            VALUE "InternalName", "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2005-2014 Pixel and Rxo Inverse\0"
+            VALUE "LegalTrademarks", "\0"
+            VALUE "OriginalFilename", "Org211.exe\0"
+            VALUE "PrivateBuild", "\0"
+            VALUE "ProductName", "Orgagna 2\0"
+            VALUE "ProductVersion", "2.1.1\0"
+            VALUE "SpecialBuild", "\0"
         END
     END
     BLOCK "VarFileInfo"
@@ -1450,7 +1448,7 @@ BEGIN
     IDS_ERROR_WAIT          "Error (weight)"
     IDS_INFO_CLEAR          "It deleted."
     IDS_INFO_INITIALIZE     "I got pure white."
-    IDS_INFO_MEMORY         "By using it for a long time, note (note) on memory¥nIt will be scattered. (Score order and memory order are different)¥nThis function places notes in order of music¥nI will rearrange them.¥nThe same effect can be obtained even by reloading the data.¥nDo you want to do it?"
+    IDS_INFO_MEMORY         "By using it for a long time, note (note) on memory\nIt will be scattered. (Score order and memory order are different)\nThis function places notes in order of music\nI will rearrange them.\nThe same effect can be obtained even by reloading the data.\nDo you want to do it?"
     IDS_INFO_NARABEKAE      "We sorted and rebuilt."
     IDS_INFO_SAME_FILE      "There is a file with the same name"
     IDS_INFO_TITLE_FREQ     "Notice (frequency)"
@@ -1582,4 +1580,3 @@ END
 
 /////////////////////////////////////////////////////////////////////////////
 #endif    // not APSTUDIO_INVOKED
-

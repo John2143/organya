@@ -942,6 +942,7 @@ int AllocMessageStringBuffer(void)
 		MessageString[i] = ptr;
 		r = LoadString(GetModuleHandle(NULL), i, ptr, 1024); //1024It is appropriate. To be exactMESSAGE_STRING_BUFFER_SIZEIt is necessary to calculate from.
 		if(r > 0){
+            printf("A string is %s", ptr);
 			//The last!!Detect
 			for(p = ptr + r - 3, flg = 0; *p != 0 ; p++){
 				if(*p == '!')flg++; else flg = 0;
@@ -954,6 +955,7 @@ int AllocMessageStringBuffer(void)
 			//Move pointer
 			ptr += (r + 1 + 1); //+ 1IsNULLMinutes already+1It is spare.
 		}else{ //In case of error(It does not exist)
+            printf("no strings left");
 			break; //To exit
 		}
 	}
@@ -965,4 +967,3 @@ int AllocMessageStringBuffer(void)
 	//for(ptr = MessageString[111]; *ptr != 0; ptr++)if(*ptr == '!')*ptr = 0;
 	return 0;
 }
-

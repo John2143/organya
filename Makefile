@@ -7,6 +7,10 @@ SRCS=$(wildcard $(SRC)/*.cpp)
 OBJS=$(patsubst %.cpp,%.o,$(SRCS))
 DEPS=$(patsubst %.cpp,%.d,$(SRCS))
 
+RCSS=$(wildcard $(SRC)/*.rc)
+RCOS=$(patsubst %.rc,%.o,$(RCSS))
+RCTS=$(patsubst %.rc,%.rct,$(RCSS))
+
 EXECUTABLE := organya
 
 LIBRARIES:= -L. -lWinMM -ldsound -mwindows
@@ -21,8 +25,8 @@ all: $(EXECUTABLE)
 
 # This is the final compile step:
 #   take all the object files in $(SRC)/*.o and link them with the libraries
-$(EXECUTABLE): $(OBJS)
-	$(CC) $(OBJS) $(LIBRARIES) -o $(EXECUTABLE)
+$(EXECUTABLE): $(OBJS) $(RCTS)
+	$(CC) $(OBJS) $(RCOS) $(LIBRARIES) -o $(EXECUTABLE)
 
 # To generate the .d files, I use the -M* options.
 DEPFLAGS = -MT $@ -MMD -MP -MF $(SRC)/$*.d
@@ -32,6 +36,10 @@ COMPILE.cpp = $(CC) $(DEPFLAGS) $(CFLAGS)
 #  compiled code, and the .d with the dependency info
 $(SRC)/%.o: $(SRC)/%.cpp
 	$(COMPILE.cpp) -c $< -o $@
+
+$(SRC)/%.rct: $(SRC)/%.rc
+	windres $< $(SRC)/$*.o
+	cp $(SRC)/$*.o $(SRC)/$*.rct
 
 # if the dependency doesnt exist, we dont have to worry because that means the
 #  corresponding object also doesnt exist. if the .d does exist then it will
@@ -62,5 +70,6 @@ include $(wildcard $(DEPS))
 clean:
 	rm -f $(SRC)/*.o
 	rm -f $(SRC)/*.d
+	rm -f $(SRC)/*.rct
 	rm -f $(EXECUTABLE).exe
 	rm -f $(EXECUTABLE)

@@ -181,7 +181,7 @@ int APIENTRY WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPTSTR dropfile
 	AllocMessageStringBuffer();
 
 	//Initial file name
-	strcpy(music_file, MessageString[IDS_DEFAULT_ORG_FILENAME]);
+    strcpy(music_file, MessageString[IDS_DEFAULT_ORG_FILENAME]);
 
 	iCast['Z']= 33;
 	iCast['S']= 34;
