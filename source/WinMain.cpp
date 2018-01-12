@@ -33,6 +33,7 @@
 #include <string.h>
 #include "Filer.h"
 #include "rxoFunction.h"
+#include "util.h"
 
 #include "Sound.h"
 #include "Timer.h"
@@ -67,6 +68,7 @@ HWND hWnd;//Main window handle
 HWND hDlgPlayer;
 HWND hDlgTrack;
 HWND hDlgEZCopy;
+extern int EZCopyWindowState; //Easy copy status
 HWND hDlgHelp = NULL;
 BOOL actApp;
 
@@ -85,7 +87,7 @@ extern int sACrnt;	//Range selection is always the current track
 extern void ChangeTrack(HWND hdwnd, int iTrack);
 extern void ChangeTrackPlus(HWND hdwnd, int iValue);
 extern char timer_sw; //During the performance?
-extern EZCopyWindowState; //Easy copy status
+extern int EZCopyWindowState; //Easy copy status
 extern void ClearEZC_Message(); //EZErase messages and ranges
 extern RECT CmnDialogWnd;
 extern int SaveWithInitVolFile;	//Song data and…Do you want to save?
@@ -363,7 +365,7 @@ int APIENTRY WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPTSTR dropfile
 	if(dropfile[0]!=0){
 		strcpy(kfn,dropfile);
 		int ttt;
-		if(dropfile[0]=='¥"'){	//Remove quotes
+		if(dropfile[0]=='"'){	//Remove quotes
 			ttt = 1;
 		}else{
 			ttt = 0;
@@ -517,10 +519,10 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 				DialogBox(hInst,"DLGTRANS",hwnd,DialogTrans);
 				break;
 			case ID_AC_STPLAY:
-				SendMessage(hDlgPlayer , WM_COMMAND , IDC_PLAY , NULL);
+				SendMessage(hDlgPlayer , WM_COMMAND , IDC_PLAY , 0);
 				break;
 			case ID_AC_STBACK:
-				SendMessage(hDlgPlayer , WM_COMMAND , IDC_START , NULL);
+				SendMessage(hDlgPlayer , WM_COMMAND , IDC_START , 0);
 				break;
 			case IDM_DLGVOL://
 			case ID_AC_DLG_VOL:
@@ -892,7 +894,7 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 				ChangeFinish();
 				break;
 			case ID_AC_HOMEBACK: //home
-				SendMessage(hDlgPlayer , WM_COMMAND , IDC_START , NULL);
+				SendMessage(hDlgPlayer , WM_COMMAND , IDC_START , 0);
 				break;
 			case IDM_RECENT_CLEAR:
 				ClearRecentFile();
@@ -947,62 +949,62 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 				RedrawWindow(hWnd,&rect,NULL,RDW_INVALIDATE|RDW_ERASENOW);
 				break;
 			case ID_AC_SELECT_BACKDEL: //2014.04.13
-				SendMessage(hDlgEZCopy , WM_COMMAND , IDC_DELETEBUTTON_2  , NULL);
+				SendMessage(hDlgEZCopy , WM_COMMAND , IDC_DELETEBUTTON_2  , 0);
 				break;
 			case ID_AC_SELECT_INSERT: //2014.04.13
-				SendMessage(hDlgEZCopy , WM_COMMAND , IDC_INSERTBUTTON  , NULL);
+				SendMessage(hDlgEZCopy , WM_COMMAND , IDC_INSERTBUTTON  , 0);
 				break;
 			//Range selection operation by ten key operation
 			case ID_AC_NUM1:
-				SendMessage(hDlgEZCopy , WM_COMMAND , IDC_CTB1 , NULL);
+				SendMessage(hDlgEZCopy , WM_COMMAND , IDC_CTB1 , 0);
 				break;
 			case ID_AC_NUM2:
-				SendMessage(hDlgEZCopy , WM_COMMAND , IDC_CTB2 , NULL);
+				SendMessage(hDlgEZCopy , WM_COMMAND , IDC_CTB2 , 0);
 				break;
 			case ID_AC_NUM3:
-				SendMessage(hDlgEZCopy , WM_COMMAND , IDC_CTB3 , NULL);
+				SendMessage(hDlgEZCopy , WM_COMMAND , IDC_CTB3 , 0);
 				break;
 			case ID_AC_NUM4:
-				SendMessage(hDlgEZCopy , WM_COMMAND , IDC_CTB4 , NULL);
+				SendMessage(hDlgEZCopy , WM_COMMAND , IDC_CTB4 , 0);
 				break;
 			case ID_AC_NUM5:
-				SendMessage(hDlgEZCopy , WM_COMMAND , IDC_CTB5 , NULL);
+				SendMessage(hDlgEZCopy , WM_COMMAND , IDC_CTB5 , 0);
 				break;
 			case ID_AC_NUM6:
-				SendMessage(hDlgEZCopy , WM_COMMAND , IDC_CTB6 , NULL);
+				SendMessage(hDlgEZCopy , WM_COMMAND , IDC_CTB6 , 0);
 				break;
 			case ID_AC_C_NUM1:
-				SendMessage(hDlgEZCopy , WM_COMMAND , IDC_CTB7 , NULL);
+				SendMessage(hDlgEZCopy , WM_COMMAND , IDC_CTB7 , 0);
 				break;
 			case ID_AC_C_NUM2:
-				SendMessage(hDlgEZCopy , WM_COMMAND , IDC_CTB8 , NULL);
+				SendMessage(hDlgEZCopy , WM_COMMAND , IDC_CTB8 , 0);
 				break;
 			case ID_AC_C_NUM3:
-				SendMessage(hDlgEZCopy , WM_COMMAND , IDC_CTB9 , NULL);
+				SendMessage(hDlgEZCopy , WM_COMMAND , IDC_CTB9 , 0);
 				break;
 			case ID_AC_C_NUM4:
-				SendMessage(hDlgEZCopy , WM_COMMAND , IDC_CTB10 , NULL);
+				SendMessage(hDlgEZCopy , WM_COMMAND , IDC_CTB10 , 0);
 				break;
 			case ID_AC_C_NUM5:
-				SendMessage(hDlgEZCopy , WM_COMMAND , IDC_CTB11 , NULL);
+				SendMessage(hDlgEZCopy , WM_COMMAND , IDC_CTB11 , 0);
 				break;
 			case ID_AC_C_NUM6:
-				SendMessage(hDlgEZCopy , WM_COMMAND , IDC_CTB12 , NULL);
+				SendMessage(hDlgEZCopy , WM_COMMAND , IDC_CTB12 , 0);
 				break;
 			case ID_AC_NUM7:
-				SendMessage(hDlgEZCopy , WM_COMMAND , IDC_PST1 , NULL);
+				SendMessage(hDlgEZCopy , WM_COMMAND , IDC_PST1 , 0);
 				break;
 			case ID_AC_NUM8:
-				SendMessage(hDlgEZCopy , WM_COMMAND , IDC_PST2 , NULL);
+				SendMessage(hDlgEZCopy , WM_COMMAND , IDC_PST2 , 0);
 				break;
 			case ID_AC_NUM9:
-				SendMessage(hDlgEZCopy , WM_COMMAND , IDC_PST3 , NULL);
+				SendMessage(hDlgEZCopy , WM_COMMAND , IDC_PST3 , 0);
 				break;
 			case ID_AC_NUMPLUS:
-				SendMessage(hDlgEZCopy , WM_COMMAND , IDC_PST4 , NULL);
+				SendMessage(hDlgEZCopy , WM_COMMAND , IDC_PST4 , 0);
 				break;
 			case ID_AC_DELETEKEY: //Add 2014/04/12
-				SendMessage(hDlgEZCopy , WM_COMMAND , IDC_DELETEBUTTON , NULL);
+				SendMessage(hDlgEZCopy , WM_COMMAND , IDC_DELETEBUTTON , 0);
 				break;
 			}
 		}else{
@@ -1180,8 +1182,8 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 			break;
 		case VK_F5:
 		case VK_NUMPAD0:
-			if(timer_sw == 0)SendMessage(hDlgPlayer , WM_COMMAND , IDC_PLAY , NULL);
-			else SendMessage(hDlgPlayer , WM_COMMAND , IDC_STOP , NULL);
+			if(timer_sw == 0)SendMessage(hDlgPlayer , WM_COMMAND , IDC_PLAY ,0 );
+			else SendMessage(hDlgPlayer , WM_COMMAND , IDC_STOP , 0);
 			break;
 		//case VK_HOME:
 		//	SendMessage(hDlgPlayer , WM_COMMAND , IDC_START , NULL);
@@ -1376,17 +1378,17 @@ void SetTitlebarText(char *name)
 	char file_name[MAX_PATH];//Processing names (excluding directories)
 
 	i = 0;
-	while(name[i] != NULL)i++;//First to the hips
-	while(i != 0 && name[i-1] != '¥¥')i--; //Last circle mark
+	while(name[i] != '\0')i++;//First to the hips
+	while(i != 0 && name[i-1] != '\\')i--; //Last circle mark
 	
 	//Create a file name
 	j = 0;
-	while(name[i] != NULL){
+	while(name[i] != '\0'){
 		file_name[j] = name[i];
 		i++;
 		j++;
 	}
-	file_name[j] = NULL;
+	file_name[j] = '\0';
 	//Pour the application title
 	for(i = 0; i < 15; i++){
 		set_name[i] = lpszName[i];
@@ -1394,7 +1396,7 @@ void SetTitlebarText(char *name)
 	//Pour the file name
 	for(j = 0; j < MAX_PATH; j++){
 		set_name[i] = file_name[j];
-		if(set_name[i] == NULL)break;
+		if(set_name[i] == '\0')break;
 		i++;
 	}
 	SetWindowText(hWnd,&set_name[0]);
@@ -1422,8 +1424,8 @@ void ResetTitlebarChange(void)
 	//chn = strstr(cc, HENKOU_NO_SHIRUSHI);	// 2014.10.19 D
 	chn = strstr(cc, MessageString[IDS_MODIFIED]);	// 2014.10.19 A
 	if(chn!=NULL){
-		*chn = '¥0';//To erase
-		*(chn+1) = '¥0';//To erase
+		*chn = '0';//To erase
+		*(chn+1) = '0';//To erase
 		SetWindowText(hWnd,cc);
 	}
 }

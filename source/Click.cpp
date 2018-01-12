@@ -337,7 +337,7 @@ void ClickProcL(WPARAM wParam, LPARAM lParam)
 	if(mouse_x < 64){
 //		if(mouse_x >= 0 && mouse_y >= 0 && mouse_y < 288+WDWHEIGHTPLUS){//keyboard
 		if(mouse_x >= 0 && mouse_y >= 0 && mouse_y < WHeight+288-WHNM){//keyboard
-			org_data.TouchKeyboard(unsigned char(95 - (mouse_y/12 + scr_v)));//96*12Is the vertical size of the score
+			org_data.TouchKeyboard(static_cast<unsigned char>(95 - (mouse_y/12 + scr_v)));//96*12Is the vertical size of the score
 		}
 		if(mouse_x >= 0 && mouse_y >= WHeight+288-WHNM+144 && mouse_y < WHeight+288-WHNM+144+16){//SelectSite 2014.05.01
 			ChangeSelAlwaysCurrent();

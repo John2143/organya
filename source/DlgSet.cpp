@@ -12,11 +12,11 @@
 #include    <commctrl.h>
 #include "Mouse.h"
 #include "rxoFunction.h"
+#include "util.h"
 
 #define PI 3.14159265358979323846
 
 #define NUMGRID		8
-#define NUMGRIDA		11
 #define MAXWAVE		100
 #define maxx(a, b) ((a) > (b) ? (a) : (b))
 
@@ -26,11 +26,12 @@ extern HWND hDlgEZCopy;
 
 
 typedef struct{
-	char name[20];
+	char name[25];
 	char line;
 	char dot;
 }GRID;
-GRID grid[NUMGRIDA] = {
+
+GRID grid[] = {
 	{"☆Free setting",0,0},
 	{"4 beats: 4 divided",4,4},
 	{"4 beats: divided into 3",4,3},
@@ -43,6 +44,7 @@ GRID grid[NUMGRIDA] = {
 	{"4 beats:12Split",4,12},
 	{"5 beats: divided into 4",5,4},
 };
+constexpr int NUMGRIDA = sizeof(grid) / sizeof(GRID);
 //IDS_GRID_STRINGInto!Add at the end. The string here is a dummy.
 
 int check_pipi[NUMGRID] ={
@@ -113,14 +115,14 @@ void SetText(HWND hdwnd, int ID_TEXTBOX, char *str)
 
 void SetText(HWND hdwnd, int ID_TEXTBOX, int iValue)
 {
-	char str[128] = {NULL};
+	char str[128] = {0};
 	itoa(iValue,str,10);
 	SetDlgItemText(hdwnd, ID_TEXTBOX , str);
 }
 
 int GetText(HWND hdwnd, int ID_TEXTBOX)
 {
-	char str[32] = {NULL};
+	char str[32] = {0};
 	GetDlgItemText(hdwnd,ID_TEXTBOX,str,31);
 	int r;
 	r = atoi(str);
@@ -139,7 +141,7 @@ void EnableDialogWindow(int iValue = TRUE)
 //Initialize dialog contents
 void InitSettingDialog(HWND hdwnd)
 {
-	char str[128] = {NULL};
+	char str[128] = {0};
 	long i,a;
 	MUSICINFO mi;
 	org_data.GetMusicInfo(&mi);
@@ -230,7 +232,7 @@ void InitSettingDialog(HWND hdwnd)
 //Setting weight
 BOOL SetWait(HWND hdwnd, MUSICINFO *mi)
 {
-	char str[128] = {NULL};
+	char str[128] = {0};
 	long a;
 	GetDlgItemText(hdwnd,IDD_SETWAIT,str,7);
 	a = atol(str);
@@ -254,7 +256,7 @@ BOOL SetGrid(HWND hdwnd,MUSICINFO *mi)
 		mi->dot = grid[i].dot;
 		mi->line = grid[i].line;
 	}else{
-		char str[128] = {NULL};
+		char str[128] = {0};
 		long a,b;
 		GetDlgItemText(hdwnd,IDD_GRIDEDIT1,str,3);
 		a = atol(str);
@@ -280,7 +282,7 @@ BOOL SetGrid(HWND hdwnd,MUSICINFO *mi)
 //Setting repeat range
 BOOL SetRepeat(HWND hdwnd, MUSICINFO *mi)
 {
-	char str[128] = {NULL};
+	char str[128] = {0};
 	long a,b;
 	GetDlgItemText(hdwnd,IDD_REP_MEAS,str,7);
 	a = atol(str);
@@ -317,7 +319,7 @@ int freqbox[MAXTRACK] = {
 };
 BOOL SetTrackFreq(HWND hdwnd, MUSICINFO *mi)
 {
-	char str[128] = {NULL};
+	char str[128] = {0};
 	unsigned short a;	
 	for(int i = 0; i < MAXMELODY; i++){
 		GetDlgItemText(hdwnd,freqbox[i],str,7);
@@ -352,7 +354,7 @@ BOOL CALLBACK DialogSetting(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lPar
 {
 	int i, j;
 	int iBPM, iWAIT;
-	char str[128] = {NULL};
+	char str[128] = {0};
 	RECT rect = {64,0,WWidth,WHeight};//Area to update
 	MUSICINFO mi,mg;
 	switch(message){
@@ -799,7 +801,7 @@ int leftbox[MAXTRACK] = {
 BOOL CALLBACK DialogNoteUsed(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	int i;
-	char str[10] = {NULL};
+	char str[10] = {0};
 	long u,l;
 //	unsigned short a;
 	switch(message){
@@ -826,7 +828,7 @@ BOOL CALLBACK DialogNoteUsed(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lPa
 
 BOOL CALLBACK DialogMemo(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-//	char str[10] = {NULL};
+//	char str[10] = {0};
 	switch(message){
 	case WM_INITDIALOG://A dialog was called
 		EnableDialogWindow(FALSE);
@@ -973,7 +975,7 @@ bool GetSetPVInitFile(HWND hdwnd, int IsSave, int iQuiet)
 
 BOOL CALLBACK DialogDefault(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	char str[32] = {NULL};
+	char str[32] = {0};
 	int i,a,b;
 	switch(message){
 	case WM_INITDIALOG://A dialog was called
@@ -1074,7 +1076,7 @@ BOOL CALLBACK DialogDefault(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lPar
 }
 BOOL CALLBACK DialogHelp(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-//	char str[10] = {NULL};
+//	char str[10] = {0};
 //	char HelpString[10000]; //Tentatively10kB
 	char *HelpString; //A 2010.9.22 Along with expansion of the help file capacity, changed to dynamic allocation.
 	HRSRC hrscr;
@@ -1099,8 +1101,8 @@ BOOL CALLBACK DialogHelp(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam)
 		cc = (char*)LockResource(LoadResource(NULL, hrscr));// Get resource address
 		cf = HelpString; ce = cc;
 		do{
-			if(*ce=='¥n'){ //Line feed code conversion (it seems that it is necessary to add a line feed)
-				*cf='¥r';
+			if(*ce=='\n'){ //Line feed code conversion (it seems that it is necessary to add a line feed)
+				*cf='\r';
 				cf++;
 			}
 			*cf = *ce;

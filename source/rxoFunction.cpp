@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include "Filer.h"
 #include <string.h>
+#include "util.h"
 
 #include "Sound.h"
 #include "Timer.h"
@@ -24,15 +25,15 @@
 #define MESSAGE_STRING_BUFFER_SIZE (1024*1024)
 #define MESSAGE_STRING_MAX 1024
 
-/* //↓Add this one line★
+/* //\�Add this one line★
 
 #include "rxoFunction.h"
 
   */
 /* //EditNoteTrack designation in
-	-1 : 0 ‾ 8
-	-2 : 8 ‾ 16
-	-3 : 0 ‾ 16 
+	-1 : 0 \� 8
+	-2 : 8 \� 16
+	-3 : 0 \� 16 
 	-4 : CurrentTrack
   */
 MEMORYSTATUS rMem ;
@@ -51,7 +52,7 @@ extern int sACrnt;	//Range selection is always the current track
 extern int gDrawDouble;	//Draw both track groups
 extern CHAR app_path[];
 extern int iDragMode;
-extern SaveWithInitVolFile;
+extern int SaveWithInitVolFile;
 
 TCHAR *MessageStringBuffer = NULL;	// 2014.10.19 A
 TCHAR *MessageString[MESSAGE_STRING_MAX];
@@ -164,7 +165,7 @@ void LoadRecentFromIniFile(){
 	int i;
 	for(i=0;i<10;i++){
 		RecentFileName[i][0]='@';
-		RecentFileName[i][1]='¥0';
+		RecentFileName[i][1]='\0';
 		GetPrivateProfileString( "Recent",FileAcc[i],"@",RecentFileName[i],256,app_path);
 	}
 	CreateMenuRecent();
@@ -179,15 +180,15 @@ void SetMenuRecent(int iMenuNumber, char *strText, int iDisable)
 	char strCc[256];
 	strcpy(strCc,"&&");
 	itoa((iMenuNumber+1)%10, &strCc[1], 10);
-	strCc[2]='¥0';
+	strCc[2]='\0';
 	strcat(strCc," ");
 	//strcat(strCc,strText);
 	int y,i;
 	y = strlen(strText);
-	for(i=y;i>0;i--)if(strText[i]=='¥¥'){i++;break;}
+	for(i=y;i>0;i--)if(strText[i]=='\\'){i++;break;}
 	strcat(strCc,&strText[i]);
 	if(iMenuNumber==0){
-		strcat(strCc,"¥tShift+Ctrl+Home");
+		strcat(strCc,"\tShift+Ctrl+Home");
 	}
 	ModifyMenu(hMenu, Menu_Recent[iMenuNumber], MF_BYCOMMAND|MF_STRING, Menu_Recent[iMenuNumber], strCc);
 	if(iDisable){
@@ -206,7 +207,7 @@ void ClearRecentFile()
 		int i;
 		for(i=0;i<10;i++){
 			RecentFileName[i][0]='@';
-			RecentFileName[i][1]='¥0';
+			RecentFileName[i][1]='\0';
 		}
 		CreateMenuRecent();
 		//MessageBox(hWnd,"I got pure white.","notification",MB_OK);	// 2014.10.19 D
@@ -436,7 +437,7 @@ void ShowMemoryState(){ //For debugging
 	char cc[32]; int y;
 	GlobalMemoryStatus( &rMem ) ;
 	y=rMem.dwAvailPhys/1000;
-	_itoa(y,cc,10);
+	itoa(y,cc,10);
 	MessageBox(NULL,cc,"Mem",MB_OK);
 }
 
@@ -444,7 +445,7 @@ void ShowMemoryState(){ //For debugging
 void SortMusicNote(void)
 {
 	int a;
-	//a = MessageBox(hWnd,"By using it for a long time, note (note) on memory¥nIt will be scattered. (Score order and memory order are different)¥nThis function places notes in order of music¥nI will rearrange them.¥nThe same effect can be obtained even by reloading the data.¥nDo you want to do it?","Usage and purpose",MB_OKCANCEL|MB_ICONQUESTION|MB_DEFBUTTON2);	// 2014.10.19 D
+	//a = MessageBox(hWnd,"By using it for a long time, note (note) on memory¥nIt will be scattered. (Score order and memory order are different)\nThis function places notes in order of music¥nI will rearrange them.\nThe same effect can be obtained even by reloading the data.\nDo you want to do it?","Usage and purpose",MB_OKCANCEL|MB_ICONQUESTION|MB_DEFBUTTON2);	// 2014.10.19 D
 	a = msgbox(hWnd,IDS_INFO_MEMORY,IDS_USAGE,MB_OKCANCEL|MB_ICONQUESTION|MB_DEFBUTTON2);	// 2014.10.19 A
 	if(a == IDOK){
 		org_data.SortNotes();
@@ -499,14 +500,14 @@ bool ReadStartFromVirtualCB(void)
 	if(VirtualCB[0]=='O' && VirtualCB[1]=='r' && VirtualCB[2]=='g' && 
 		VirtualCB[3]=='C' && VirtualCB[4]=='B' && VirtualCB[5]=='D' && 
 		VirtualCB[6]=='a' && VirtualCB[7]=='t' && VirtualCB[8]=='a')return true;
-	VirtualCB[10]='¥0'; //Discard data
+	VirtualCB[10]='\0'; //Discard data
 	return false;
 
 }
 
 int ReadIntegerFromVirtualCB(void)
 {
-	if(*readVCB=='¥0')return -9999;
+	if(*readVCB=='\0')return -9999;
 	char ons[32], *cp;
 	cp = ons;
 	do{
@@ -551,13 +552,13 @@ void GetClipBoardToVCB(void)
 
 	hText = GetClipboardData(CF_TEXT);
 	if(hText == NULL) {
-		//printf("There is no text data on the clipboard.¥n");
+		//printf("There is no text data on the clipboard.\n");
 	} else {
 		pText = (char*)GlobalLock(hText);
 		int i;
 		for(i=0;i<640000;i++){
 			VirtualCB[i]=pText[i];
-			if(pText[i]=='¥0')i=640000+1; //Forcibly end loop
+			if(pText[i]=='\0')i=640000+1; //Forcibly end loop
 		}
 
 		GlobalUnlock(hText);

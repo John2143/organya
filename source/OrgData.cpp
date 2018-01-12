@@ -5,6 +5,7 @@
 #include "resource.h"
 #include <memory.h>
 #include <math.h>
+#include "util.h"
 
 #include "Sound.h"
 #include "rxoFunction.h"
@@ -717,7 +718,7 @@ OrgData::OrgData()
 	UndoEnable = false;
 	//noteon = new unsigned char[65536];
 }
-OrgData::‾OrgData() //Destructor
+OrgData::~OrgData() //Destructor
 {
 	//delete [] noteon;
 }

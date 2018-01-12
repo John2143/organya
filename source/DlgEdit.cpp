@@ -16,7 +16,7 @@ extern char TrackN[];
 
 BOOL CALLBACK DialogDelete(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	char str[128] = {NULL};
+	char str[128] = {0};
 	int v;
 	long a,b,c;
 	RECT rect = {64,0,WWidth,WHeight};//Area to update
@@ -85,7 +85,7 @@ BOOL CALLBACK DialogDelete(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lPara
 //Copy dialog
 BOOL CALLBACK DialogCopy(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	char str[128] = {NULL};
+	char str[128] = {0};
 	long a,b,c;
 	RECT rect = {64,0,WWidth,WHeight};//Area to update
 	MUSICINFO mi;
@@ -216,7 +216,7 @@ BOOL CALLBACK DialogCopy(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam)
 //Pan change dialog
 BOOL CALLBACK DialogPan(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	char str[128] = {NULL};
+	char str[128] = {0};
 //	long a,b,c,d;
 	RECT rect = {64,0,WWidth,WHeight};//Area to update
 	PARCHANGE pc;
@@ -283,7 +283,7 @@ BOOL CALLBACK DialogPan(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam)
 //Transpose dialog
 BOOL CALLBACK DialogTrans(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	char str[128] = {NULL};
+	char str[128] = {0};
 //	long a,b,c,d;
 	RECT rect = {64,0,WWidth,WHeight};//Area to update
 	PARCHANGE pc;
@@ -351,7 +351,7 @@ BOOL CALLBACK DialogTrans(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam
 //Volume change dialog
 BOOL CALLBACK DialogVolume(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	char str[128] = {NULL};
+	char str[128] = {0};
 //	long a,b,c,d;
 	RECT rect = {64,0,WWidth,WHeight};//Area to update
 	PARCHANGE pc;
@@ -438,7 +438,7 @@ int cbox[MAXTRACK] = {
 BOOL CALLBACK DialogCopy2(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	int i;
-	char str[128] = {NULL};
+	char str[128] = {0};
 	long a,b,c;
 	RECT rect = {64,0,WWidth,WHeight};//Area to update
 	MUSICINFO mi;
@@ -566,7 +566,7 @@ BOOL CALLBACK DialogCopy2(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam
 
 BOOL CALLBACK DialogSwap(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	char str[128] = {NULL};
+	char str[128] = {0};
 //	long a,b,c,d;
 	RECT rect = {64,0,WWidth,WHeight};//Area to update
 	NOTECOPY nc;

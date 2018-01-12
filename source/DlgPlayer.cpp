@@ -6,6 +6,9 @@
 #include "Timer.h"
 #include "Sound.h"
 #include "Scroll.h"
+#include <cstdio>
+#include "util.h"
+
 char timer_sw = 0;
 extern HWND hDlgTrack;
 extern HWND hWnd;

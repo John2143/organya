@@ -4,7 +4,7 @@
 #include "DefOrg.h"
 #include "OrgData.h"
 #include "rxoFunction.h"
-
+#include "util.h"
 
 
 RECT CmnDialogWnd;

@@ -8,6 +8,7 @@
 #include "resource.h"
 #include "Scroll.h"
 #include "rxoFunction.h"
+#include "util.h"
 
 //Of the songPATHI will leave it here
 char music_file[MAX_PATH]; //NewData.org

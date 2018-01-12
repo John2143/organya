@@ -7,6 +7,8 @@
 #include "Gdi.h"
 #include "Timer.h"
 #include "Sound.h"
+#include "util.h"
+
 #include <string.h>//sprintffor test
 
 #include "rxoFunction.h"
@@ -147,7 +149,7 @@ BOOL CALLBACK DialogTrack(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam
 		SetDlgItemText(hdwnd,IDE_VIEWWAIT,str);
 		//itoa(org_data.track,str,10);
 		str[0]='1';
-		str[1]='¥0';
+		str[1]='\0';
 		SetDlgItemText(hdwnd,IDE_VIEWTRACK,str);
 		for(i = 0; i < MAXTRACK; i++)org_data.mute[i] = 0;
 		HANDLE hBmp;

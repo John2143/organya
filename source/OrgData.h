@@ -82,7 +82,7 @@ typedef struct OrgData{
 		BOOL NoteAlloc(unsigned short note_num);//As many as specifiedNoteDataSecure an area of
 		void ReleaseNote(void);//NoteDataOpen
 		NOTELIST *SearchNote(NOTELIST *np);//unusedNOTESearch
-		void OrgData::TouchKeyboard(unsigned char y);//Touch the keyboard
+		void TouchKeyboard(unsigned char y);//Touch the keyboard
 		BOOL SetNote(long x,unsigned char y, int DragMode = 0);//Place notes
 		BOOL CutNote(long x,unsigned char y);//Cut the note
 		BOOL SetPan(long x,unsigned char y);//Place pan notes
@@ -114,8 +114,8 @@ typedef struct OrgData{
 		void SetPlayPointer(long x);//Set playback pointer to specified position
 		//Below is the file relation
 		unsigned short GetNoteNumber(char track,NOTECOPY *nc);
-		BOOL OrgData::SaveMusicData(void);
-		BOOL OrgData::LoadMusicData(void);
+		BOOL SaveMusicData(void);
+		BOOL LoadMusicData(void);
 		int FileCheckBeforeLoad(char *checkfile); //If the file is loadable0If it is abnormal1return it. Data loading is not done. 2014.05.22
 		//The following are editorial relations
 		BOOL DelateNoteData(PARCHANGE *pc);

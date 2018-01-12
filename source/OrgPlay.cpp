@@ -4,10 +4,12 @@
 #include "Sound.h"
 #include "resource.h"
 #include "Scroll.h"
+#include "util.h"
+
 
 long play_p;//Current playback position (canvas)
 NOTELIST *np[MAXTRACK];//Currently ready to play notes
-long now_leng[MAXMELODY] = {NULL};//Length of note during playback
+long now_leng[MAXMELODY] = {0};//Length of note during playback
 extern HWND hDlgPlayer;
 void OrgData::PlayData(void)
 {
@@ -33,13 +35,13 @@ void OrgData::PlayData(void)
 		}
 		if(now_leng[i] == 0 ){
 			if(info.tdata[i].pipi == 0)
-				PlayOrganObject(NULL,2,i,info.tdata[i].freq);
-			else PlayOrganObject2(NULL,2,i,info.tdata[i].freq);
+				PlayOrganObject(0,2,i,info.tdata[i].freq);
+			else PlayOrganObject2(0,2,i,info.tdata[i].freq);
 		}
 		if(now_leng[i] > 0)now_leng[i]--;
 	}
 	//Playing the drum
-	for(i = MAXMELODY; i < MAXTRACK; i++){
+	for(int i = MAXMELODY; i < MAXTRACK; i++){
 		if(np[i] != NULL &&play_p == np[i]->x ){//The sound came.
 			if(np[i]->y != KEYDUMMY){//Normal slow
 				if(mute[i] == 0)PlayDramObject(np[i]->y,1,i-MAXMELODY);
