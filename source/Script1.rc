@@ -56,6 +56,7 @@ END
 //
 // Cursor
 //
+CURS                    CURSOR  "bitmap\\cursor.cur"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -1141,7 +1142,6 @@ B_LOUPE_MINUS           BITMAP  DISCARDABLE     "Bitmap\\Loupe_MINUS.bmp"
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
 ICO                     ICON    DISCARDABLE     "bitmap\\icon1.ico"
-ZZZ                     ICON    DISCARDABLE     "bitmap\\ffff.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //

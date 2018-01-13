@@ -214,9 +214,9 @@ int APIENTRY WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPTSTR dropfile
 	wc.cbClsExtra    = 0;
 	wc.cbWndExtra    = 0;
 	wc.hInstance     = hInst = hInstance;
-	wc.hIcon         = LoadIcon(hInst,"ICON");//Large icon
-	wc.hIconSm       = LoadIcon(hInst,"ICON");//Small icon
-	wc.hCursor       = LoadCursor(hInst,"CURSOR");//cursor
+	wc.hIcon         = LoadIcon(hInst,"ICO");//Large icon
+	wc.hIconSm       = LoadIcon(hInst,"ICO");//Small icon
+	wc.hCursor       = LoadCursor(hInst,"CURS");//cursor
 	wc.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH);//Wind dash color
 	wc.lpszMenuName  = "ORGANYAMENU";//Meni	Ue
 	wc.lpszClassName = lpszName;
