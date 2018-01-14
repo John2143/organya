@@ -15,7 +15,6 @@ void OrgData::PlayData(void)
 {
 	char str[10];
 	char oldstr[10];
-	char end_cnt = MAXTRACK;
 //	PlaySoundObject(1,1);
 	//Melody playback
 	for(int i = 0; i < MAXMELODY; i++){

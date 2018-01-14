@@ -599,6 +599,8 @@ BOOL OrgData::SetVolume2(long x,unsigned char y,long fade)
 			if(dv < 0)dv = 0; else if(dv > 255)dv = 255;
 			vv = (unsigned char)dv;
 			break;
+        default:
+            vv = 0;
 		}
 		note->volume = vv;
 		note->x = x;
@@ -876,4 +878,3 @@ BOOL OrgData::SetNote_afterSetLength(long x)
 	return TRUE;
 
 }
-

@@ -137,7 +137,6 @@ void ChangeTrack(HWND hdwnd, int iTrack){
 }
 
 BOOL CALLBACK DialogTrack(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam){
-	RECT rect = {64,0,WWidth,WHeight};//Area to update(Track change)
 	int i, j;
 	char str[8];
 	MUSICINFO mi;

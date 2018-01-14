@@ -19,8 +19,6 @@ BOOL StartGDI(HWND hwnd)
 {
 	HDC hdc;//Device context
 	BOOL status = FALSE;//Return value of this function
-    int nDesktopWidth = GetSystemMetrics( SM_CXFULLSCREEN );
-    int nDesktopHeight = GetSystemMetrics( SM_CYFULLSCREEN );	//Task bar consideration
     int nScreenWidth = GetSystemMetrics( SM_CXSCREEN );
     int nScreenHeight = GetSystemMetrics( SM_CYSCREEN );
 

@@ -975,7 +975,6 @@ bool GetSetPVInitFile(HWND hdwnd, int IsSave, int iQuiet)
 
 BOOL CALLBACK DialogDefault(HWND hdwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	char str[32] = {0};
 	int i,a,b;
 	switch(message){
 	case WM_INITDIALOG://A dialog was called

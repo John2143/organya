@@ -149,7 +149,6 @@ void MouseDrag(WPARAM wParam, LPARAM lParam)
 	RECT rect = {64,WHeight-16,WWidth,WHeight};
 	RECT rect2 = {64,0,WWidth,WHeight};
 	RECT rectPAN = {64, WHeight+292-WHNM - 3, WWidth, WHeight+(351+7)-WHNM + 3};	// 2010.08.14 
-	RECT rectVOL = {64, WHeight+365-WHNM - 3, WWidth, WHeight+428-WHNM + 3};	// 2010.08.14 
 
 	if(timer_sw)return;
 	long mouse_x;
@@ -622,4 +621,3 @@ void ClickProcM(WPARAM wParam, LPARAM lParam)
 //	TextOut(hdc,200,100,str,strlen(str));
 //	ReleaseDC(hWnd,hdc);
 }
-

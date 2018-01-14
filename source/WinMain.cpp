@@ -429,10 +429,8 @@ int APIENTRY WinMain(HINSTANCE hInstance,HINSTANCE hPrevInstance,LPTSTR dropfile
 //Main procedure
 LRESULT CALLBACK WndProc(HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 {
-//	char str[64];
-	int i, j;	// 2014.10.18 jAdd
+	int i, j;
 	char res;
-	bool AfterReSize=false;
 	RECT rect = {0,0,WWidth,WHeight};//Area to update(Track change)
 	MUSICINFO mi;
 	MINMAXINFO *pmmi;

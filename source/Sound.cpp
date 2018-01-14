@@ -155,7 +155,7 @@ BOOL LoadSoundObject(char *file_name, int no)
 	if(check_box[1] != 'I')return(FALSE);
 	if(check_box[2] != 'F')return(FALSE);
 	if(check_box[3] != 'F')return(FALSE);
-	file_size = *((DWORD *)&check_box[4]);
+	file_size = check_box[4];
 
 	DWORD *wp;
 	wp = (DWORD*)malloc(file_size);//Make a file workspace

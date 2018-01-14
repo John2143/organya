@@ -26,7 +26,7 @@ BOOL QuitMMTimer();
 //Global variables
 /*■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■*/
 static UINT ExactTime   = 13;//Minimum precision
-static UINT TimerID     = NULL;
+static UINT TimerID     = 0;
 
 /*■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■*/
 //Set the timer accuracy.
@@ -53,7 +53,7 @@ BOOL InitMMTimer()
 /*■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■*/
 BOOL StartTimer(DWORD dwTimer)
 {
-	MMRESULT ret = NULL;
+	MMRESULT ret = 0;
 	ExactTime = dwTimer;
 	//Generate a timer
 	TimerID = timeSetEvent
@@ -61,7 +61,7 @@ BOOL StartTimer(DWORD dwTimer)
 		dwTimer,       //Timer time
 		10,             //Acceptable timer accuracy
 		(LPTIMECALLBACK)TimerProc, //Callback procedure
-		NULL,          //The user callback functiondwUserInformation value to send to
+        0,          //The user callback functiondwUserInformation value to send to
 		TIME_PERIODIC //Generate an event at every timer time
 	);
 	if(ret != TIMERR_NOERROR) return FALSE;

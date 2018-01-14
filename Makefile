@@ -1,5 +1,5 @@
 CC := g++ -std=c++11 -g
-CFLAGS := -Wall -Wextra -Iinclude -Wno-unused-parameter -Wno-write-strings -Wno-char-subscripts -Wno-unused-but-set-variable -Wno-unused-variable
+CFLAGS := -Wall -Wextra -Iinclude -Wno-unused-parameter -Wno-write-strings -Wno-char-subscripts
 
 SRC=source
 
@@ -18,14 +18,14 @@ ifeq ($(shell uname),Linux)
 LIBRARIES += -lm
 endif
 
-.PHONY: clean all
+.PHONY: clean all new
 
 # Default behaviour is to make the executable
 all: $(EXECUTABLE)
 
 # This is the final compile step:
 #   take all the object files in $(SRC)/*.o and link them with the libraries
-$(EXECUTABLE): $(OBJS) $(RCTS)
+$(EXECUTABLE): $(OBJS) $(RCTS) Makefile
 	$(CC) $(OBJS) $(RCOS) $(LIBRARIES) -o $(EXECUTABLE)
 
 # To generate the .d files, I use the -M* options.
@@ -34,10 +34,10 @@ COMPILE.cpp = $(CC) $(DEPFLAGS) $(CFLAGS)
 
 # To create a .o file, take the source code and create 2 files: the .o with the
 #  compiled code, and the .d with the dependency info
-$(SRC)/%.o: $(SRC)/%.cpp
+$(SRC)/%.o: $(SRC)/%.cpp Makefile
 	$(COMPILE.cpp) -c $< -o $@
 
-$(SRC)/%.rct: $(SRC)/%.rc
+$(SRC)/%.rct: $(SRC)/%.rc Makefile
 	windres $< $(SRC)/$*.o
 	cp $(SRC)/$*.o $(SRC)/$*.rct
 
@@ -73,3 +73,6 @@ clean:
 	rm -f $(SRC)/*.rct
 	rm -f $(EXECUTABLE).exe
 	rm -f $(EXECUTABLE)
+
+new: clean
+	$(MAKE)
