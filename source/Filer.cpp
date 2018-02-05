@@ -1,17 +1,21 @@
 #include "Setting.h"
+#include "Gdi.h"
 #include <stdio.h>
 #include "resource.h"
 #include "DefOrg.h"
 #include "OrgData.h"
+#include "Sound.h"
+#include "Scroll.h"
 #include "rxoFunction.h"
 #include "util.h"
-
+#include "math.h"
 
 RECT CmnDialogWnd;
 int count_of_INIT_DONE;
 int iDlgRepeat; //Repeat count obtained from dialog
 extern char strMIDI_TITLE[256];
 extern char strMIDI_AUTHOR[256];
+extern char *dram_name[];
 LPCTSTR  MIDIPC[]={
 	"000 Acoustic Grand Piano","001 Bright Acoustic Piano","002 Electric Grand Piano","003 Honky-tonk Piano","004 Electric Piano 1","005 Electric Piano 2","006 Harpsichord","007 Clavi",
 	"008 Celesta","009 Glockenspiel","010 Music Box","011 Vibraphone","012 Marimba","013 Xylophone","014 Tubular Bells","015 Dulcimer",
@@ -32,6 +36,8 @@ LPCTSTR  MIDIPC[]={
 };
 
 extern unsigned char ucMIDIProgramChangeValue[MAXTRACK];
+
+ extern HWND hDlgPlayer;
 
 char GetFileNameSave(HWND hwnd,char *title)
 {//Get file name(save)
@@ -57,7 +63,8 @@ char GetFileNameSave(HWND hwnd,char *title)
 	else return MSGCANCEL;//Cancel0Will return
 	fp = fopen(music_file,"rb");
 	//Existing file exists? OFN_OVERWRITEPROMPT It made unnecessary by designation.
-	//if(fp != NULL){
+	//if(fp != NULL)
+	//{
 	//	fclose(fp);
 	//	return MSGEXISFILE;//Existing file
 	//}
@@ -208,7 +215,8 @@ char GetFileNameMIDI(HWND hwnd,char *title, char *filename)
 	fp = fopen(filename,"rb");
 
 	//Existing file exists?  OFN_OVERWRITEPROMPT It made unnecessary by designation.
-	//if(fp != NULL){
+	//if(fp != NULL)
+	//{
 	//	fclose(fp);
 	//	return MSGEXISFILE;//Existing file
 	//}
@@ -296,4 +304,498 @@ char GetFileNameLoad(HWND hwnd,char *title, int OpenType)
 	fclose(fp);
 
 	return MSGLOADOK;
+}
+
+char GetFileNameLoadPtcop(HWND hwnd,char *title)
+{//Get file name(Load)
+	OPENFILENAME ofn;
+	FILE *fp;
+//	char res;//Result of file open
+
+	memset(&ofn,0,sizeof(OPENFILENAME));
+//	strcpy(GetName,"*.pmd");
+	ofn.lStructSize = sizeof(OPENFILENAME);
+	ofn.hwndOwner   = hwnd;
+	ofn.hInstance   = hInst;
+	//ofn.lpstrFilter = "OrganyaData[*.org]¥0*.org¥0All formats [*.*]¥0*.*¥0¥0";	// 2014.10.19 D
+	ofn.lpstrFilter = MessageString[IDS_STRING120];	// 2014.10.19 A
+	ofn.lpstrFile   = music_file;
+	ofn.nMaxFile    = MAX_PATH;
+	ofn.lpstrTitle  = title;
+	ofn.Flags       = OFN_HIDEREADONLY ;
+
+	ofn.lpstrDefExt = "ptcop";
+	
+	count_of_INIT_DONE = 0;
+	//Attempt to acquire the file name.
+	if(GetOpenFileName(&ofn));//InvalidateRect(hwnd,NULL,TRUE);
+	else return MSGCANCEL;//Cancel0Will return
+	fp = fopen(music_file,"rb");
+	if(fp == NULL){
+		//MessageBox(hwnd,"File can not be accessed","",MB_OK);	// 2014.10.19 D
+		msgbox(hwnd,IDS_WARNING_ACCESS_FILE,IDS_ERROR,MB_OK);	// 2014.10.19 A
+		return MSGCANCEL;//Specified file does not exist
+	}
+	fclose(fp);
+
+	return MSGLOADOK;
+}
+
+int decodePxInt(FILE * fp)
+{
+	int v = 0x00;
+	fread(&v, 1, 1, fp);
+	//printf("%i\n", v);
+	if (v > 0x7f)
+		return v + 0x80*(decodePxInt(fp) - 1);
+	else
+		return v;
+}
+
+#pragma pack(1) //one byte imprecision is too much...
+
+typedef struct __attribute__((packed))
+{
+	short unknown1 = 0x1E0;
+	byte beat;
+	short unknown2 = 0;
+	short tempo;
+	int repeat;
+	int last;
+	
+}MASTERV5BLOCK;
+
+#pragma pack()
+
+typedef struct
+{
+	int position;
+	byte event_id;
+	int value;
+	
+}PxEvent;
+
+typedef struct
+{
+	PxEvent Events[16383];
+	int next;
+	bool unused;
+
+}PxUnit;
+
+BOOL ConvertPtcopData(PxUnit * Units, MASTERV5BLOCK song_data);
+
+enum
+{
+	EVENTKIND_NULL  = 0 ,//  0
+
+	EVENTKIND_ON        ,//  1
+	EVENTKIND_KEY       ,//  2
+	EVENTKIND_PAN_VOLUME,//  3
+	EVENTKIND_VELOCITY  ,//  4
+	EVENTKIND_VOLUME    ,//  5
+	EVENTKIND_PORTAMENT ,//  6
+	EVENTKIND_BEATCLOCK ,//  7
+	EVENTKIND_BEATTEMPO ,//  8
+	EVENTKIND_BEATNUM   ,//  9
+	EVENTKIND_REPEAT    ,// 10
+	EVENTKIND_LAST      ,// 11
+	EVENTKIND_VOICENO   ,// 12
+	EVENTKIND_GROUPNO   ,// 13
+	EVENTKIND_TUNING    ,// 14
+	EVENTKIND_PAN_TIME  ,// 15
+
+	EVENTKIND_NUM       ,// 16
+};
+
+BOOL ConvertPtcopData(PxUnit * Units, MASTERV5BLOCK song_data)
+{
+	MUSICINFO& info = org_data.info;
+	NOTELIST* np;
+	
+	int resolution = 10; //notes above 255 length are cut off
+	
+	//simple maths up ahead
+	double exponent = ((song_data.tempo - 16243.57) / 185.45);
+	int wait = (60000 / pow(2.71828, exponent)) / 4;
+	info.wait = (int)(wait / resolution);//todo, convert based on number of steps
+	if(!info.wait) info.wait = 1;
+	
+	info.line = song_data.beat;
+	info.dot = 4 * resolution;
+	info.repeat_x = (song_data.repeat / song_data.beat / 0x1E0);
+	info.end_x = 555555;//(song_data.last / song_data.beat / 0x1E0);
+	
+	//move this **** to rainfunction.cpp
+	
+	for (int i=0; i < 8; i++) //iterate through UNIT
+	{
+		PxUnit& unit = Units[i];
+		PxEvent* events = unit.Events;
+		
+		bool isDrum;
+		int lowLength = 9999999;
+		int drumThreshold = 4;
+		int drumTrack;
+		int lastPos = 0;
+		
+		bool on = true;
+		int length = 1;
+		int newLength = 1;
+	
+		
+		bool newPan = true;
+		bool keyChange = true;
+		bool newVolume = true;
+		
+		int pitch = 0x1000;
+		int levelPan = 6 * 11;
+		int velocity = 10;
+		int levelVolume = 64;
+		
+		if(unit.unused) continue; //is this really needed?
+	
+		if(i >= drumThreshold)
+		{
+			isDrum = true;
+			drumTrack = i+8-drumThreshold;
+			np = info.tdata[drumTrack].note_p;
+			info.tdata[drumTrack].note_list = info.tdata[drumTrack].note_p;
+		}
+		else
+		{
+			isDrum = false;
+			np = info.tdata[i].note_p;
+			info.tdata[i].note_list = info.tdata[i].note_p;
+		}
+		np->from = NULL;
+		np->to = (np + 1);
+		np++; //first event being completely invalid causes the rest of the song to not play
+			  //if you don't start from the next measure
+		
+		for(int j=0; j <= unit.next; j++)
+		{
+			PxEvent e = events[j];
+			printf("Unit: %i ", i);
+			printf("Event: %i Position: %i Event Id; %i Value: %i \n", j, e.position, e.event_id, e.value);
+			switch(e.event_id) //unimplemented events can't trigger note placement
+			{
+				case EVENTKIND_NULL:
+				case EVENTKIND_PORTAMENT:
+				case EVENTKIND_BEATCLOCK:
+				case EVENTKIND_BEATTEMPO:
+				case EVENTKIND_BEATNUM:  
+				case EVENTKIND_REPEAT:   
+				case EVENTKIND_LAST:     
+				case EVENTKIND_VOICENO:  
+				case EVENTKIND_GROUPNO:  
+				case EVENTKIND_TUNING:   
+				case EVENTKIND_PAN_TIME: 
+				continue;
+				break;
+			}
+			if (e.position != lastPos || e.position == -1)
+			{
+			
+				//commit note
+				//option to ignore pitch bends...
+				
+				//handle case where there's already a note in that position
+				//push note forward where there's room, or ignore
+				// and count how many times this happens
+				
+				//pitch bends do not create a on event, so the length is implicitly carried from the remaining time of the initial note
+				
+				if(j > 0) 
+				{
+					np->from = (np - 1); //not setting the from pointer on all events seems to be fine...
+										 //but you just can't access the previous linked note from that pointer
+										 //it seems to crash half the time in PutNotes while checking if the ptr is null
+										 //if the froms/to's are (properly?) set
+										 //but when it doesn't crash the notes seem to play fine,
+										 //just that nothing renders
+										 //other times only one sound plays ever
+				}
+				else
+				{
+					np->from = NULL;
+				}
+				if(e.position == -1)// this is the last note
+				{
+					np->to = NULL;
+				}
+				else
+				{
+					np->to = (np + 1);
+				}
+				int overlap = lastPos / (120 / resolution);
+				printf ("event pos: %i np->x %i \n", lastPos, overlap); /////////////////why do (parts of) tracks disappear randomly?
+				if (np->from && overlap <= np->from->x && np->from->x != 0)         //why don't drums work?
+				                                                        //implement overlap properly
+				{
+					lastPos = e.position; continue;
+				}
+				np->x = overlap;
+				
+				/////////LENGTH HANDLING
+				if(isDrum)
+				{
+					np->length = 1;
+				}
+				else if(keyChange && !on)
+				{
+					/*pitch = KEYDUMMY; // ignore pitch bends
+					np->length = 1;
+					newPan = true;
+					newVolume = true;*/
+					//changing key
+					
+					//also affects pan and volume events too, fix
+					NOTELIST* lastOn = np->from;
+					if(np->from)
+					{
+						//DIRTY hack: we know that pitch bends only exist if the last on's length is above 1... maybe
+						while (lastOn->length <= 1)
+						{
+							printf("laston length %i skipping \n", lastOn->length);
+							lastOn--;
+						}
+							
+						int difference = (np->x - lastOn->x);
+						printf("difference %i skipping \n", difference);
+						int newLength = lastOn->length - difference;
+						printf("newLength %i \n", newLength);
+						lastOn->length -= newLength;
+						np->length = newLength;
+					}
+					else
+					{
+						printf("WHAT????//?????????????//?????????????//?????????????//?????????????//?????????????");
+						np->length = length; //?????????????
+					}
+
+					newPan = true;
+					newVolume = true;
+				}
+				else if(on) //given that i set the length (and all the other values) to 1 after every note placement,
+							//are any of these bools neccesary?
+				{
+					np->length = length / (120 / resolution);
+					newPan = true;
+					newVolume = true;
+				}
+				else // only a volume/pan event
+				{
+					pitch = KEYDUMMY;
+					np->length = 1;
+				}
+				if(!np->length) np->length = 1;
+				
+				
+				if(pitch == KEYDUMMY)
+				{
+					np->y = pitch;
+				}
+				else
+				{
+					np->y = (pitch - 0x3F00) / 0x100;
+				}
+				if(newVolume)
+				{
+					np->volume = (velocity); //calc
+				}
+				else
+				{
+					np->volume = VOLDUMMY;
+				}
+				
+				if(newPan)
+				{
+					np->pan = levelPan / 0xB;
+				}
+				else
+				{
+					np->pan = PANDUMMY;
+				}
+				newPan = false;
+				keyChange = false;
+				newVolume = false;
+				on = false;
+				
+				//printf("np from %i np to %i", np->from, np->to);
+				
+				np++;
+				
+				length = 1;
+				pitch = KEYDUMMY;
+				
+				lastPos = e.position;
+			}
+
+			switch(e.event_id)
+			{
+				case EVENTKIND_ON:			
+					length = e.value;
+					if(length <= lowLength) lowLength = length; 
+					on = true;
+					break;
+				case EVENTKIND_KEY:			pitch = e.value; keyChange = true; break; //DISABLE OPTION
+				case EVENTKIND_PAN_VOLUME:	levelPan = e.value; newPan = true; break;
+				case EVENTKIND_VELOCITY:	velocity = e.value; newVolume = true; break;
+				case EVENTKIND_VOLUME:		levelVolume = e.value; newVolume = true; break;
+				default: break;
+			}
+	
+		}
+		
+		//np->to = NULL;
+		
+		printf("lowest length %i \n", lowLength);
+		
+		
+	}
+	
+	//pasted from loadmusicdata
+	//can't seam to load another ptcop after already loading one,
+	//even though i don't see anything the other load functions do differently
+	int i;
+	for(int j = 0; j < MAXMELODY; j++)
+		MakeOrganyaWave(j,info.tdata[j].wave_no, info.tdata[j].pipi);
+	for(int j = MAXMELODY; j < MAXTRACK; j++){
+		i = info.tdata[j].wave_no;
+		InitDramObject(dram_name[i],j-MAXMELODY);
+	}
+	//Show to player
+	char str[32];
+	org_data.SetPlayPointer(0);//Cueing
+	scr_data.SetHorzScroll(0);
+	itoa(info.wait,str,10);
+	SetDlgItemText(hDlgPlayer,IDE_VIEWWAIT,str);
+	SetDlgItemText(hDlgPlayer,IDE_VIEWMEAS,"0");
+	SetDlgItemText(hDlgPlayer,IDE_VIEWXPOS,"0");
+
+	MakeMusicParts(info.line,info.dot);//Generate parts
+	MakePanParts(info.line,info.dot);
+	//PutRecentFile(music_file);
+	//↓2014.05.06 A
+	if(SaveWithInitVolFile != 0){
+		AutoLoadPVIFile();
+	}
+	return TRUE;
+}
+
+BOOL LoadPtcopData(void)
+{
+	static const char* _code_proj_v5      = "PTCOLLAGE-071119";
+	static const char* _code_MasterV5     = "MasterV5";
+	static const char* _code_Event_V5     = "Event V5";
+	
+	//ORGANYADATA org_data;
+	
+	PxUnit Units[8];
+	
+	int numEvents;
+	int blockSize;
+	
+	int position;
+	int absolutePosition = 0;
+	
+	int unit_id;
+	int event_id;
+	int event_value;
+	
+	char pass_check[16];
+	char tag_check[8];
+	
+	MASTERV5BLOCK song_data;
+
+	FILE *fp;
+	if((fp=fopen(music_file,"rb"))==NULL)
+	{
+		msgbox(hWnd,IDS_WARNING_ACCESS_FILE,IDS_ERROR_LOAD,MB_OK);
+		return(FALSE);
+	}
+	//verify ptcop header
+	fread(&pass_check[0], sizeof(char), 16, fp);
+	if( memcmp(pass_check, _code_proj_v5, 16) )
+	{
+		fclose(fp);
+		msgbox(hWnd,IDS_WARNING_PTCOP,IDS_ERROR_LOAD,MB_OK);
+		return FALSE;
+	}
+
+	//seek to masterv5, skipping some int
+	fseek(fp, 4, SEEK_CUR);
+	fread(&tag_check[0], sizeof(char), 8, fp);
+	if( memcmp(tag_check, _code_MasterV5, 8) )
+	{
+		fclose(fp);
+		MessageBox(hWnd,"masterv5 missing","Errrrrrrrrror (Load)",MB_OK);
+		//msgbox(hWnd,IDS_WARNING_PTCOP,IDS_ERROR_LOAD,MB_OK);
+		return FALSE;
+	}
+	
+	fread(&blockSize, 4, 1, fp);
+	printf("MasterV5 size: %i \n", blockSize);
+	
+	fread(&song_data, sizeof(MASTERV5BLOCK), 1, fp);
+	printf("beat: %i tempo: %i repeat: %i last: %i \n", song_data.beat, song_data.tempo, song_data.repeat, song_data.last);
+	
+    fread(&tag_check[0], sizeof(char), 8, fp);
+	if( memcmp(tag_check, _code_Event_V5, 8) )
+	{
+		printf("HELP ME %s", tag_check);
+		fclose(fp);
+		MessageBox(hWnd,"eventv5 missing","Errrrrrrrrror (Load)",MB_OK);
+		//msgbox(hWnd,IDS_WARNING_PTCOP,IDS_ERROR_LOAD,MB_OK);
+		return FALSE;
+	}
+	
+	fread(&blockSize, 4, 1, fp);
+	printf("EventV5 size: %i \n", blockSize);
+	
+	fread(&numEvents, sizeof(int), 1, fp);
+	printf("NumEvents %i \n", numEvents);
+	
+	for( int i = 0; i < numEvents; i++ )
+	{
+		position = decodePxInt(fp);
+		fread(&unit_id, 1, 1, fp);
+		fread(&event_id, 1, 1, fp);
+		event_value = decodePxInt(fp);
+		
+		absolutePosition += position;
+		
+		//printf("Event: %i Position: %i Unit Id: %i Event Id; %i Value: %i \n", i, absolutePosition, unit_id, event_id, event_value);
+		
+		int& next = Units[unit_id].next;
+		Units[unit_id].Events[next].position = absolutePosition;
+		Units[unit_id].Events[next].event_id = event_id;
+		Units[unit_id].Events[next].value = event_value;
+		next++;
+	}
+	
+	for (int i=0; i < 8; i++) //iterate through UNIT
+	{
+		int& next = Units[i].next;
+		Units[i].Events[next].position = -1; //end of events marker...
+		Units[i].Events[next].event_id = 1;
+		
+		if(next < 2)
+		{
+			Units[i].unused = true;
+		
+		}
+		else
+		{
+			Units[i].unused = false;
+		}
+	}
+	//here we go
+	ConvertPtcopData(Units, song_data);
+	
+	fclose(fp);
+	
+	return TRUE;
+	
 }

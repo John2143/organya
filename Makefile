@@ -1,4 +1,4 @@
-CC := g++ -std=c++11 -g
+CC := g++ -O3 -std=c++11 -g
 CFLAGS := -Wall -Wextra -Iinclude -Wno-unused-parameter -Wno-write-strings -Wno-char-subscripts -Wno-unused-but-set-variable -Wno-unused-variable
 
 SRC=source
@@ -13,7 +13,7 @@ RCTS=$(patsubst %.rc,%.rct,$(RCSS))
 
 EXECUTABLE := organya
 
-LIBRARIES:= -L. -lWinMM -ldsound -mwindows
+LIBRARIES:= -L. -lWinMM -ldsound -mwindows -static-libgcc -static-libstdc++ 
 ifeq ($(shell uname),Linux)
 LIBRARIES += -lm
 endif

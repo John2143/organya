@@ -918,10 +918,12 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "overwrite save (&S)\tCtrl+S",     IDM_SAVEOVER
         MENUITEM "Save as a different name (&W)...\tShift+Ctrl+S", IDM_SAVENEW
+		MENUITEM SEPARATOR
+		MENUITEM "▼ import",             ID_IMPORT, INACTIVE
+		MENUITEM "pxtone COLLAGE Project(*.ptcop) (&M)...\tCtrl+Alt+P", IDM_IMPORT_PTCOP
         MENUITEM SEPARATOR
         MENUITEM "▼ export",             ID_EXPORT, INACTIVE
         MENUITEM "standardMIDIFile(*.mid) (&M)...\tCtrl+Alt+M", IDM_EXPORT_MIDI
-        MENUITEM SEPARATOR
         MENUITEM SEPARATOR
         MENUITEM "▼ Recent file",       ID_MENUITEM40135, INACTIVE
         MENUITEM "1",                           IDM_RECENT1
@@ -1303,6 +1305,7 @@ BEGIN
     "O",            ID_AC_PRESS_RIGHT,      VIRTKEY, NOINVERT
     "O",            ID_AC_MENUOPEN,         VIRTKEY, CONTROL, NOINVERT
     "P",            ID_AC_PRESS_LEFT,       VIRTKEY, NOINVERT
+	"P",            ID_AC_PTCOP,            VIRTKEY, CONTROL, ALT, NOINVERT
     "Q",            ID_AC_Q,                VIRTKEY, NOINVERT
     "Q",            ID_AC_SQ,               VIRTKEY, SHIFT, NOINVERT
     "R",            ID_AC_R,                VIRTKEY, NOINVERT
@@ -1564,6 +1567,9 @@ BEGIN
     IDS_STRING116           "All tracks From the beginning to the end"
     IDS_STRING117           "Wave-%02d*"
     IDS_STRING118           "Wave-%02d"
+	IDS_STRING119           "Import PxTone Collage .ptcop format"
+	IDS_STRING120           "PxTone Collage Project[*.ptcop]!*.ptcop!All formats [*.*]!*.*!!"
+	IDS_WARNING_PTCOP       "Invalid file or wrong ptcop version (needs PTCOLLAGE 071119)"
 END
 
 #endif    // Japanese resources

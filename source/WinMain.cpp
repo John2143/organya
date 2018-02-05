@@ -570,6 +570,33 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 				SetTitlebarText(music_file);//Title name set
 				ResetTitlebarChange();
 				break;
+			case IDM_IMPORT_PTCOP:
+			case ID_AC_PTCOP:
+				if(CancelDeleteCurrentData(CDCD_LOAD))break;
+
+				if(GetFileNameLoadPtcop(hWnd,MessageString[IDS_STRING119]) != MSGLOADOK)break;//"Reading song data"
+				
+				//ClearUndo();
+				//this function gives printf insane values for some reason, but only half way through printing all the values
+				
+				org_data.InitOrgData();
+				LoadPtcopData();
+				
+				//org_data.InitOrgData();
+				//org_data.LoadMusicData();
+				SetTitlebarText(music_file);//Title name set
+				//Show to player
+				org_data.GetMusicInfo( &mi );
+				SetDlgItemInt(hDlgTrack,IDE_VIEWWAIT,mi.wait,TRUE );
+				//SetDlgItemInt(hDlgTrack,IDE_VIEWTRACK,0,TRUE );
+				SetDlgItemText(hDlgTrack,IDE_VIEWTRACK,"1");
+
+				ClearEZC_Message();
+				SelectReset();
+				org_data.PutMusic();
+				RedrawWindow(hWnd,&rect,NULL,RDW_INVALIDATE|RDW_ERASENOW);
+				for(i=0;i<8;i++)ucMIDIProgramChangeValue[i]=255;
+				break;
 			case IDM_EXPORT_MIDI: //Export 2014.05.11
 			case ID_AC_MIDI:
 				
@@ -1059,6 +1086,7 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 		default: SetDlgItemText(hDlgEZCopy, IDC_MESSAGE, ""); break;
 		case ID_MENUITEM40265:      SetDlgItemText(hDlgEZCopy, IDC_MESSAGE, MessageString[IDS_STRING78]); break;
 		case IDM_EXPORT_MIDI:       SetDlgItemText(hDlgEZCopy, IDC_MESSAGE, MessageString[IDS_STRING79]); break;
+		case IDM_IMPORT_PTCOP:      SetDlgItemText(hDlgEZCopy, IDC_MESSAGE, MessageString[IDS_STRING79]); break;
 		case IDM_LOAD2:             SetDlgItemText(hDlgEZCopy, IDC_MESSAGE, MessageString[IDS_STRING80]); break;
 		case IDM_SAVEOVER:          SetDlgItemText(hDlgEZCopy, IDC_MESSAGE, music_file); break; 
 		case IDM_SAVENEW:           SetDlgItemText(hDlgEZCopy, IDC_MESSAGE, MessageString[IDS_STRING81]); break; 

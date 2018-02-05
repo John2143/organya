@@ -120,6 +120,9 @@
 #define IDS_STRING116                   116
 #define IDS_STRING117                   117
 #define IDS_STRING118                   118
+#define IDS_STRING119                   119
+#define IDS_STRING120                   120
+#define IDS_WARNING_PTCOP               121
 #define IDR_ACCELERATOR1                164
 #define IDD_DIALOGOPEN                  190
 #define IDD_MIDI                        232
@@ -638,14 +641,17 @@
 #define IDM_AUTOLOADPVI                 40255
 #define IDM_DUMMY                       40256
 #define IDM_DLGSWAP                     40257
+#define IDM_IMPORT_PTCOP                40258
 #define IDM_EXPORT_MIDI                 40259
 #define ID_AC_DLG_SWAP                  40260
+#define ID_IMPORT                       40261
 #define ID_EXPORT                       40262
 #define ID_AC_MIDI                      40264
 #define ID_MENUITEM40265                40265
 #define ID_AC_INIT                      40266
 #define ID_AC_PAN_REVERSE               40267
 #define ID_AC_HELP                      40268
+#define ID_AC_PTCOP                     40269
 #define ID_AC_CA0                       40270
 #define ID_AC_CA1                       40271
 #define ID_AC_CA2                       40272

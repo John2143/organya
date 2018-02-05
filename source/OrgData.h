@@ -49,9 +49,8 @@ typedef struct MUSICINFO{
 typedef struct OrgData{
 	OrgData();//constructor
 	~OrgData();//Destructor
-	private:
-		MUSICINFO info;
 	public:
+		MUSICINFO info;
 		//unsigned char *noteon;
 		BOOL SetNote_afterSetLength(long x);
 		BOOL SetNote_onlyLength(long x, long Length);
