@@ -1,4 +1,4 @@
-CC := g++ -O3 -std=c++11 -g
+CC := g++ -g -std=c++11
 CFLAGS := -Wall -Wextra -Iinclude -Wno-unused-parameter -Wno-write-strings -Wno-char-subscripts -Wno-unused-but-set-variable -Wno-unused-variable
 
 SRC=source
@@ -11,11 +11,11 @@ RCSS=$(wildcard $(SRC)/*.rc)
 RCOS=$(patsubst %.rc,%.o,$(RCSS))
 RCTS=$(patsubst %.rc,%.rct,$(RCSS))
 
-EXECUTABLE := organya
+EXECUTABLE := organyaa
 
-LIBRARIES:= -L. -lWinMM -ldsound -mwindows -static-libgcc -static-libstdc++ 
+LIBRARIES:= -L. -lWinMM -ldsound -mwindows -static-libgcc -static-libstdc++ -static
 ifeq ($(shell uname),Linux)
-LIBRARIES += -lm
+LIBRARIES += -lm 
 endif
 
 .PHONY: clean all

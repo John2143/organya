@@ -576,14 +576,12 @@ LRESULT CALLBACK WndProc(HWND hwnd,UINT message,WPARAM wParam,LPARAM lParam)
 
 				if(GetFileNameLoadPtcop(hWnd,MessageString[IDS_STRING119]) != MSGLOADOK)break;//"Reading song data"
 				
-				//ClearUndo();
+				ClearUndo();
 				//this function gives printf insane values for some reason, but only half way through printing all the values
 				
 				org_data.InitOrgData();
 				LoadPtcopData();
 				
-				//org_data.InitOrgData();
-				//org_data.LoadMusicData();
 				SetTitlebarText(music_file);//Title name set
 				//Show to player
 				org_data.GetMusicInfo( &mi );

@@ -9,6 +9,9 @@
 #include "rxoFunction.h"
 #include "util.h"
 #include "math.h"
+#include <algorithm>
+
+#define NUMUNIT 16
 
 RECT CmnDialogWnd;
 int count_of_INIT_DONE;
@@ -345,7 +348,6 @@ int decodePxInt(FILE * fp)
 {
 	int v = 0x00;
 	fread(&v, 1, 1, fp);
-	//printf("%i\n", v);
 	if (v > 0x7f)
 		return v + 0x80*(decodePxInt(fp) - 1);
 	else
@@ -356,11 +358,10 @@ int decodePxInt(FILE * fp)
 
 typedef struct __attribute__((packed))
 {
-	short unknown1 = 0x1E0;
-	byte beat;
-	short unknown2 = 0;
-	short tempo;
-	int repeat;
+	short beatclock;      //number of ticks per beat
+	byte beat;            //number of beats per measure
+	float beattempo;      //bpm
+	int repeat;           
 	int last;
 	
 }MASTERV5BLOCK;
@@ -372,12 +373,13 @@ typedef struct
 	int position;
 	byte event_id;
 	int value;
+	int relativePos;
 	
 }PxEvent;
 
 typedef struct
 {
-	PxEvent Events[16383];
+	PxEvent Events[8000];
 	int next;
 	bool unused;
 
@@ -389,8 +391,8 @@ enum
 {
 	EVENTKIND_NULL  = 0 ,//  0
 
-	EVENTKIND_ON        ,//  1
-	EVENTKIND_KEY       ,//  2
+	EVENTKIND_ON        ,//  1 
+	EVENTKIND_KEY       ,//  2 
 	EVENTKIND_PAN_VOLUME,//  3
 	EVENTKIND_VELOCITY  ,//  4
 	EVENTKIND_VOLUME    ,//  5
@@ -413,47 +415,73 @@ BOOL ConvertPtcopData(PxUnit * Units, MASTERV5BLOCK song_data)
 	MUSICINFO& info = org_data.info;
 	NOTELIST* np;
 	
-	int resolution = 10; //notes above 255 length are cut off
+	//1,  2  3, 4, 5, 6, 7,  8, 9,  10, 11,  12
+	//120,60,40,30,24,20,17*,15,13*,12, 10.9,10
+	int resolution = 12; //notes above 255 length are cut off
+	int drumThreshold = 4;
+	int pitchOffset = 0;
+	bool ignorePitchBend = false;
+	bool clampPanValues = true;//pxtone's pan is less extreme, but org's pan really goes from one ear to the next
+	bool allowOverlapNotes = false;
+	int defaultWaveNumbers[16];
 	
-	//simple maths up ahead
-	double exponent = ((song_data.tempo - 16243.57) / 185.45);
-	int wait = (60000 / pow(2.71828, exponent)) / 4;
-	info.wait = (int)(wait / resolution);//todo, convert based on number of steps
-	if(!info.wait) info.wait = 1;
+	bool repeatAtEnd = false;
+	int highPos = 0;
 	
-	info.line = song_data.beat;
+	int overlappingNotes[NUMUNIT];
+	int lowestNoteLengths[NUMUNIT];
+	int lowestNotePos[NUMUNIT];
+	int inaccurateNotePos[NUMUNIT];
+	
+	int numOrgEventsTotal = 0;
+	
 	info.dot = 4 * resolution;
-	info.repeat_x = (song_data.repeat / song_data.beat / 0x1E0);
-	info.end_x = 555555;//(song_data.last / song_data.beat / 0x1E0);
+	info.line = song_data.beat;
+	
+	float wait = (60000 / song_data.beattempo) / info.line;
+	info.wait = round(wait / resolution);
+	if(info.wait <= 0) info.wait = 1;
+	
+	info.repeat_x = (song_data.repeat / song_data.beatclock) * info.dot;
+	info.end_x = (song_data.last / song_data.beatclock) * info.dot;
+	
+	if(info.end_x == 0) repeatAtEnd = true;
 	
 	//move this **** to rainfunction.cpp
 	
-	for (int i=0; i < 8; i++) //iterate through UNIT
+	for (int i=0; i < NUMUNIT; i++) //iterate through UNIT
 	{
 		PxUnit& unit = Units[i];
 		PxEvent* events = unit.Events;
+		NOTELIST* lastOn = NULL;
 		
 		bool isDrum;
-		int lowLength = 9999999;
-		int drumThreshold = 4;
 		int drumTrack;
 		int lastPos = 0;
 		
-		bool on = true;
+		bool on = false;
 		int length = 1;
 		int newLength = 1;
-	
-		
+
 		bool newPan = true;
-		bool keyChange = true;
+		bool keyChange = false;
 		bool newVolume = true;
+		bool volPanEve = false;
 		
-		int pitch = 0x1000;
-		int levelPan = 6 * 11;
-		int velocity = 10;
-		int levelVolume = 64;
+		int pitch = 24576; //default pitch for samples, A 4?
+		const double panDivisor = 10.666666666;
+		int levelPan = 64;
+		int velocity = 104;
+		int levelVolume = 104;
 		
-		if(unit.unused) continue; //is this really needed?
+		int numOrgEvents = 0;
+		
+		overlappingNotes[i] = 0;
+		lowestNoteLengths[i] = 99999999;
+		lowestNotePos[i] = 99999999;
+		inaccurateNotePos[i] = 0;
+		
+		if(unit.unused) continue;
 	
 		if(i >= drumThreshold)
 		{
@@ -470,14 +498,14 @@ BOOL ConvertPtcopData(PxUnit * Units, MASTERV5BLOCK song_data)
 		}
 		np->from = NULL;
 		np->to = (np + 1);
-		np++; //first event being completely invalid causes the rest of the song to not play
+		//np++; //first event being completely invalid causes the rest of the song to not play
 			  //if you don't start from the next measure
 		
 		for(int j=0; j <= unit.next; j++)
 		{
 			PxEvent e = events[j];
-			printf("Unit: %i ", i);
-			printf("Event: %i Position: %i Event Id; %i Value: %i \n", j, e.position, e.event_id, e.value);
+			//printf("Unit: %i ", i);
+			//printf("Event: %i Position: %i Event Id; %i Value: %i \n", j, e.position, e.event_id, e.value);
 			switch(e.event_id) //unimplemented events can't trigger note placement
 			{
 				case EVENTKIND_NULL:
@@ -494,11 +522,11 @@ BOOL ConvertPtcopData(PxUnit * Units, MASTERV5BLOCK song_data)
 				continue;
 				break;
 			}
+			if(e.relativePos <= lowestNotePos[i] && e.relativePos > 0) lowestNotePos[i] = e.relativePos;
+			
 			if (e.position != lastPos || e.position == -1)
 			{
-			
-				//commit note
-				//option to ignore pitch bends...
+				//---------commit note
 				
 				//handle case where there's already a note in that position
 				//push note forward where there's room, or ignore
@@ -506,9 +534,9 @@ BOOL ConvertPtcopData(PxUnit * Units, MASTERV5BLOCK song_data)
 				
 				//pitch bends do not create a on event, so the length is implicitly carried from the remaining time of the initial note
 				
-				if(j > 0) 
+				if(numOrgEvents > 0) 
 				{
-					np->from = (np - 1); //not setting the from pointer on all events seems to be fine...
+					//np->from = (np - 1);//not setting the from pointer on all events seems to be fine...
 										 //but you just can't access the previous linked note from that pointer
 										 //it seems to crash half the time in PutNotes while checking if the ptr is null
 										 //if the froms/to's are (properly?) set
@@ -519,7 +547,9 @@ BOOL ConvertPtcopData(PxUnit * Units, MASTERV5BLOCK song_data)
 				else
 				{
 					np->from = NULL;
+					//lastOn = np; // don't know
 				}
+				
 				if(e.position == -1)// this is the last note
 				{
 					np->to = NULL;
@@ -528,81 +558,109 @@ BOOL ConvertPtcopData(PxUnit * Units, MASTERV5BLOCK song_data)
 				{
 					np->to = (np + 1);
 				}
-				int overlap = lastPos / (120 / resolution);
-				printf ("event pos: %i np->x %i \n", lastPos, overlap); /////////////////why do (parts of) tracks disappear randomly?
-				if (np->from && overlap <= np->from->x && np->from->x != 0)         //why don't drums work?
+				
+				int overlap = lastPos / (song_data.beatclock / info.line / resolution);
+				//printf ("event pos: %i np->x %i \n", lastPos, overlap); 
+				if ((np-1) && overlap <= (np-1)->x && numOrgEvents > 0)         ///////////////////////placeholder until np->from works again
 				                                                        //implement overlap properly
 				{
-					lastPos = e.position; continue;
+					overlappingNotes[i]++; 
+					if(!allowOverlapNotes)
+					{
+						lastPos = e.position; 
+						continue;
+					}
 				}
 				np->x = overlap;
+				if(overlap > highPos) highPos = overlap;
+
+				int inaccuracy = np->x * (song_data.beatclock / info.line / resolution);
+				if(inaccuracy != lastPos)
+				{
+					inaccurateNotePos[i]++;
+				}
 				
-				/////////LENGTH HANDLING
-				if(isDrum)
+				//-------------LENGTH HANDLING
+				if(isDrum && on)
 				{
 					np->length = 1;
 				}
 				else if(keyChange && !on)
 				{
-					/*pitch = KEYDUMMY; // ignore pitch bends
-					np->length = 1;
-					newPan = true;
-					newVolume = true;*/
-					//changing key
-					
-					//also affects pan and volume events too, fix
-					NOTELIST* lastOn = np->from;
-					if(np->from)
+					if(ignorePitchBend)
 					{
-						//DIRTY hack: we know that pitch bends only exist if the last on's length is above 1... maybe
-						while (lastOn->length <= 1)
-						{
-							printf("laston length %i skipping \n", lastOn->length);
-							lastOn--;
-						}
-							
-						int difference = (np->x - lastOn->x);
-						printf("difference %i skipping \n", difference);
-						int newLength = lastOn->length - difference;
-						printf("newLength %i \n", newLength);
-						lastOn->length -= newLength;
-						np->length = newLength;
+						np->y = KEYDUMMY;
+						np->length = 1;
+						newPan = true;
+						newVolume = true;
+						volPanEve = true;
 					}
 					else
 					{
-						printf("WHAT????//?????????????//?????????????//?????????????//?????????????//?????????????");
-						np->length = length; //?????????????
+						//changing key
+						if(lastOn)
+						{
+								
+							int difference = (np->x - lastOn->x);
+							//printf("difference %i skipping \n", difference);
+							int newLength = lastOn->length - difference;
+							//printf("newLength %i \n", newLength);
+							lastOn->length -= newLength;
+							np->length = newLength;
+							lastOn = np;
+						}
+						else
+						{
+							printf("WHAT????//?????????????//?????????????//?????????????//?????????????//?????????????");
+							np->length = 1; //?????????????
+						}
+						newPan = true;
+						newVolume = true;
 					}
-
-					newPan = true;
-					newVolume = true;
 				}
-				else if(on) //given that i set the length (and all the other values) to 1 after every note placement,
-							//are any of these bools neccesary?
+				else if(on)
 				{
-					np->length = length / (120 / resolution);
+					int overLimit = length / (song_data.beatclock / info.line / resolution);
+					if (overLimit >= 255) overLimit = 255;
+					np->length = overLimit;
 					newPan = true;
 					newVolume = true;
+					//it's possible for the length of a previous pitch bend to be really long, which should never happen but
+					//store true length
+					if (lastOn && lastOn->x + lastOn->length >= np->x) lastOn->length -= (lastOn->x + lastOn->length) - np->x;
+					
+					lastOn = np;
 				}
 				else // only a volume/pan event
 				{
-					pitch = KEYDUMMY;
+					np->y = KEYDUMMY;
 					np->length = 1;
+					volPanEve = true;
 				}
 				if(!np->length) np->length = 1;
 				
+				if(!volPanEve)
+				{
+					np->y = ((pitch - 0x3F00) / 0x100) + pitchOffset;
+				}
 				
-				if(pitch == KEYDUMMY)
-				{
-					np->y = pitch;
-				}
-				else
-				{
-					np->y = (pitch - 0x3F00) / 0x100;
-				}
 				if(newVolume)
 				{
-					np->volume = (velocity); //calc
+					/*double velocityDiv = (velocity / 1.20);
+					double volumeDiv = (levelVolume / 1.28);
+					double volumePct = (levelVolume / 100.00);
+					printf("vd %f vd %f vp %f \n", velocityDiv, volumeDiv, volumePct);*/
+					double work = 1;
+					work = (work * velocity) / 128;
+					work = (work * levelVolume) / 128;
+					work = log(work*12.8) * 99.6295206; //approximate calculation, mostly a guess but it sounds right
+					
+					//work = (work * 254);
+					//work = work + (work * 0.4); //apply a nice 40% bonus
+					
+					np->volume = std::min(std::max((int)(work), 1), 254); //most songs don't go over 104 velocity/volume
+					//(velocity + levelVolume)
+					//velocityDiv + volumeDiv) * (volumePct)
 				}
 				else
 				{
@@ -611,7 +669,8 @@ BOOL ConvertPtcopData(PxUnit * Units, MASTERV5BLOCK song_data)
 				
 				if(newPan)
 				{
-					np->pan = levelPan / 0xB;
+					np->pan = round((double)levelPan / panDivisor);
+					//printf("levelpan %i/ divide %f / pan %i \n", levelPan, (double)levelPan / panDivisor, np->pan);
 				}
 				else
 				{
@@ -621,13 +680,15 @@ BOOL ConvertPtcopData(PxUnit * Units, MASTERV5BLOCK song_data)
 				keyChange = false;
 				newVolume = false;
 				on = false;
+				volPanEve = false;
 				
 				//printf("np from %i np to %i", np->from, np->to);
 				
 				np++;
+				numOrgEvents++;
 				
 				length = 1;
-				pitch = KEYDUMMY;
+				//if(!isDrum) pitch = KEYDUMMY; //pitch events are implicitly carried over
 				
 				lastPos = e.position;
 			}
@@ -636,7 +697,7 @@ BOOL ConvertPtcopData(PxUnit * Units, MASTERV5BLOCK song_data)
 			{
 				case EVENTKIND_ON:			
 					length = e.value;
-					if(length <= lowLength) lowLength = length; 
+					if(length <= lowestNoteLengths[i] && length > 0) lowestNoteLengths[i] = length; 
 					on = true;
 					break;
 				case EVENTKIND_KEY:			pitch = e.value; keyChange = true; break; //DISABLE OPTION
@@ -649,15 +710,26 @@ BOOL ConvertPtcopData(PxUnit * Units, MASTERV5BLOCK song_data)
 		}
 		
 		//np->to = NULL;
-		
-		printf("lowest length %i \n", lowLength);
-		
+		numOrgEventsTotal += numOrgEvents;
 		
 	}
 	
+	for(int i=0;i<NUMUNIT;i++)
+	{
+		printf("track %i: lowestlength: %i lowestpos: %i overlap: %i inaccuracy: %i \n", i, lowestNoteLengths[i], lowestNotePos[i], overlappingNotes[i], inaccurateNotePos[i]);
+	}
+	printf("numOrgEventsTotal: %i", numOrgEventsTotal);
+	
+	if(repeatAtEnd)
+	{
+		info.end_x = ceil((double)highPos / (info.line * info.dot)) * (info.line * info.dot);
+	}
+	
+	//sort note data, since the "going back" link of a linked list is completely gone
+	//this is no longer true, but undefined behavior still causes crashes so keep this in
+	org_data.SortNotes();
+	
 	//pasted from loadmusicdata
-	//can't seam to load another ptcop after already loading one,
-	//even though i don't see anything the other load functions do differently
 	int i;
 	for(int j = 0; j < MAXMELODY; j++)
 		MakeOrganyaWave(j,info.tdata[j].wave_no, info.tdata[j].pipi);
@@ -692,17 +764,18 @@ BOOL LoadPtcopData(void)
 	
 	//ORGANYADATA org_data;
 	
-	PxUnit Units[8];
+	PxUnit Units[NUMUNIT];
+	memset(&Units, 0, sizeof(Units));
+
+	int numEvents = 0;
+	int blockSize = 0;
 	
-	int numEvents;
-	int blockSize;
-	
-	int position;
+	int position = 0;
 	int absolutePosition = 0;
 	
-	int unit_id;
-	int event_id;
-	int event_value;
+	int unit_id = 0;
+	int event_id = 0;
+	int event_value = 0;
 	
 	char pass_check[16];
 	char tag_check[8];
@@ -739,7 +812,7 @@ BOOL LoadPtcopData(void)
 	printf("MasterV5 size: %i \n", blockSize);
 	
 	fread(&song_data, sizeof(MASTERV5BLOCK), 1, fp);
-	printf("beat: %i tempo: %i repeat: %i last: %i \n", song_data.beat, song_data.tempo, song_data.repeat, song_data.last);
+	printf("beat: %i tempo: %f repeat: %i last: %i \n", song_data.beat, song_data.beattempo, song_data.repeat, song_data.last);
 	
     fread(&tag_check[0], sizeof(char), 8, fp);
 	if( memcmp(tag_check, _code_Event_V5, 8) )
@@ -770,31 +843,27 @@ BOOL LoadPtcopData(void)
 		
 		int& next = Units[unit_id].next;
 		Units[unit_id].Events[next].position = absolutePosition;
+		Units[unit_id].Events[next].relativePos = position;
 		Units[unit_id].Events[next].event_id = event_id;
 		Units[unit_id].Events[next].value = event_value;
 		next++;
 	}
 	
-	for (int i=0; i < 8; i++) //iterate through UNIT
+	for (int i=0; i < NUMUNIT; i++) //iterate through UNIT
 	{
 		int& next = Units[i].next;
+		Units[i].unused = (next <= 1);
+		if(Units[i].unused) continue;
+		
 		Units[i].Events[next].position = -1; //end of events marker...
 		Units[i].Events[next].event_id = 1;
 		
-		if(next < 2)
-		{
-			Units[i].unused = true;
-		
-		}
-		else
-		{
-			Units[i].unused = false;
-		}
 	}
 	//here we go
 	ConvertPtcopData(Units, song_data);
-	
 	fclose(fp);
+	//append a .org so you don't compeltely obliterate your ptcop by trying to save
+	strcat(music_file, ".org");
 	
 	return TRUE;
 	
