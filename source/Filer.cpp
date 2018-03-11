@@ -310,6 +310,136 @@ char GetFileNameLoad(HWND hwnd,char *title, int OpenType)
 	return MSGLOADOK;
 }
 
+BOOL CALLBACK RelocateControls(HWND hwnd, LPARAM DlgWidth)
+{
+	//cursed function!!! relocates controls ON OTHER PROCESSES?!?!?!?!? INCLUDING EXPLORER.EXE
+	LPRECT lpRect;
+	GetWindowRect(hwnd, lpRect);
+	int width = ((DlgWidth - 555)/4);
+	if(width <= 0) width = 1;
+	SetWindowPos(hwnd, HWND_TOP, width, lpRect->top, 1, 1, SWP_NOSIZE | SWP_NOACTIVATE | SWP_NOZORDER);
+	return true;
+}
+
+	float resolution = NULL; //notes above 255 length are cut off
+	int drumThreshold = NULL;
+	int pitchOffset = NULL;
+	bool ignorePitchBend = false;
+	bool clampPanValues = false;//pxtone's pan is less extreme, but org's pan really goes from one ear to the next
+	bool allowOverlapNotes = false;
+	bool suppressOutput = false;
+	int defaultWaveNumbers[16] = {NULL};
+
+UINT CALLBACK OFNHookProcPTCOP(HWND hdlg, UINT msg, WPARAM wParam, LPARAM lParam)
+{
+	//RECT  rcWindow;
+	LPOFNOTIFY lpOfn = (LPOFNOTIFY)lParam;
+	char ctmp[12];
+	int DlgWidth, DlgHeight, i,j;
+	HWND haDlg;
+	HDC hdc;
+	PAINTSTRUCT ps;
+	static MUSICINFO mi;
+	switch(msg){
+        case WM_INITDIALOG:
+			
+			if(resolution == NULL)
+			{
+				SetDlgItemText(hdlg,IDC_PTCOP_RES,"4");
+				SetDlgItemText(hdlg,IDC_PTCOP_DT,"4");
+				SetDlgItemText(hdlg,IDC_PTCOP_POFF,"0");
+			}
+			else
+			{
+				sprintf(ctmp, "%.3g", resolution);
+				
+				
+				SetDlgItemText(hdlg,IDC_PTCOP_RES, ctmp);
+				itoa(drumThreshold, ctmp, 10);
+				SetDlgItemText(hdlg,IDC_PTCOP_DT, ctmp);
+				itoa(pitchOffset, ctmp, 10);
+				SetDlgItemText(hdlg,IDC_PTCOP_POFF, ctmp);
+			}
+			
+			if(ignorePitchBend) CheckDlgButton(hdlg, IDC_PTCOP_IGNOREPBEND, BST_CHECKED);
+			if(allowOverlapNotes) CheckDlgButton(hdlg, IDC_PTCOP_OVERLAP, BST_CHECKED);
+			
+			//Edit_SetCueBannerText(haDlg, "4");
+			//Edit_SetCueBannerText(hCtrl, IDC_PTCOP_DT, 4);
+			//Edit_SetCueBannerText(hCtrl, IDC_PTCOP_POFF, 0);
+ 			/*for(j=0;j<8;j++){
+				SendDlgItemMessage(hdlg,IDC_MIDIPC1+j,CB_RESETCONTENT,0,0);//Initialization
+				for(i=0;i<128;i++){
+					SendDlgItemMessage(hdlg,IDC_MIDIPC1+j,CB_ADDSTRING,0,(LPARAM)MIDIPC[i]);
+				}
+				if(ucMIDIProgramChangeValue[j] == 255){
+					ucMIDIProgramChangeValue[j] = mi.tdata[j].wave_no; //Initialized in this place
+				}
+				SendDlgItemMessage(hdlg,IDC_MIDIPC1+j,CB_SETCURSEL,ucMIDIProgramChangeValue[j],0);
+			}*/
+           return TRUE;
+
+		case WM_SIZE:
+			return TRUE;
+			DlgWidth  = LOWORD(lParam);	//Size of client area
+			DlgHeight = HIWORD(lParam);
+			
+			//EnumChildWindows(hdlg, RelocateControls, DlgWidth);
+			return TRUE;
+
+		case WM_PAINT:
+			hdc = BeginPaint(hdlg, &ps);
+			DrawGr(hdlg, hdc);
+			EndPaint(hdlg, &ps);
+			return TRUE; 		
+		case WM_COMMAND:
+			switch(LOWORD(wParam)){
+			case IDC_ALL_SQUAREWAVE1:
+				i = SendDlgItemMessage(hdlg,IDC_MIDIPC1,CB_GETCURSEL,0,0);
+				for(j=1;j<8;j++) SendDlgItemMessage(hdlg,IDC_MIDIPC1+j,CB_SETCURSEL,i,0);
+				break;
+			case IDC_ALL_SQUAREWAVE2:
+				for(j=0;j<8;j++) SendDlgItemMessage(hdlg,IDC_MIDIPC1+j,CB_SETCURSEL,16,0);
+				break;
+			case IDC_ALL_SQUAREWAVE3:
+				for(j=0;j<8;j++) SendDlgItemMessage(hdlg,IDC_MIDIPC1+j,CB_SETCURSEL,80,0);
+				break;
+			case IDC_ALL_SQUAREWAVE4:
+				for(j=0;j<8;j++) SendDlgItemMessage(hdlg,IDC_MIDIPC1+j,CB_SETCURSEL,(rand() & 0x7F),0);
+				break;
+			}
+
+			return TRUE;
+		case WM_NOTIFY:
+			if(lpOfn->hdr.code == CDN_INITDONE ){
+			}
+			if(lpOfn->hdr.code == CDN_FILEOK ){
+				GetDlgItemText(hdlg,IDC_PTCOP_RES,ctmp,12); //combo boxes
+				//disable vista style, resource manifest + resource.h include
+				//move to dialog...
+				resolution = atof(ctmp); //don't see why i shouldn't allow float values
+				GetDlgItemText(hdlg,IDC_PTCOP_DT,ctmp,12);
+				drumThreshold = atol(ctmp);
+				GetDlgItemText(hdlg,IDC_PTCOP_POFF,ctmp,12);
+				pitchOffset = atol(ctmp);
+				
+				ignorePitchBend = IsDlgButtonChecked(hdlg, IDC_PTCOP_IGNOREPBEND);
+				allowOverlapNotes = IsDlgButtonChecked(hdlg, IDC_PTCOP_OVERLAP);
+				
+				//vector math
+
+				for(j=0;j<8;j++){
+					ucMIDIProgramChangeValue[j] = (unsigned char)SendDlgItemMessage(hdlg,IDC_MIDIPC1+j,CB_GETCURSEL,0,0);
+				}
+
+				//MessageBox(NULL,ctmp,"Message",MB_OK);
+			}
+			//MessageBox(NULL,"Initialized","Message",MB_OK);
+			return TRUE;
+    }
+    return FALSE;
+}
+
 char GetFileNameLoadPtcop(HWND hwnd,char *title)
 {//Get file name(Load)
 	OPENFILENAME ofn;
@@ -326,7 +456,10 @@ char GetFileNameLoadPtcop(HWND hwnd,char *title)
 	ofn.lpstrFile   = music_file;
 	ofn.nMaxFile    = MAX_PATH;
 	ofn.lpstrTitle  = title;
-	ofn.Flags       = OFN_HIDEREADONLY ;
+	ofn.Flags       = OFN_EXPLORER | OFN_ENABLEHOOK | OFN_ENABLETEMPLATE | OFN_ENABLESIZING;
+	
+	ofn.lpfnHook = OFNHookProcPTCOP;
+	ofn.lpTemplateName = MAKEINTRESOURCE(IDD_PTCOP);
 
 	ofn.lpstrDefExt = "ptcop";
 	
@@ -360,7 +493,7 @@ int decodePxInt(FILE * fp)
 typedef struct __attribute__((packed))
 {
 	short beatclock;      //number of ticks per beat
-	byte beat;            //number of beats per measure
+	char beat;            //number of beats per measure
 	float beattempo;      //bpm
 	int repeat;           
 	int last;
@@ -372,7 +505,7 @@ typedef struct __attribute__((packed))
 typedef struct
 {
 	int position;
-	byte event_id;
+	char event_id;
 	int value;
 	int relativePos;
 	
@@ -418,13 +551,6 @@ BOOL ConvertPtcopData(PxUnit * Units, MASTERV5BLOCK song_data)
 	
 	//1,  2  3, 4, 5, 6, 7,  8, 9,  10, 11,  12
 	//120,60,40,30,24,20,17*,15,13*,12, 10.9,10
-	int resolution = 12; //notes above 255 length are cut off
-	int drumThreshold = 4;
-	int pitchOffset = 0;
-	bool ignorePitchBend = false;
-	bool clampPanValues = true;//pxtone's pan is less extreme, but org's pan really goes from one ear to the next
-	bool allowOverlapNotes = false;
-	int defaultWaveNumbers[16];
 	
 	bool repeatAtEnd = false;
 	int highPos = 0;
@@ -433,10 +559,40 @@ BOOL ConvertPtcopData(PxUnit * Units, MASTERV5BLOCK song_data)
 	int lowestNoteLengths[NUMUNIT];
 	int lowestNotePos[NUMUNIT];
 	int inaccurateNotePos[NUMUNIT];
+	int truncatedNoteLengths[NUMUNIT];
 	
 	int numOrgEventsTotal = 0;
 	
-	info.dot = 4 * resolution;
+	if(resolution >= 32 || drumThreshold <= -8)
+	{/*
+		TASKDIALOGCONFIG pTaskConfig; 
+		memset(&pTaskConfig, 0, sizeof(TASKDIALOGCONFIG));
+		
+		pTaskConfig.cbSize = sizeof(TASKDIALOGCONFIG);
+		pTaskConfig.hwndParent = NULL;
+		pTaskConfig.hInstance = NULL;
+		pTaskConfig.dwFlags = TDF_USE_COMMAND_LINKS;
+		pTaskConfig.dwCommonButtons = TDCBF_YES_BUTTON;
+		pTaskConfig.pszWindowTitle = L"info";
+		pTaskConfig.hMainIcon = NULL;
+		pTaskConfig.pszMainIcon = TD_INFORMATION_ICON;
+		pTaskConfig.pszMainInstruction = L"thats TOO MANY";
+		pTaskConfig.cButtons = 1;
+		TASKDIALOG_BUTTON buttons[] = { 
+			{0,L"try agaig\nno you bloated doushe"}
+		};
+		pTaskConfig.pButtons = buttons;
+		pTaskConfig.nDefaultButton = 0,
+		
+		TaskDialogIndirect(&pTaskConfig, NULL, NULL, NULL);*/
+		MessageBox(hWnd,"thats TOO MANY\ntry agaig","no you bloated doushe",MB_OK);
+		return FALSE;
+	}
+	
+	if(resolution <= 0) {}
+	
+	info.dot = song_data.beat * resolution;
+	if(info.dot <= 0) info.dot = 1;
 	info.line = song_data.beat;
 	
 	float wait = (60000 / song_data.beattempo) / info.line;
@@ -448,6 +604,7 @@ BOOL ConvertPtcopData(PxUnit * Units, MASTERV5BLOCK song_data)
 	
 	if(info.end_x == 0) repeatAtEnd = true;
 	
+	
 	//move this **** to rainfunction.cpp
 	
 	for (int i=0; i < NUMUNIT; i++) //iterate through UNIT
@@ -456,8 +613,8 @@ BOOL ConvertPtcopData(PxUnit * Units, MASTERV5BLOCK song_data)
 		PxEvent* events = unit.Events;
 		NOTELIST* lastOn = NULL;
 		
-		bool isDrum;
-		int drumTrack;
+		bool isDrum = false;
+		int drumTrack = 0;
 		int lastPos = 0;
 		
 		bool on = false;
@@ -474,6 +631,7 @@ BOOL ConvertPtcopData(PxUnit * Units, MASTERV5BLOCK song_data)
 		int levelPan = 64;
 		int velocity = 104;
 		int levelVolume = 104;
+		int portament = 0;
 		
 		int numOrgEvents = 0;
 		
@@ -481,6 +639,7 @@ BOOL ConvertPtcopData(PxUnit * Units, MASTERV5BLOCK song_data)
 		lowestNoteLengths[i] = 99999999;
 		lowestNotePos[i] = 99999999;
 		inaccurateNotePos[i] = 0;
+		truncatedNoteLengths[i] = 0;
 		
 		if(unit.unused) continue;
 	
@@ -497,6 +656,13 @@ BOOL ConvertPtcopData(PxUnit * Units, MASTERV5BLOCK song_data)
 			np = info.tdata[i].note_p;
 			info.tdata[i].note_list = info.tdata[i].note_p;
 		}
+		if(i > 15 || drumTrack > 15)
+		{
+			MessageBox(hWnd,"Attempted to initialize more than 16 tracks! \
+			\nPlease increase the drum threshold.","Errrrrrrrrror (Load)",MB_OK);
+			//msgbox(hWnd,IDS_WARNING_PTCOP,IDS_ERROR_LOAD,MB_OK);
+			return FALSE;
+		}
 		np->from = NULL;
 		np->to = (np + 1);
 		//np++; //first event being completely invalid causes the rest of the song to not play
@@ -510,7 +676,6 @@ BOOL ConvertPtcopData(PxUnit * Units, MASTERV5BLOCK song_data)
 			switch(e.event_id) //unimplemented events can't trigger note placement
 			{
 				case EVENTKIND_NULL:
-				case EVENTKIND_PORTAMENT:
 				case EVENTKIND_BEATCLOCK:
 				case EVENTKIND_BEATTEMPO:
 				case EVENTKIND_BEATNUM:  
@@ -565,12 +730,18 @@ BOOL ConvertPtcopData(PxUnit * Units, MASTERV5BLOCK song_data)
 				if ((np-1) && overlap <= (np-1)->x && numOrgEvents > 0)         ///////////////////////placeholder until np->from works again
 				                                                        //implement overlap properly
 				{
-					overlappingNotes[i]++; 
-					if(!allowOverlapNotes)
+					overlappingNotes[i]++;
+					overlap = (np-1)->x + 1;
+					/*if(!allowOverlapNotes)
 					{
-						lastPos = e.position; 
-						continue;
-					}
+						if(!on)
+						{
+							lastPos = e.position; 
+							continue;
+						}
+						np--; //allows important notes to replace the previous one, for better sounding results at low res
+						//lastOn = NULL;
+					}*/
 				}
 				np->x = overlap;
 				if(overlap > highPos) highPos = overlap;
@@ -588,7 +759,7 @@ BOOL ConvertPtcopData(PxUnit * Units, MASTERV5BLOCK song_data)
 				}
 				else if(keyChange && !on)
 				{
-					if(ignorePitchBend)
+					if(ignorePitchBend && portament != 0)
 					{
 						np->y = KEYDUMMY;
 						np->length = 1;
@@ -622,12 +793,16 @@ BOOL ConvertPtcopData(PxUnit * Units, MASTERV5BLOCK song_data)
 				else if(on)
 				{
 					int overLimit = length / (song_data.beatclock / info.line / resolution);
-					if (overLimit >= 255) overLimit = 255;
+					if (overLimit >= 255) 
+					{
+						overLimit = 255; 
+						truncatedNoteLengths[i] += 1;
+					}
 					np->length = overLimit;
 					newPan = true;
 					newVolume = true;
 					//it's possible for the length of a previous pitch bend to be really long, which should never happen but
-					//store true length
+					//i should store true length
 					if (lastOn && lastOn->x + lastOn->length >= np->x) lastOn->length -= (lastOn->x + lastOn->length) - np->x;
 					
 					lastOn = np;
@@ -702,6 +877,7 @@ BOOL ConvertPtcopData(PxUnit * Units, MASTERV5BLOCK song_data)
 					on = true;
 					break;
 				case EVENTKIND_KEY:			pitch = e.value; keyChange = true; break; //DISABLE OPTION
+				case EVENTKIND_PORTAMENT:	portament = e.value; break;
 				case EVENTKIND_PAN_VOLUME:	levelPan = e.value; newPan = true; break;
 				case EVENTKIND_VELOCITY:	velocity = e.value; newVolume = true; break;
 				case EVENTKIND_VOLUME:		levelVolume = e.value; newVolume = true; break;
@@ -717,7 +893,11 @@ BOOL ConvertPtcopData(PxUnit * Units, MASTERV5BLOCK song_data)
 	
 	for(int i=0;i<NUMUNIT;i++)
 	{
-		printf("track %i: lowestlength: %i lowestpos: %i overlap: %i inaccuracy: %i \n", i, lowestNoteLengths[i], lowestNotePos[i], overlappingNotes[i], inaccurateNotePos[i]);
+		if(!Units[i].unused)
+		{
+			printf("track %i: lowestlength: %i lowestpos: %i overlap: %i inaccuracy: %i truncation: %i \n", \
+					i, lowestNoteLengths[i], lowestNotePos[i], overlappingNotes[i], inaccurateNotePos[i], truncatedNoteLengths[i]);
+		}
 	}
 	printf("numOrgEventsTotal: %i", numOrgEventsTotal);
 	
@@ -742,7 +922,7 @@ BOOL ConvertPtcopData(PxUnit * Units, MASTERV5BLOCK song_data)
 	char str[32];
 	org_data.SetPlayPointer(0);//Cueing
 	scr_data.SetHorzScroll(0);
-	itoa(info.wait,str,10);
+	sprintf(str, "%d", info.wait);
 	SetDlgItemText(hDlgPlayer,IDE_VIEWWAIT,str);
 	SetDlgItemText(hDlgPlayer,IDE_VIEWMEAS,"0");
 	SetDlgItemText(hDlgPlayer,IDE_VIEWXPOS,"0");
@@ -835,6 +1015,13 @@ BOOL LoadPtcopData(void)
 	{
 		position = decodePxInt(fp);
 		fread(&unit_id, 1, 1, fp);
+		if(unit_id > 15)
+		{
+			fclose(fp);
+			MessageBox(hWnd,"Attempted to load more than 16 tracks! \
+			\nPlease reduce the number of tracks in the PTCOP.","Errrrrrrrrror (Load)",MB_OK);
+			return FALSE;
+		}
 		fread(&event_id, 1, 1, fp);
 		event_value = decodePxInt(fp);
 		
@@ -843,6 +1030,16 @@ BOOL LoadPtcopData(void)
 		//printf("Event: %i Position: %i Unit Id: %i Event Id; %i Value: %i \n", i, absolutePosition, unit_id, event_id, event_value);
 		
 		int& next = Units[unit_id].next;
+		
+		if(next >= 8000)
+		{
+			fclose(fp);
+			MessageBox(hWnd,"Attempted to load more than 8000 events from 1 unit! \
+			\nPlease reduce the size of the ptcop.","Errrrrrrrrror (Load)",MB_OK);
+			//msgbox(hWnd,IDS_WARNING_PTCOP,IDS_ERROR_LOAD,MB_OK);
+			return FALSE;
+		}
+		
 		Units[unit_id].Events[next].position = absolutePosition;
 		Units[unit_id].Events[next].relativePos = position;
 		Units[unit_id].Events[next].event_id = event_id;
@@ -861,8 +1058,11 @@ BOOL LoadPtcopData(void)
 		
 	}
 	//here we go
-	ConvertPtcopData(Units, song_data);
-	fclose(fp);
+	if(!ConvertPtcopData(Units, song_data))
+	{
+		fclose(fp);
+		return FALSE;
+	}
 	//append a .org so you don't compeltely obliterate your ptcop by trying to save
 	strcat(music_file, ".org");
 	
