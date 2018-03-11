@@ -6,7 +6,7 @@
 //
 
 #include <windows.h>  //Win32n API's
-#include <windowsx.h> //mmsystem.h
+#include <mmsystem.h>
 #include "DefOrg.h"
 #include "OrgData.h"
 

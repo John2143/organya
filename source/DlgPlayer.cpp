@@ -10,6 +10,9 @@
 #include "util.h"
 extern "C" {
 #include "windows.h"
+#include "Shellapi.h"
+
+
 }
 
 char timer_sw = 0;

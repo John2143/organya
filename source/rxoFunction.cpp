@@ -10,7 +10,9 @@
 #include <stdio.h>
 #include "Filer.h"
 #include <string.h>
-#include "util.h"
+//#include "util.h"
+#include "malloc.h"
+#include <stdlib.h> 
 
 #include "Sound.h"
 #include "Timer.h"

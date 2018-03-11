@@ -2,6 +2,7 @@
 #include "DefOrg.h"
 #include <string.h>
 #include <stdio.h>
+#include "stdlib.h"
 #include "Sound.h"
 #include "resource.h"
 #include "OrgData.h"

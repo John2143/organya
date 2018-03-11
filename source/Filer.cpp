@@ -7,9 +7,10 @@
 #include "Sound.h"
 #include "Scroll.h"
 #include "rxoFunction.h"
-#include "util.h"
+//#include "util.h"
 #include "math.h"
 #include <algorithm>
+#include "Commdlg.h"
 
 #define NUMUNIT 16
 

@@ -5,6 +5,8 @@
 #include <stdlib.h>
 #include <math.h>
 
+#include "Commdlg.h"
+#include "Mmsystem.h"
 #include "Sound.h"
 #include "resource.h"
 #include "OrgData.h"

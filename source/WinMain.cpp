@@ -17,9 +17,11 @@
 #define CDCD_EXIT 1
 #define CDCD_LOAD 2
 
-
 #include <windows.h>
 #include <winuser.h>
+#include "Shellapi.h"
+#include "Mmsystem.h"
+#include "malloc.h"
 
 #include "Setting.h"
 #include "DefOrg.h"

@@ -1,5 +1,5 @@
-CC := g++ -g -std=c++11
-CFLAGS := -Wall -Wextra -Iinclude -Wno-unused-parameter -Wno-write-strings -Wno-char-subscripts -Wno-unused-but-set-variable -Wno-unused-variable
+CC := g++ -std=c++11
+CFLAGS := -D WIN32_LEAN_AND_MEAN -Wall -Wextra -Iinclude -Wno-unused-parameter -Wno-write-strings -Wno-char-subscripts -Wno-unused-but-set-variable -Wno-unused-variable
 
 SRC=source
 
