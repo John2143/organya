@@ -55,6 +55,7 @@ int pitchOffset = 0;
 bool ignorePitchBend = false;
 bool clampPanValues = false;//pxtone's pan is less extreme, but org's pan really goes from one ear to the next
 bool allowOverlapNotes = false;
+bool shiftOverlap = false;
 bool suppressOutput = false;
 int defaultWaveNumbers[16] = {NULL};
 
@@ -117,23 +118,12 @@ UINT CALLBACK OFNHookProcPTCOP(HWND hdlg, UINT msg, WPARAM wParam, LPARAM lParam
 	switch(msg){
         case WM_INITDIALOG:
 			
-			if(resolution == NULL)
-			{
-				SetDlgItemText(hdlg,IDC_PTCOP_RES,"4");
-				SetDlgItemText(hdlg,IDC_PTCOP_DT,"4");
-				SetDlgItemText(hdlg,IDC_PTCOP_POFF,"0");
-			}
-			else
-			{
-				sprintf(ctmp, "%.3g", resolution);
-				
-				
-				SetDlgItemText(hdlg,IDC_PTCOP_RES, ctmp);
-				itoa(drumThreshold, ctmp, 10);
-				SetDlgItemText(hdlg,IDC_PTCOP_DT, ctmp);
-				itoa(pitchOffset, ctmp, 10);
-				SetDlgItemText(hdlg,IDC_PTCOP_POFF, ctmp);
-			}
+			sprintf(ctmp, "%.3g", resolution);
+			SetDlgItemText(hdlg,IDC_PTCOP_RES, ctmp);
+			itoa(drumThreshold, ctmp, 10);
+			SetDlgItemText(hdlg,IDC_PTCOP_DT, ctmp);
+			itoa(pitchOffset, ctmp, 10);
+			SetDlgItemText(hdlg,IDC_PTCOP_POFF, ctmp);
 			
 			if(ignorePitchBend) CheckDlgButton(hdlg, IDC_PTCOP_IGNOREPBEND, BST_CHECKED);
 			if(allowOverlapNotes) CheckDlgButton(hdlg, IDC_PTCOP_OVERLAP, BST_CHECKED);
@@ -163,7 +153,7 @@ UINT CALLBACK OFNHookProcPTCOP(HWND hdlg, UINT msg, WPARAM wParam, LPARAM lParam
 
 		case WM_PAINT:
 			hdc = BeginPaint(hdlg, &ps);
-			DrawGr(hdlg, hdc);
+			//DrawGr(hdlg, hdc);
 			EndPaint(hdlg, &ps);
 			return TRUE; 		
 		case WM_COMMAND:
@@ -188,8 +178,7 @@ UINT CALLBACK OFNHookProcPTCOP(HWND hdlg, UINT msg, WPARAM wParam, LPARAM lParam
 			if(lpOfn->hdr.code == CDN_INITDONE ){
 			}
 			if(lpOfn->hdr.code == CDN_FILEOK ){
-				GetDlgItemText(hdlg,IDC_PTCOP_RES,ctmp,12); //combo boxes
-				//disable vista style, resource manifest + resource.h include
+				GetDlgItemText(hdlg,IDC_PTCOP_RES,ctmp,12);
 				//move to dialog...
 				resolution = atof(ctmp); //don't see why i shouldn't allow float values
 				GetDlgItemText(hdlg,IDC_PTCOP_DT,ctmp,12);
@@ -202,9 +191,9 @@ UINT CALLBACK OFNHookProcPTCOP(HWND hdlg, UINT msg, WPARAM wParam, LPARAM lParam
 				
 				//vector math
 
-				for(j=0;j<8;j++){
+				/*for(j=0;j<8;j++){
 					ucMIDIProgramChangeValue[j] = (unsigned char)SendDlgItemMessage(hdlg,IDC_MIDIPC1+j,CB_GETCURSEL,0,0);
-				}
+				}*/
 
 				//MessageBox(NULL,ctmp,"Message",MB_OK);
 			}
@@ -237,7 +226,6 @@ char GetFileNameLoadPtcop(HWND hwnd,char *title)
 
 	ofn.lpstrDefExt = "ptcop";
 	
-	count_of_INIT_DONE = 0;
 	//Attempt to acquire the file name.
 	if(GetOpenFileName(&ofn));//InvalidateRect(hwnd,NULL,TRUE);
 	else return MSGCANCEL;//Cancel0Will return
@@ -312,9 +300,6 @@ BOOL ConvertPtcopData(PxUnit * Units, MASTERV5BLOCK song_data)
 	
 	if(info.end_x == 0) repeatAtEnd = true;
 	
-	
-	//move this **** to rainfunction.cpp
-	
 	for (int i=0; i < NUMUNIT; i++) //iterate through UNIT
 	{
 		PxUnit& unit = Units[i];
@@ -328,6 +313,7 @@ BOOL ConvertPtcopData(PxUnit * Units, MASTERV5BLOCK song_data)
 		bool on = false;
 		int length = 1;
 		int newLength = 1;
+		int trueLength = 0;
 
 		bool newPan = true;
 		bool keyChange = false;
@@ -433,26 +419,28 @@ BOOL ConvertPtcopData(PxUnit * Units, MASTERV5BLOCK song_data)
 					np->to = (np + 1);
 				}
 				
-				int overlap = lastPos / (song_data.beatclock / info.line / resolution);
-				//printf ("event pos: %i np->x %i \n", lastPos, overlap); 
-				if ((np-1) && overlap <= (np-1)->x && numOrgEvents > 0)         ///////////////////////placeholder until np->from works again
-				                                                        //implement overlap properly
+				int xScaled = lastPos / (song_data.beatclock / info.line / resolution);
+				//printf ("event pos: %i np->x %i \n", lastPos, xScaled); 
+				if ((np-1) && xScaled <= (np-1)->x && numOrgEvents > 0)         ///////////////////////placeholder until np->from works again
 				{
 					overlappingNotes[i]++;
-					overlap = (np-1)->x + 1;
-					/*if(!allowOverlapNotes)
+					if (shiftOverlap)
+					{
+						xScaled = (np-1)->x + 1;
+					}
+					else if(!allowOverlapNotes)
 					{
 						if(!on)
 						{
 							lastPos = e.position; 
 							continue;
 						}
-						np--; //allows important notes to replace the previous one, for better sounding results at low res
+						np--; //allows important notes to replace the previous one, for usually better sounding results at low res
 						//lastOn = NULL;
-					}*/
+					}
 				}
-				np->x = overlap;
-				if(overlap > highPos) highPos = overlap;
+				np->x = xScaled;
+				if(xScaled > highPos) highPos = xScaled;
 
 				int inaccuracy = np->x * (song_data.beatclock / info.line / resolution);
 				if(inaccuracy != lastPos)
@@ -464,54 +452,72 @@ BOOL ConvertPtcopData(PxUnit * Units, MASTERV5BLOCK song_data)
 				if(isDrum && on)
 				{
 					np->length = 1;
+					lastOn = np;
 				}
 				else if(keyChange && !on)
 				{
-					if(ignorePitchBend && portament != 0)
+					if(lastOn && np->x > (lastOn->x + lastOn->length))
 					{
-						np->y = KEYDUMMY;
-						np->length = 1;
-						newPan = true;
-						newVolume = true;
-						volPanEve = true;
+						lastPos = e.position;
+						continue; //this is not a valid note...
 					}
 					else
 					{
-						//changing key
-						if(lastOn)
+						if(ignorePitchBend && portament != 0)
 						{
-								
-							int difference = (np->x - lastOn->x);
-							//printf("difference %i skipping \n", difference);
-							int newLength = lastOn->length - difference;
-							//printf("newLength %i \n", newLength);
-							lastOn->length -= newLength;
-							np->length = newLength;
-							lastOn = np;
+							np->y = KEYDUMMY;
+							np->length = 1;
+							newPan = true;
+							newVolume = true;
+							volPanEve = true;
 						}
 						else
 						{
-							printf("WHAT????//?????????????//?????????????//?????????????//?????????????//?????????????");
-							np->length = 1; //?????????????
+							//changing key
+							if(lastOn)
+							{
+									
+								int difference = (np->x - lastOn->x);
+								//printf("difference %i skipping \n", difference);
+								if(trueLength >= 1)
+								{
+									newLength = trueLength - difference;
+									if(newLength >= 255) newLength = 255;
+								}
+								else
+								{
+									newLength = lastOn->length - difference;
+								}
+								trueLength -= newLength;
+								//printf("newLength %i \n", newLength);
+								lastOn->length = difference;
+								np->length = newLength;
+								lastOn = np;
+							}
+							else
+							{
+								printf("WHAT????//?????????????//?????????????//?????????????//?????????????//?????????????");
+								np->length = 1; //?????????????
+							}
+							newPan = true;
+							newVolume = true;
 						}
-						newPan = true;
-						newVolume = true;
 					}
 				}
 				else if(on)
 				{
-					int overLimit = length / (song_data.beatclock / info.line / resolution);
-					if (overLimit >= 255) 
+					int lengthScaled = length / (song_data.beatclock / info.line / resolution);
+					if (lengthScaled >= 255) 
 					{
-						overLimit = 255; 
+						trueLength = lengthScaled;
+						lengthScaled = 255; 
 						truncatedNoteLengths[i] += 1;
 					}
-					np->length = overLimit;
+					np->length = lengthScaled;
 					newPan = true;
 					newVolume = true;
-					//it's possible for the length of a previous pitch bend to be really long, which should never happen but
-					//i should store true length
-					if (lastOn && lastOn->x + lastOn->length >= np->x) lastOn->length -= (lastOn->x + lastOn->length) - np->x;
+					//this is a band aid fix for length issues that should not be happening
+					//if (lastOn && lastOn->x + lastOn->length >= np->x) lastOn->length -= (lastOn->x + lastOn->length) - np->x;
 					
 					lastOn = np;
 				}
@@ -566,7 +572,7 @@ BOOL ConvertPtcopData(PxUnit * Units, MASTERV5BLOCK song_data)
 				on = false;
 				volPanEve = false;
 				
-				//printf("np from %i np to %i", np->from, np->to);
+				////printf("np from %i np to %i", np->from, np->to);
 				
 				np++;
 				numOrgEvents++;
@@ -742,7 +748,7 @@ BOOL LoadPtcopData(void)
 		if(next >= 8000)
 		{
 			fclose(fp);
-			MessageBox(hWnd,"Attempted to load more than 8000 events from 1 unit! \
+			MessageBox(hWnd,"Attempted to load more than 8000 events in 1 unit! \
 			\nPlease reduce the size of the ptcop.","Errrrrrrrrror (Load)",MB_OK);
 			//msgbox(hWnd,IDS_WARNING_PTCOP,IDS_ERROR_LOAD,MB_OK);
 			return FALSE;
