@@ -34,6 +34,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "Filer.h"
+#include "PtcopOrg.h"
 #include "rxoFunction.h"
 #include "util.h"
 
