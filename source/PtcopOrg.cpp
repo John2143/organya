@@ -261,8 +261,7 @@ BOOL ConvertPtcopData(PxUnit * Units, MASTERV5BLOCK song_data)
 	
 	int numOrgEventsTotal = 0;
 	
-	//placeholder for 256 multiples
-	if(resolution % 16 == 0 && resolution != 0|| drumThreshold <= -8)
+	if(resolution >= 9999999 || drumThreshold <= -8)
 	{/*
 		TASKDIALOGCONFIG pTaskConfig; 
 		memset(&pTaskConfig, 0, sizeof(TASKDIALOGCONFIG));
