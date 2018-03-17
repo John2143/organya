@@ -255,11 +255,14 @@ BOOL ConvertPtcopData(PxUnit * Units, MASTERV5BLOCK song_data)
 	int lowestNoteLengths[NUMUNIT];
 	int lowestNotePos[NUMUNIT];
 	int inaccurateNotePos[NUMUNIT];
+	int inaccurateNoteLen[NUMUNIT];
 	int truncatedNoteLengths[NUMUNIT];
+	int numOrgEvents[NUMUNIT];
 	
 	int numOrgEventsTotal = 0;
 	
-	if(resolution >= 32 || drumThreshold <= -8)
+	//placeholder for 256 multiples
+	if(resolution % 16 == 0 && resolution != 0|| drumThreshold <= -8)
 	{/*
 		TASKDIALOGCONFIG pTaskConfig; 
 		memset(&pTaskConfig, 0, sizeof(TASKDIALOGCONFIG));
@@ -291,6 +294,8 @@ BOOL ConvertPtcopData(PxUnit * Units, MASTERV5BLOCK song_data)
 	if(info.dot <= 0) info.dot = 1;
 	
 	info.line = song_data.beat;
+	
+	float scaleFactor = (song_data.beatclock / info.line / resolution);
 	
 	float wait = (60000 / song_data.beattempo) / info.line;
 	info.wait = round(wait / resolution);
@@ -330,13 +335,13 @@ BOOL ConvertPtcopData(PxUnit * Units, MASTERV5BLOCK song_data)
 		int levelVolume = 104;
 		int portament = 0;
 		
-		int numOrgEvents = 0;
-		
 		overlappingNotes[i] = 0;
 		lowestNoteLengths[i] = 99999999;
 		lowestNotePos[i] = 99999999;
 		inaccurateNotePos[i] = 0;
+		inaccurateNoteLen[i] = 0;
 		truncatedNoteLengths[i] = 0;
+		numOrgEvents[i] = 0;
 		
 		if(unit.unused) continue;
 	
@@ -360,10 +365,6 @@ BOOL ConvertPtcopData(PxUnit * Units, MASTERV5BLOCK song_data)
 			//msgbox(hWnd,IDS_WARNING_PTCOP,IDS_ERROR_LOAD,MB_OK);
 			return FALSE;
 		}
-		np->from = NULL;
-		np->to = (np + 1);
-		//np++; //first event being completely invalid causes the rest of the song to not play
-			  //if you don't start from the next measure
 		
 		for(int j=0; j <= unit.next; j++)
 		{
@@ -397,22 +398,16 @@ BOOL ConvertPtcopData(PxUnit * Units, MASTERV5BLOCK song_data)
 				//events that do nothing shouldn't trigger notes
 				if(unimplemented && !on && !keyChange && !newPan && !newVolume) continue;
 				
-				if(numOrgEvents > 0) 
+				if(numOrgEvents[i] > 0) 
 				{
-					//np->from = (np - 1);//not setting the from pointer on all events seems to be fine...
-										 //but you just can't access the previous linked note from that pointer
-										 //it seems to crash half the time in PutNotes while checking if the ptr is null
-										 //if the froms/to's are (properly?) set
-										 //but when it doesn't crash the notes seem to play fine,
-										 //just that nothing renders
-										 //other times only one sound plays ever
+					np->from = (np - 1);
 				}
 				else
 				{
 					np->from = NULL;
 				}
 				
-				if(e.position == -1)// this is the last note
+				if(events[j+1].position == -1)// this is the last note
 				{
 					np->to = NULL;
 				}
@@ -421,16 +416,16 @@ BOOL ConvertPtcopData(PxUnit * Units, MASTERV5BLOCK song_data)
 					np->to = (np + 1);
 				}
 				
-				int xScaled = e.position / (song_data.beatclock / info.line / resolution);
-				//printf ("event pos: %i np->x %i \n", e.position, xScaled); 
-				if ((np-1) && xScaled <= (np-1)->x && numOrgEvents > 0)         ///////////////////////placeholder until np->from works again
+				int xScaled = e.position / scaleFactor;
+				////printf ("event pos: %i np->x %i \n", e.position, xScaled); 
+				if (numOrgEvents[i] > 0 && np->from && xScaled <= np->from->x)
 				{
 					//resolution is too low, so there's already a note in the spot it's trying to place in
 					overlappingNotes[i]++;
 					if (shiftOverlap)
 					{
 						//push forward the note so it isn't overlapping anymore
-						xScaled = (np-1)->x + 1;
+						xScaled = np->from->x + 1;
 					}
 					else if(!allowOverlapNotes)
 					{
@@ -442,11 +437,8 @@ BOOL ConvertPtcopData(PxUnit * Units, MASTERV5BLOCK song_data)
 				np->x = xScaled;
 				if(xScaled > highPos) highPos = xScaled;
 
-				int inaccuracy = np->x * (song_data.beatclock / info.line / resolution);
-				if(inaccuracy != e.position)
-				{
-					inaccurateNotePos[i]++;
-				}
+				int inaccuracy = np->x * scaleFactor;
+				if(inaccuracy != e.position) inaccurateNotePos[i]++;
 				
 				//-------------LENGTH HANDLING
 				if(isDrum && on)
@@ -485,6 +477,7 @@ BOOL ConvertPtcopData(PxUnit * Units, MASTERV5BLOCK song_data)
 							}
 							trueLength -= newLength;
 							//printf("newLength %i \n", newLength);
+							if(difference >= 255) difference = 255;
 							lastOn->length = difference;
 							np->length = newLength;
 							lastOn = np;
@@ -501,12 +494,16 @@ BOOL ConvertPtcopData(PxUnit * Units, MASTERV5BLOCK song_data)
 				}
 				else if(on)
 				{
-					int lengthScaled = length / (song_data.beatclock / info.line / resolution);
+					int lengthScaled = length / scaleFactor;
 					if (lengthScaled >= 255) 
 					{
 						trueLength = lengthScaled;
 						lengthScaled = 255; 
 						truncatedNoteLengths[i] += 1;
+					}
+					else
+					{
+						if(lengthScaled * scaleFactor != length) inaccurateNoteLen[i]+=1;
 					}
 					np->length = lengthScaled;
 					newPan = true;
@@ -555,7 +552,7 @@ BOOL ConvertPtcopData(PxUnit * Units, MASTERV5BLOCK song_data)
 				if(newPan)
 				{
 					np->pan = round((double)levelPan / panDivisor);
-					//printf("levelpan %i/ divide %f / pan %i \n", levelPan, (double)levelPan / panDivisor, np->pan);
+					////printf("levelpan %i/ divide %f / pan %i \n", levelPan, (double)levelPan / panDivisor, np->pan);
 				}
 				else
 				{
@@ -570,13 +567,16 @@ BOOL ConvertPtcopData(PxUnit * Units, MASTERV5BLOCK song_data)
 				length = 1;
 				////printf("np from %i np to %i", np->from, np->to);
 				
+				//printf("[Note %i] Meas %i, %i, length %i \n", numOrgEvents[i], (int)np->x / (info.line*info.dot), (int)np->x % (info.line*info.dot), (int)np->length);
+				
 				np++;
-				numOrgEvents++;
+				numOrgEvents[i]++;
 				//if(!isDrum) pitch = KEYDUMMY; //pitch events are implicitly carried over
+				
 			}
 		}
 		
-		numOrgEventsTotal += numOrgEvents;
+		numOrgEventsTotal += numOrgEvents[i];
 		
 	}
 	
@@ -584,8 +584,8 @@ BOOL ConvertPtcopData(PxUnit * Units, MASTERV5BLOCK song_data)
 	{
 		if(!Units[i].unused)
 		{
-			printf("track %i: lowestlength: %i lowestpos: %i overlap: %i inaccuracy: %i truncation: %i \n", \
-					i, lowestNoteLengths[i], lowestNotePos[i], overlappingNotes[i], inaccurateNotePos[i], truncatedNoteLengths[i]);
+			printf("track %i: events: %i lowestlength: %i lowestpos: %i overlap: %i inaccuracyPos: %i inaccuracyLen: %i truncation: %i \n", \
+			i, numOrgEvents[i], lowestNoteLengths[i], lowestNotePos[i], overlappingNotes[i], inaccurateNotePos[i], inaccurateNoteLen[i], truncatedNoteLengths[i]);
 		}
 	}
 	printf("numOrgEventsTotal: %i", numOrgEventsTotal);
@@ -594,10 +594,6 @@ BOOL ConvertPtcopData(PxUnit * Units, MASTERV5BLOCK song_data)
 	{
 		info.end_x = ceil((double)highPos / (info.line * info.dot)) * (info.line * info.dot);
 	}
-	
-	//sort note data, since the "going back" link of a linked list is completely gone
-	//this is no longer true, but undefined behavior still causes crashes so keep this in
-	org_data.SortNotes();
 	
 	//pasted from loadmusicdata
 	int i;
