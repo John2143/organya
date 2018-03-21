@@ -474,7 +474,7 @@ BOOL ConvertPtcopData(PxUnit * Units, MASTERV5BLOCK song_data)
 							{
 								newLength = lastOn->length - difference;
 							}
-							trueLength -= newLength;
+							trueLength -= difference;
 							//printf("newLength %i \n", newLength);
 							if(difference >= 255) difference = 255;
 							lastOn->length = difference;
