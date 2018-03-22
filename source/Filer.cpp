@@ -1,17 +1,22 @@
 #include "Setting.h"
+#include "Gdi.h"
 #include <stdio.h>
 #include "resource.h"
 #include "DefOrg.h"
 #include "OrgData.h"
+#include "Sound.h"
+#include "Scroll.h"
 #include "rxoFunction.h"
-#include "util.h"
-
+//#include "util.h"
+#include "math.h"
+#include "Commdlg.h"
 
 RECT CmnDialogWnd;
 int count_of_INIT_DONE;
 int iDlgRepeat; //Repeat count obtained from dialog
 extern char strMIDI_TITLE[256];
 extern char strMIDI_AUTHOR[256];
+extern char *dram_name[];
 LPCTSTR  MIDIPC[]={
 	"000 Acoustic Grand Piano","001 Bright Acoustic Piano","002 Electric Grand Piano","003 Honky-tonk Piano","004 Electric Piano 1","005 Electric Piano 2","006 Harpsichord","007 Clavi",
 	"008 Celesta","009 Glockenspiel","010 Music Box","011 Vibraphone","012 Marimba","013 Xylophone","014 Tubular Bells","015 Dulcimer",
@@ -32,6 +37,8 @@ LPCTSTR  MIDIPC[]={
 };
 
 extern unsigned char ucMIDIProgramChangeValue[MAXTRACK];
+
+ extern HWND hDlgPlayer;
 
 char GetFileNameSave(HWND hwnd,char *title)
 {//Get file name(save)
@@ -57,7 +64,8 @@ char GetFileNameSave(HWND hwnd,char *title)
 	else return MSGCANCEL;//Cancel0Will return
 	fp = fopen(music_file,"rb");
 	//Existing file exists? OFN_OVERWRITEPROMPT It made unnecessary by designation.
-	//if(fp != NULL){
+	//if(fp != NULL)
+	//{
 	//	fclose(fp);
 	//	return MSGEXISFILE;//Existing file
 	//}
@@ -208,7 +216,8 @@ char GetFileNameMIDI(HWND hwnd,char *title, char *filename)
 	fp = fopen(filename,"rb");
 
 	//Existing file exists?  OFN_OVERWRITEPROMPT It made unnecessary by designation.
-	//if(fp != NULL){
+	//if(fp != NULL)
+	//{
 	//	fclose(fp);
 	//	return MSGEXISFILE;//Existing file
 	//}
@@ -297,3 +306,5 @@ char GetFileNameLoad(HWND hwnd,char *title, int OpenType)
 
 	return MSGLOADOK;
 }
+
+

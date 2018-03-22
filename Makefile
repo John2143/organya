@@ -1,5 +1,5 @@
-CC := g++ -std=c++11 -g
-CFLAGS := -Wall -Wextra -Iinclude -Wno-unused-parameter -Wno-write-strings -Wno-char-subscripts -Wno-unused-but-set-variable -Wno-unused-variable
+CC := g++ -std=c++11
+CFLAGS := -D WIN32_LEAN_AND_MEAN -Wall -Wextra -Iinclude -Wno-unused-parameter -Wno-write-strings -Wno-char-subscripts -Wno-unused-but-set-variable -Wno-unused-variable
 
 SRC=source
 
@@ -11,11 +11,11 @@ RCSS=$(wildcard $(SRC)/*.rc)
 RCOS=$(patsubst %.rc,%.o,$(RCSS))
 RCTS=$(patsubst %.rc,%.rct,$(RCSS))
 
-EXECUTABLE := organya
+EXECUTABLE := organyaa
 
-LIBRARIES:= -L. -lWinMM -ldsound -mwindows
+LIBRARIES:= -L. -lWinMM -ldsound -mwindows -static-libgcc -static-libstdc++ -static
 ifeq ($(shell uname),Linux)
-LIBRARIES += -lm
+LIBRARIES += -lm 
 endif
 
 .PHONY: clean all

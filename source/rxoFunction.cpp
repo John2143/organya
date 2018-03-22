@@ -10,7 +10,9 @@
 #include <stdio.h>
 #include "Filer.h"
 #include <string.h>
-#include "util.h"
+//#include "util.h"
+#include "malloc.h"
+#include <stdlib.h> 
 
 #include "Sound.h"
 #include "Timer.h"
@@ -942,7 +944,7 @@ int AllocMessageStringBuffer(void)
 		MessageString[i] = ptr;
 		r = LoadString(GetModuleHandle(NULL), i, ptr, 1024); //1024It is appropriate. To be exactMESSAGE_STRING_BUFFER_SIZEIt is necessary to calculate from.
 		if(r > 0){
-            printf("A string is %s", ptr);
+            //printf("A string is %s", ptr);
 			//The last!!Detect
 			for(p = ptr + r - 3, flg = 0; *p != 0 ; p++){
 				if(*p == '!')flg++; else flg = 0;

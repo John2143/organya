@@ -9,6 +9,7 @@
 #include "resource.h"
 #include "Scroll.h"
 #include "rxoFunction.h"
+#include <malloc.h>
 
 char strMIDI_TITLE[256];
 char strMIDI_AUTHOR[256];

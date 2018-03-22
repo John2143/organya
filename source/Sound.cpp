@@ -1,9 +1,11 @@
 #include <windows.h>
 #include <stdio.h>
 #include "dplay.h"
+#include "Mmsystem.h"
 #include "dsound.h"
 #include "Setting.h"
 #include "DefOrg.h"
+
 #define SE_MAX	512
 
 // Symbol definition.

@@ -207,9 +207,9 @@ extern int iKeyPushDown[256]; // 2010.09.22 A Piano key pressed
 void OrgData::PutNumber(void)
 {
 	long scr_h,scr_v;
-	char k100,k10,k1;
-	char i,j;
-	char k = info.dot*info.line;
+	int k100,k10,k1;
+	int i,j;
+	int k = info.dot*info.line;
 	j = (WWidth/NoteWidth)/k;
 	//Show measures
 	for(i = 0; i <= j; i++){
